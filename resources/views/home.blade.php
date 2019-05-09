@@ -5,7 +5,7 @@
         @if (Auth::check())
                 @if (Auth::user()->role_id == 1)
                   <template v-if="menu==0">
-                    <example-component></example-component>
+                    <dash></dash>
                   </template>
 
                   <template v-if="menu==1">
@@ -42,11 +42,11 @@
                   </template>
 
                   <template v-if="menu==9">
-                    <h1> contenido reposte ingresos</h1>
+                    <findp></findp>
                   </template>
 
                   <template v-if="menu==10">
-                    <h1> contenido reporte ventas</h1>
+                    <finds></finds>
                   </template>
 
                   <template v-if="menu==11">
@@ -58,7 +58,7 @@
                   </template>                    
                 @elseif (Auth::user()->role_id == 2)
                   <template v-if="menu==0">
-                    <example-component></example-component>
+                    <dash></dash>
                   </template>
 
                   <template v-if="menu==5">
@@ -70,7 +70,7 @@
                   </template>
                             
                   <template v-if="menu==10">
-                    <h1> contenido reporte ventas</h1>
+                    <finds></finds>
                   </template>
 
                   <template v-if="menu==11">
@@ -82,7 +82,7 @@
                   </template>
                 @elseif (Auth::user()->role_id == 3)
                     <template v-if="menu==0">
-                      <example-component></example-component>
+                      <dash></dash>
                     </template>
 
                     <template v-if="menu==1">
@@ -101,7 +101,7 @@
                       <provider></provider>
                     </template>
                     <template v-if="menu==9">
-                      <h1> contenido reposte ingresos</h1>
+                      <findp></findp>
                     </template>
 
                     <template v-if="menu==11">

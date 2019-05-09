@@ -38,7 +38,13 @@ Vue.component('role', require('./components/Role.vue').default);
 
 Vue.component('purchase', require('./components/Purchase.vue').default);
 
+Vue.component('findp', require('./components/FindPurchase.vue').default);
+
 Vue.component('sale', require('./components/Sale.vue').default);
+
+Vue.component('finds', require('./components/FindSale.vue').default);
+
+Vue.component('dash', require('./components/Dashboard.vue').default);
 
 
 

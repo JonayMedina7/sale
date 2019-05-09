@@ -292,6 +292,7 @@
                 });
             },
             loadPdf(){
+                /*window.open('https://bacoop.com/laravel/public/product/listPdf', '_blank');*/
                 window.open('http://localhost:8080/sistema1/public/product/listPdf', '_blank');
             },
             categorySelect(){

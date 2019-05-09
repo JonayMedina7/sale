@@ -448,6 +448,7 @@
                                 this.rif         = data['rif'];
                                 this.email         = data['email'];
                                 this.address   = data['address'];
+                                this.retention = data['retention'];
                                 this.actionType   = 2;
                                 break;
                             }

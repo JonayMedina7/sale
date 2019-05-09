@@ -6,7 +6,7 @@
       <div class="col-md-8">
         <div class="card-group mb-0">
           <div class="card p-4">
-            <form method="post" class="form-horizontal was-validated" action="{{ route('login') }}">
+            <form method="post" class="form-horizontal was-validated" action="{{ url('login') }}">
                 @csrf
                 <div class="card-body">
                   <h1>Acceder</h1>

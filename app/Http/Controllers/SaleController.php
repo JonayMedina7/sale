@@ -82,9 +82,29 @@ class SaleController extends Controller
         ->orderBy('detailsales.id', 'desc')->get();
 
         $numsale = Sale::select('voucher_num')->where('id',$id)->get();
+        /*$sale=strtoupper($sale->name, $sale->address);
+        $details=strtoupper($details);*/
 
         $pdf = \PDF::loadView('pdf.sale',['sale'=>$sale,'details'=>$details]);
         return $pdf->download('venta-'.$numsale[0]->voucher_num.'.pdf');
+    }
+
+    public function pdfw(Request $request, $id)
+    {
+        $sale = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
+        ->join('users', 'sales.user_id', '=', 'users.id')
+        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.total', 'sales.status', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
+        ->where('sales.id','=',$id)->take(1)->get();
+
+         $details = Detailsale::join('products', 'detailsales.product_id', '=', 'products.id')
+        ->select('detailsales.quantity', 'detailsales.price', 'products.name as product')
+        ->where('detailsales.sale_id','=',$id)
+        ->orderBy('detailsales.id', 'desc')->get();
+
+        $numsale = Sale::select('voucher_num')->where('id',$id)->get();
+
+        
+        return view('welcome', compact('sale', 'details', 'numsale'));
     }
   
 
@@ -130,6 +150,7 @@ class SaleController extends Controller
         }
 
         DB::commit();
+        return ['id'=>$sale->id];
         } catch (Exception $e) {
             DB::rollBack();
 

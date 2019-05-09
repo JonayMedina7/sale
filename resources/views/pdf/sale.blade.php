@@ -13,25 +13,29 @@
         /*color: #555555;*/
         /*background: #FFFFFF; */
         font-family: Arial, sans-serif; 
-        font-size: 14px;
+        font-size: 12px;
         /*font-family: SourceSansPro;*/
         }
         nav{
-            height: 100px;
+            height: 80px;
         }
         header{
-
+            
             margin: 0px;
             padding: 0px;
-            /*top: 0px;*/
-            /*bottom: 0px;*/
+            top: 0px;
+            bottom: 0px;
+        }
+        tr th, tr td {
+            padding: 4px;
+            font-size: 14px;
         }
 
        
         #data{
         float: left;
-        margin: 0px;
-        padding: 0px;
+        margin: 0px 2%;
+        
         font-size: 15px;
 
         /*text-align: justify;*/
@@ -43,25 +47,34 @@
         float: right;
         margin: 0px;
         padding: 0px;
-        font-size: 20px;
+        font-size: 17px;
         }
 
-        section{
+        table{
+        /*position: relative;*/
         clear: left;
         border: 1px solid #000;
         }
+        /*#fact{
+        
+        float: right;
 
-        #client th{
-        text-align: left;
-
-        }
+        margin-top: 0%;
+        margin-left: 2%;
+        margin-right: 2%;
+        font-size: 20px;
+        }*/
 
         #facliente{
         width: 100%;
         border-collapse: collapse;
         border-spacing: 0;
-        margin-bottom: 15px;
+        text-align: left;
+        margin-bottom: 12px;
         }
+        /*tr #fac{
+            width: 100%;
+        }*/
 
         #fac, #fv, #fa{
         color: #FFFFFF;
@@ -79,7 +92,8 @@
         width: 100%;
         border-collapse: collapse;
         border-spacing: 0;
-        margin-bottom: 15px;
+        text-align: center;
+        margin-bottom: 12px;
         }
 
         #facvendedor thead{
@@ -93,7 +107,10 @@
         width: 100%;
         border-collapse: collapse;
         border-spacing: 0;
-        margin-bottom: 15px;
+        margin-bottom: 12px;
+        }
+        #facarticulo td{
+             text-align: center;
         }
 
         #facarticulo thead{
@@ -103,10 +120,27 @@
         border-bottom: 1px solid #FFFFFF;  
         }
 
+        #total {
+        width: 100%;
+        
+        border-spacing: 0;
+        margin-top: 15px;
+        margin-bottom: 12px; 
+        }
+
+        #total thead{
+        /*display: block;*/
+        align-content: right;
+        text-align: right;
+        
+        }
+        
         #gracias{
-        text-align: center; 
+        text-align: left;
+        padding: 2% 6%; 
         }
     </style>
+    {{-- <link href="css/template.css" rel="stylesheet"> --}}
     <body>
         @foreach ($sale as $s)
         <nav>
@@ -116,16 +150,16 @@
             {{-- <div id="logo">
                 <img src="img/logo.png" alt="dilia soluciones" id="imagen">
             </div> --}}
-            <div id="data">
+            <div id="data" class="clearfix">
                 <p > Fecha de Emisión: {{ $s->date }}</p>
             </div> 
-            <div id="inv">
+            <div id="inv" class="clearfix">
                 <p> @if ($s->voucher=='bill')
-                    Factura n°: 
+                    FACTURA N°: 
                 @elseif ($s->voucher=='credit')
-                    Nota de Credito n°: 
+                    NOTA DE CRÉDITO N°: 
                 @elseif ($s->voucher=='note')
-                    Vale n°: 
+                    VALE N°: 
                 @endif
                 {{ $s->voucher_serie }}-{{ $s->voucher_num }}</p>
             </div>
@@ -133,105 +167,99 @@
         <br>
         <section>
             <div>
-                <table id="facliente">
+                <table id="facliente" >
                     <thead>                        
                         <tr>
-                            <th id="fac">Cliente</th>
+                            <th colspan="6" id="fac">DATOS DE CLIENTE</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <th><p id="client">Razón Social: {{ $s->name }}<br>
-                            Rif/c.i.:{{ $s->tyse }}: {{ $s->rif }}<br>
-                            Dirección Fiscal: {{ $s->address }}<br>
-                            Telefono: {{ $s->phone }}<br>
-                            Email: {{ $s->email }}</p></th>
+                            <th colspan="2" id="client">RAZÓN SOCIAL: </th>
+                            <td  colspan="4">{{ strtoupper($s->name) }}</td>
+                            
                         </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-        <br>
-        <section>
-            <div>
-                <table id="facvendedor">
-                    <thead>
-                        <tr id="fv">
-                            <th>VENDEDOR</th>
-                            <th>FECHA</th>
-                        </tr>
-                    </thead>
-                    <tbody>
                         <tr>
-                            <td> {{ $s->user }}</td>
-                            <td>{{ $s->date }}</td>
+                            <th colspan="2" id="client">DIRECCIÓN FISCAL: </th>
+                            <td colspan="4">{{ strtoupper($s->address) }}</td>
+                           
+                        </tr>
+                        <tr>
+                            <td colspan="1" ><p style="text-align: center;">Rif/C.I.:</p></td>
+                            <td colspan="1" >
+                                {{ $s->rif }}</td>
+                            <td colspan="2" ><p style="text-align: center;">Telefono: {{ $s->phone }}</p></td>
+                            <td colspan="2" ><p style="text-align: center;">Email: {{ strtoupper($s->email) }}</p></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </section>
         @endforeach
-        <br>
         <section>
             <div>
                 <table id="facarticulo">
                     <thead>
                         <tr id="fa">
-                            <th>CANT</th>
-                            <th>DESCRIPCION</th>
-                            <th>PRECIO UNIT</th>
-                            <th>PRECIO TOTAL</th>
+                            <th style="width: 10%;">CANT</th>
+                            <th style="width: 60%;">DESCRIPCION</th>
+                            <th style="width: 20%;">PRECIO UNIT</th>
+                            <th style="width: 20%;">PRECIO TOTAL</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($details as $d)
-                            {{-- expr --}}
-                        
+                            
                         <tr>
                             <td>{{ $d->quantity }}</td>
-                            <td>{{ $d->product }}</td>
+                            <td>{{ strtoupper($d->product) }}</td>
                             <td>{{ $d->price }}</td>
-                            
                             <td>{{ $d->quantity*$d->price }}</td>
                         </tr>
                         @endforeach
                     </tbody>
-                    <tfoot>
-                        @foreach ($sale as $s)
-                        <tr>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th>SUBTOTAL</th>
-                            <td>Bs: {{ round($s->total-($s->total*$s->tax),2) }}</td>
-                        </tr>
-                        <tr>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th>IVA</th>
-                            <td>Bs: {{ round($s->total*$s->tax,2) }}</td>
-                        </tr>
-                        <tr>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th>TOTAL</th>
-                            <td>bs: {{ $s->total }}</td>
-                        </tr>
-                        @endforeach
-                    </tfoot>
                 </table>
             </div>
         </section>
+        <section>
+            <div>
+                
+                <table id="total">
+                    
+                    <thead >
+                        @foreach ($sale as $s)
 
-        
-        <br>
-        <br>
+                        <tr>
+                            <th style="width: 50%;"></th>
+                            <th style="width: 18%;"></th>
+                            <td ><strong>SUBTOTAL</strong></td>
+                            <td>Bs: {{ round($s->total-($s->total*$s->tax),2) }}</td>
+                        </tr>
+                        <tr>
+                            <th style="width: 50%;"></th>
+                            <th style="width: 18%;"></th>
+                            <td><strong>IVA</strong></td>
+                            <td>Bs: {{ round($s->total*$s->tax,2) }}</td>
+                        </tr>
+                        <tr>
+                            <th style="width: 50%;">Recibido por: ____________________________</th>
+                            <th style="width: 18%;"></th>
+                            <td ><strong>TOTAL</strong></td>
+                            <td>Bs: {{ $s->total }}</td>
+                        </tr>
+                        @endforeach
+                    </thead>
+
+                </table>
+                <div>
+                </div>
+            </div>
+        </section>
 
         <footer>
             <div id="gracias">
-                <p><b>Gracias por su compra!</b></p>
+                <p><b>Observaciones:</b></p>
             </div>
         </footer>
     </body>

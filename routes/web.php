@@ -21,6 +21,12 @@ Route::group(['middleware' =>['auth']], function()
 {
 	Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 
+	Route::get('welcome', function () {
+    return view('welcome');
+	});
+	route::get('/dashboard', 'DashboardController');
+
+
 	Route::group(['middleware' =>['storer']], function()
 	{
 		Route::get('/home', 'HomeController@index')->name('home');
@@ -73,7 +79,8 @@ Route::group(['middleware' =>['auth']], function()
 		route::put('/sale/desactive', 'SaleController@desactive');
 		route::get('/sale/getHeader', 'SaleController@getHeader');
 		route::get('/sale/getDetail', 'SaleController@getDetail'); 
-		route::get('/sale/pdf/{id}', 'SaleController@pdf')->name('venta_pdf'); 
+		route::get('/sale/pdf/{id}', 'SaleController@pdf')->name('venta_pdf');
+		route::get('/sale/pdfw/{id}', 'SaleController@pdfw')->name('venta'); 
 
 		route::get('/product/listProductSale', 'ProductController@listProductSale');
 		route::get('/product/productSearchSale', 'ProductController@productSearchSale');
