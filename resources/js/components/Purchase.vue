@@ -22,7 +22,7 @@
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <select class="form-control col-md-3" v-model="criterion">
-                                          <option value="voucher">Tipo de Comprobante</option>
+                                          <option value="voucher">Tipo de Documento</option>
                                           <option value="voucher_num">numero de comprobante</option>
                                           <option value="date">Fecha-hora</option>
                                         </select>
@@ -122,15 +122,6 @@
                                             <option value="bill">Factura</option>
                                             <option value="credit">Ticket</option>
                                         </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div v-show="errorSmsP" class="form-group row div-error">
-                                        <div class="text-center text-error">
-                                            <div v-for="error in errorSmsListP" :key="error" v-text="error">
-                                                
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -728,7 +719,17 @@
                 if (!this.tax) this.errorSmsListP.push("ingrese un impuesto valido");
 
                 if (this.errorSmsListP.length) this.errorSmsP = 1;
-                return this.errorSmsP;
+                /*console.log(this.errorSmsListP);*/
+                
+                Swal.fire({
+                    confirmButtonText: 'Aceptar!',
+                    confirmButtonClass: 'btn btn-danger',
+                    confirmButtonColor: '#3085d6',
+                    html: `${this.errorSmsListP.map( er =>`<br><br>${er}`)}`,
+                    showCancelButton: false
+                });
+                return this.errorSms;
+
             },
            
             showDetail(){

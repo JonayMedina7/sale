@@ -178,13 +178,6 @@
 								
                                     </div>
                                 </div>
-                                <div v-show="errorSms" class="form-group row div-error">
-                                    <div class="text-center text-error">
-                                        <div v-for="error in errorSmsList" :key="error" v-text="error">
-                                            
-                                        </div>
-                                    </div>
-                                </div>
                                 
                             </form>
                         </div>
@@ -266,7 +259,7 @@
                 titleModal : '',
                 actionType : 0,
                 errorSms : 0,
-                errorSmsList : [],
+                errorSmsListU : [],
                 pagination : {
                     'total' : 0,
                     'current_page' : 0,
@@ -400,23 +393,30 @@
             },
             validateClient(){
                 this.errorSms=0;
-                this.errorSmsList =[];
+                this.errorSmsListU =[];
 
                 
 
-                if (!this.name) this.errorSmsList.push("Por favor insertar Nombre y Apellido");
+                if (!this.name) this.errorSmsListU.push("Por favor insertar Nombre y Apellido");
 
-                if (!this.user) this.errorSmsList.push("Por favor insertar Nombre de usuario valido");
+                if (!this.user) this.errorSmsListU.push("Por favor insertar Nombre de usuario valido");
 
-                if (!this.password) this.errorSmsList.push("Por favor ingresar password para el Usuario");
+                if (!this.password) this.errorSmsListU.push("Por favor ingresar password para el Usuario");
 
-                if (!this.type) this.errorSmsList.push("Seleccione el tipo de Cliente: J, G, V 'o' Cedula");
+                if (!this.type) this.errorSmsListU.push("Seleccione el tipo de Cliente: J, G, V 'o' Cedula");
 
-                if (!this.rif) this.errorSmsList.push("El Rif del cliente debe ser nuemro y no puede estar vacio");
+                if (!this.rif) this.errorSmsListU.push("El Rif del cliente debe ser nuemro y no puede estar vacio");
 
-                if (this.role_id ==0 ) this.errorSmsList.push("Por favor seleccione un 'Rol' para el Usuario");
+                if (this.role_id ==0 ) this.errorSmsListU.push("Por favor seleccione un 'Rol' para el Usuario");
 
-                if (this.errorSmsList.length) this.errorSms = 1;
+                if (this.errorSmsListU.length) this.errorSms = 1;
+                Swal.fire({
+                    confirmButtonText: 'Aceptar!',
+                    confirmButtonClass: 'btn btn-danger',
+                    confirmButtonColor: '#3085d6',
+                    html: `${this.errorSmsListU.map( er =>`<br><br>${er}`)}`,
+                    showCancelButton: false
+                });
                 return this.errorSms;
             },
             desactiveClient(){

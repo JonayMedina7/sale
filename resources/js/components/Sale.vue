@@ -129,15 +129,6 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div v-show="errorSmsS" class="form-group row div-error">
-                                        <div class="text-center text-error">
-                                            <div v-for="error in errorSmsListS" :key="error" v-text="error">
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Serie Comprobante</label>
@@ -788,7 +779,14 @@
 
 
                 if (me.errorSmsListS.length) me.errorSmsS = 1;
-                return me.errorSmsS;
+                Swal.fire({
+                    confirmButtonText: 'Aceptar!',
+                    confirmButtonClass: 'btn btn-danger',
+                    confirmButtonColor: '#3085d6',
+                    html: `${this.errorSmsListS.map( er =>`<br><br>${er}`)}`,
+                    showCancelButton: false
+                });
+                return this.errorSms;
             },
            
             showDetail(){

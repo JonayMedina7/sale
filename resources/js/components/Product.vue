@@ -38,7 +38,7 @@
                                     <th>Código</th>
                                     <th>Nombre</th>
                                     <th>Categoría</th>
-                                    <th>Precio Venta</th>
+                                    <th>Precio Compra</th>
                                     <th>Stock</th>
                                     <th>Descripción</th>
                                     <th>Estado</th>
@@ -60,7 +60,7 @@
                                     <td v-text="product.code"></td>
                                     <td v-text="product.name"></td>
                                     <td v-text="product.category_name"></td>
-                                    <td v-text="product.price_sell"></td>
+                                    <td v-text="product.price_buy"></td>
                                     <td v-text="product.stock"></td>
                                     <td v-text="product.description"></td> 
 
@@ -131,9 +131,9 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="price_sell">Precio de Venta</label>
+                                    <label class="col-md-3 form-control-label" for="price_buy">Precio de Compra</label>
                                     <div class="col-md-9">
-                                        <input type="number" v-model="price_sell" class="form-control" placeholder="">
+                                        <input type="number" v-model="price_buy" class="form-control" placeholder="">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -147,14 +147,6 @@
                                     <label class="col-md-3 form-control-label" for="description">Descripción</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="description" class="form-control" placeholder="Ingrese descripción">
-                                    </div>
-                                </div>
-                                
-                                <div v-show="errorProduct" class="form-group row div-error">
-                                    <div class="text-center text-error">
-                                        <div v-for="error in errorSmsProduct" :key="error" v-text="error">
-                                            
-                                        </div>
                                     </div>
                                 </div>
                                 
@@ -221,7 +213,7 @@
                 category_id : 0,
                 code : '',
                 name : '',
-                price_sell : 0,
+                price_buy : 0,
                 stock: 0,
                 description : '',
                 condition : '',
@@ -330,7 +322,7 @@
                     'code':this.code,
                     'name': this.name,
                     'stock': this.stock,
-                    'price_sell': this.price_sell,
+                    'price_buy': this.price_buy,
                     'description': this.description
                     
                 }).then(function(response) {
@@ -354,7 +346,7 @@
                     'code':this.code,
                     'name': this.name,
                     'stock': this.stock,
-                    'price_sell': this.price_sell,
+                    'price_buy': this.price_buy,
                     'description': this.description
                 }).then(function (response){
                     me.closeModal();
@@ -369,13 +361,20 @@
 
                 if (this.category_id ==0) this.errorSmsProduct.push("Selecione una Categoria");
 
-                if (!this.name) this.errorSmsProduct.push("el name del producto no puede estar vacio");
+                if (!this.name) this.errorSmsProduct.push("El Nombre del producto no puede estar vacio");
 
-                if (!this.stock) this.errorSmsProduct.push("el Stock del producto debe ser un Numero y no puede estar vacio");
+                if (!this.stock) this.errorSmsProduct.push(" Stock del producto debe ser un Numero y no puede estar vacio");
 
-                if (!this.price_sell) this.errorSmsProduct.push("el Precio de Venta del producto debe ser un Numero y no puede estar vacio");
+                if (!this.price_buy) this.errorSmsProduct.push("Precio de Compra del producto debe ser un Numero y no puede estar vacio");
 
                 if (this.errorSmsProduct.length) this.errorProduct = 1;
+                Swal.fire({
+                    confirmButtonText: 'Aceptar!',
+                    confirmButtonClass: 'btn btn-danger',
+                    confirmButtonColor: '#3085d6',
+                    html: `${this.errorSmsProduct.map( er =>`<br><br>${er}`)}`,
+                    showCancelButton: false
+                });
                 return this.errorProduct;
             },
             desactiveProduct(){
@@ -410,7 +409,7 @@
                 this.category_id= 0;
                 this.category_name='';
                 this.code=0;
-                this.price_sell=0;
+                this.price_buy=0;
                 this.stock=0;
                 this.errorProduct=0;
                 this.titleModal= '';
@@ -430,7 +429,7 @@
                                 this.category_name='';
                                 this.code=0;
                                 this.name         = '';
-                                this.price_sell=0;
+                                this.price_buy=0;
                                 this.stock=0;
                                 this.description    = '';
                                 this.actionType     = 1;
@@ -445,7 +444,7 @@
                                 this.category_name=data['category_name'];
                                 this.code         = data['code'];
                                 this.name         = data['name'];
-                                this.price_sell   = data['price_sell'];
+                                this.price_buy   = data['price_buy'];
                                 this.stock        = data['stock'];
                                 this.description  = data['description'];
                                 this.actionType   = 2;

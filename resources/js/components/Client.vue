@@ -161,14 +161,6 @@
                                     </div>
                                 </div>
                                 
-                                <div v-show="errorSms" class="form-group row div-error">
-                                    <div class="text-center text-error">
-                                        <div v-for="error in errorSmsList" :key="error" v-text="error">
-                                            
-                                        </div>
-                                    </div>
-                                </div>
-                                
                             </form>
                         </div>
                         <div class="modal-footer">
@@ -365,15 +357,22 @@
 
                 
 
-                if (!this.name) this.errorSmsList.push("el name del producto no puede estar vacio");
+                if (!this.name) this.errorSmsList.push("El Nombre del producto no puede estar vacio");
 
-                if (!this.email) this.errorSmsList.push("el Correo Eléctronico del Cliente no puede estar vacio");
+                if (!this.email) this.errorSmsList.push("El Correo Eléctronico del Cliente no puede estar vacio");
 
                 if (!this.type) this.errorSmsList.push("Seleccione el tipo de Cliente: J, G, V, Cedula")
 
                 if (!this.rif) this.errorSmsList.push("El Rif del cliente debe ser nuemro y no puede estar vacio");
 
                 if (this.errorSmsList.length) this.errorSms = 1;
+                Swal.fire({
+                    confirmButtonText: 'Aceptar!',
+                    confirmButtonClass: 'btn btn-danger',
+                    confirmButtonColor: '#3085d6',
+                    html: `${this.errorSmsList.map( er =>`<br><br>${er}`)}`,
+                    showCancelButton: false
+                });
                 return this.errorSms;
             },
             desactiveClient(){

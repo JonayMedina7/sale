@@ -1983,14 +1983,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     var _ref;
@@ -2115,11 +2107,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     validateClient: function validateClient() {
       this.errorSms = 0;
       this.errorSmsList = [];
-      if (!this.name) this.errorSmsList.push("el name del producto no puede estar vacio");
-      if (!this.email) this.errorSmsList.push("el Correo Eléctronico del Cliente no puede estar vacio");
+      if (!this.name) this.errorSmsList.push("El Nombre del producto no puede estar vacio");
+      if (!this.email) this.errorSmsList.push("El Correo Eléctronico del Cliente no puede estar vacio");
       if (!this.type) this.errorSmsList.push("Seleccione el tipo de Cliente: J, G, V, Cedula");
       if (!this.rif) this.errorSmsList.push("El Rif del cliente debe ser nuemro y no puede estar vacio");
       if (this.errorSmsList.length) this.errorSms = 1;
+      Swal.fire({
+        confirmButtonText: 'Aceptar!',
+        confirmButtonClass: 'btn btn-danger',
+        confirmButtonColor: '#3085d6',
+        html: "".concat(this.errorSmsList.map(function (er) {
+          return "<br><br>".concat(er);
+        })),
+        showCancelButton: false
+      });
       return this.errorSms;
     },
     desactiveClient: function desactiveClient() {
@@ -3370,14 +3371,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3385,7 +3378,7 @@ __webpack_require__.r(__webpack_exports__);
       category_id: 0,
       code: '',
       name: '',
-      price_sell: 0,
+      price_buy: 0,
       stock: 0,
       description: '',
       condition: '',
@@ -3490,7 +3483,7 @@ __webpack_require__.r(__webpack_exports__);
         'code': this.code,
         'name': this.name,
         'stock': this.stock,
-        'price_sell': this.price_sell,
+        'price_buy': this.price_buy,
         'description': this.description
       }).then(function (response) {
         me.closeModal();
@@ -3512,7 +3505,7 @@ __webpack_require__.r(__webpack_exports__);
         'code': this.code,
         'name': this.name,
         'stock': this.stock,
-        'price_sell': this.price_sell,
+        'price_buy': this.price_buy,
         'description': this.description
       }).then(function (response) {
         me.closeModal();
@@ -3525,10 +3518,19 @@ __webpack_require__.r(__webpack_exports__);
       this.errorProduct = 0;
       this.errorSmsProduct = [];
       if (this.category_id == 0) this.errorSmsProduct.push("Selecione una Categoria");
-      if (!this.name) this.errorSmsProduct.push("el name del producto no puede estar vacio");
-      if (!this.stock) this.errorSmsProduct.push("el Stock del producto debe ser un Numero y no puede estar vacio");
-      if (!this.price_sell) this.errorSmsProduct.push("el Precio de Venta del producto debe ser un Numero y no puede estar vacio");
+      if (!this.name) this.errorSmsProduct.push("El Nombre del producto no puede estar vacio");
+      if (!this.stock) this.errorSmsProduct.push(" Stock del producto debe ser un Numero y no puede estar vacio");
+      if (!this.price_buy) this.errorSmsProduct.push("Precio de Compra del producto debe ser un Numero y no puede estar vacio");
       if (this.errorSmsProduct.length) this.errorProduct = 1;
+      Swal.fire({
+        confirmButtonText: 'Aceptar!',
+        confirmButtonClass: 'btn btn-danger',
+        confirmButtonColor: '#3085d6',
+        html: "".concat(this.errorSmsProduct.map(function (er) {
+          return "<br><br>".concat(er);
+        })),
+        showCancelButton: false
+      });
       return this.errorProduct;
     },
     desactiveProduct: function desactiveProduct() {
@@ -3559,7 +3561,7 @@ __webpack_require__.r(__webpack_exports__);
       this.category_id = 0;
       this.category_name = '';
       this.code = 0;
-      this.price_sell = 0;
+      this.price_buy = 0;
       this.stock = 0;
       this.errorProduct = 0;
       this.titleModal = '';
@@ -3581,7 +3583,7 @@ __webpack_require__.r(__webpack_exports__);
                   this.category_name = '';
                   this.code = 0;
                   this.name = '';
-                  this.price_sell = 0;
+                  this.price_buy = 0;
                   this.stock = 0;
                   this.description = '';
                   this.actionType = 1;
@@ -3597,7 +3599,7 @@ __webpack_require__.r(__webpack_exports__);
                   this.category_name = data['category_name'];
                   this.code = data['code'];
                   this.name = data['name'];
-                  this.price_sell = data['price_sell'];
+                  this.price_buy = data['price_buy'];
                   this.stock = data['stock'];
                   this.description = data['description'];
                   this.actionType = 2;
@@ -3643,14 +3645,6 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -4010,6 +4004,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (!this.type) this.errorSmsList.push("Seleccione el tipo de Cliente: J, G, V, Cedula");
       if (!this.rif) this.errorSmsList.push("El Rif del cliente debe ser nuemro y no puede estar vacio");
       if (this.errorSmsList.length) this.errorSms = 1;
+      Swal.fire({
+        confirmButtonText: 'Aceptar!',
+        confirmButtonClass: 'btn btn-danger',
+        confirmButtonColor: '#3085d6',
+        html: "".concat(this.errorSmsListP.map(function (er) {
+          return "<br><br>".concat(er);
+        })),
+        showCancelButton: false
+      });
       return this.errorSms;
     },
     desactiveClient: function desactiveClient() {
@@ -4132,15 +4135,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1__);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -4822,7 +4816,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (this.arrayDetail.length <= 0) this.errorSmsListP.push("Por favor ingrese productos a la compra");
       if (!this.tax) this.errorSmsListP.push("ingrese un impuesto valido");
       if (this.errorSmsListP.length) this.errorSmsP = 1;
-      return this.errorSmsP;
+      /*console.log(this.errorSmsListP);*/
+
+      Swal.fire({
+        confirmButtonText: 'Aceptar!',
+        confirmButtonClass: 'btn btn-danger',
+        confirmButtonColor: '#3085d6',
+        html: "".concat(this.errorSmsListP.map(function (er) {
+          return "<br><br>".concat(er);
+        })),
+        showCancelButton: false
+      });
+      return this.errorSms;
     },
     showDetail: function showDetail() {
       var me = this;
@@ -5067,15 +5072,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1__);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -5816,7 +5812,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (!me.tax) me.errorSmsListS.push("ingrese un impuesto valido");
       if (me.arrayDetail.length <= 0) me.errorSmsListS.push("Ingrese productos");
       if (me.errorSmsListS.length) me.errorSmsS = 1;
-      return me.errorSmsS;
+      Swal.fire({
+        confirmButtonText: 'Aceptar!',
+        confirmButtonClass: 'btn btn-danger',
+        confirmButtonColor: '#3085d6',
+        html: "".concat(this.errorSmsListS.map(function (er) {
+          return "<br><br>".concat(er);
+        })),
+        showCancelButton: false
+      });
+      return this.errorSms;
     },
     showDetail: function showDetail() {
       var me = this;
@@ -6129,13 +6134,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     var _ref;
@@ -6153,7 +6151,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       user: '',
       password: '',
       role_id: 0
-    }, _defineProperty(_ref, "condition", 0), _defineProperty(_ref, "type", ''), _defineProperty(_ref, "arrayClient", []), _defineProperty(_ref, "arrayRole", []), _defineProperty(_ref, "modal1", 0), _defineProperty(_ref, "modal", 0), _defineProperty(_ref, "titleModal", ''), _defineProperty(_ref, "actionType", 0), _defineProperty(_ref, "errorSms", 0), _defineProperty(_ref, "errorSmsList", []), _defineProperty(_ref, "pagination", {
+    }, _defineProperty(_ref, "condition", 0), _defineProperty(_ref, "type", ''), _defineProperty(_ref, "arrayClient", []), _defineProperty(_ref, "arrayRole", []), _defineProperty(_ref, "modal1", 0), _defineProperty(_ref, "modal", 0), _defineProperty(_ref, "titleModal", ''), _defineProperty(_ref, "actionType", 0), _defineProperty(_ref, "errorSms", 0), _defineProperty(_ref, "errorSmsListU", []), _defineProperty(_ref, "pagination", {
       'total': 0,
       'current_page': 0,
       'per_page': 0,
@@ -6277,14 +6275,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     validateClient: function validateClient() {
       this.errorSms = 0;
-      this.errorSmsList = [];
-      if (!this.name) this.errorSmsList.push("Por favor insertar Nombre y Apellido");
-      if (!this.user) this.errorSmsList.push("Por favor insertar Nombre de usuario valido");
-      if (!this.password) this.errorSmsList.push("Por favor ingresar password para el Usuario");
-      if (!this.type) this.errorSmsList.push("Seleccione el tipo de Cliente: J, G, V 'o' Cedula");
-      if (!this.rif) this.errorSmsList.push("El Rif del cliente debe ser nuemro y no puede estar vacio");
-      if (this.role_id == 0) this.errorSmsList.push("Por favor seleccione un 'Rol' para el Usuario");
-      if (this.errorSmsList.length) this.errorSms = 1;
+      this.errorSmsListU = [];
+      if (!this.name) this.errorSmsListU.push("Por favor insertar Nombre y Apellido");
+      if (!this.user) this.errorSmsListU.push("Por favor insertar Nombre de usuario valido");
+      if (!this.password) this.errorSmsListU.push("Por favor ingresar password para el Usuario");
+      if (!this.type) this.errorSmsListU.push("Seleccione el tipo de Cliente: J, G, V 'o' Cedula");
+      if (!this.rif) this.errorSmsListU.push("El Rif del cliente debe ser nuemro y no puede estar vacio");
+      if (this.role_id == 0) this.errorSmsListU.push("Por favor seleccione un 'Rol' para el Usuario");
+      if (this.errorSmsListU.length) this.errorSms = 1;
+      Swal.fire({
+        confirmButtonText: 'Aceptar!',
+        confirmButtonClass: 'btn btn-danger',
+        confirmButtonColor: '#3085d6',
+        html: "".concat(this.errorSmsListU.map(function (er) {
+          return "<br><br>".concat(er);
+        })),
+        showCancelButton: false
+      });
       return this.errorSms;
     },
     desactiveClient: function desactiveClient() {
@@ -54064,35 +54071,7 @@ var render = function() {
                           ]
                         )
                       ])
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        directives: [
-                          {
-                            name: "show",
-                            rawName: "v-show",
-                            value: _vm.errorSms,
-                            expression: "errorSms"
-                          }
-                        ],
-                        staticClass: "form-group row div-error"
-                      },
-                      [
-                        _c(
-                          "div",
-                          { staticClass: "text-center text-error" },
-                          _vm._l(_vm.errorSmsList, function(error) {
-                            return _c("div", {
-                              key: error,
-                              domProps: { textContent: _vm._s(error) }
-                            })
-                          }),
-                          0
-                        )
-                      ]
-                    )
+                    ])
                   ]
                 )
               ]),
@@ -55922,7 +55901,7 @@ var render = function() {
                     }),
                     _vm._v(" "),
                     _c("td", {
-                      domProps: { textContent: _vm._s(product.price_sell) }
+                      domProps: { textContent: _vm._s(product.price_buy) }
                     }),
                     _vm._v(" "),
                     _c("td", {
@@ -56238,9 +56217,9 @@ var render = function() {
                         "label",
                         {
                           staticClass: "col-md-3 form-control-label",
-                          attrs: { for: "price_sell" }
+                          attrs: { for: "price_buy" }
                         },
-                        [_vm._v("Precio de Venta")]
+                        [_vm._v("Precio de Compra")]
                       ),
                       _vm._v(" "),
                       _c("div", { staticClass: "col-md-9" }, [
@@ -56249,19 +56228,19 @@ var render = function() {
                             {
                               name: "model",
                               rawName: "v-model",
-                              value: _vm.price_sell,
-                              expression: "price_sell"
+                              value: _vm.price_buy,
+                              expression: "price_buy"
                             }
                           ],
                           staticClass: "form-control",
                           attrs: { type: "number", placeholder: "" },
-                          domProps: { value: _vm.price_sell },
+                          domProps: { value: _vm.price_buy },
                           on: {
                             input: function($event) {
                               if ($event.target.composing) {
                                 return
                               }
-                              _vm.price_sell = $event.target.value
+                              _vm.price_buy = $event.target.value
                             }
                           }
                         })
@@ -56339,35 +56318,7 @@ var render = function() {
                           }
                         })
                       ])
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        directives: [
-                          {
-                            name: "show",
-                            rawName: "v-show",
-                            value: _vm.errorProduct,
-                            expression: "errorProduct"
-                          }
-                        ],
-                        staticClass: "form-group row div-error"
-                      },
-                      [
-                        _c(
-                          "div",
-                          { staticClass: "text-center text-error" },
-                          _vm._l(_vm.errorSmsProduct, function(error) {
-                            return _c("div", {
-                              key: error,
-                              domProps: { textContent: _vm._s(error) }
-                            })
-                          }),
-                          0
-                        )
-                      ]
-                    )
+                    ])
                   ]
                 )
               ]),
@@ -56548,7 +56499,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Categoría")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Precio Venta")]),
+        _c("th", [_vm._v("Precio Compra")]),
         _vm._v(" "),
         _c("th", [_vm._v("Stock")]),
         _vm._v(" "),
@@ -57345,35 +57296,7 @@ var render = function() {
                           ]
                         )
                       ])
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        directives: [
-                          {
-                            name: "show",
-                            rawName: "v-show",
-                            value: _vm.errorSms,
-                            expression: "errorSms"
-                          }
-                        ],
-                        staticClass: "form-group row div-error"
-                      },
-                      [
-                        _c(
-                          "div",
-                          { staticClass: "text-center text-error" },
-                          _vm._l(_vm.errorSmsList, function(error) {
-                            return _c("div", {
-                              key: error,
-                              domProps: { textContent: _vm._s(error) }
-                            })
-                          }),
-                          0
-                        )
-                      ]
-                    )
+                    ])
                   ]
                 )
               ]),
@@ -57709,7 +57632,7 @@ var render = function() {
                           },
                           [
                             _c("option", { attrs: { value: "voucher" } }, [
-                              _vm._v("Tipo de Comprobante")
+                              _vm._v("Tipo de Documento")
                             ]),
                             _vm._v(" "),
                             _c("option", { attrs: { value: "voucher_num" } }, [
@@ -58096,36 +58019,6 @@ var render = function() {
                           ]
                         )
                       ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-md-12" }, [
-                      _c(
-                        "div",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: _vm.errorSmsP,
-                              expression: "errorSmsP"
-                            }
-                          ],
-                          staticClass: "form-group row div-error"
-                        },
-                        [
-                          _c(
-                            "div",
-                            { staticClass: "text-center text-error" },
-                            _vm._l(_vm.errorSmsListP, function(error) {
-                              return _c("div", {
-                                key: error,
-                                domProps: { textContent: _vm._s(error) }
-                              })
-                            }),
-                            0
-                          )
-                        ]
-                      )
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-4" }, [
@@ -59973,36 +59866,6 @@ var render = function() {
                           ]
                         )
                       ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-md-12" }, [
-                      _c(
-                        "div",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: _vm.errorSmsS,
-                              expression: "errorSmsS"
-                            }
-                          ],
-                          staticClass: "form-group row div-error"
-                        },
-                        [
-                          _c(
-                            "div",
-                            { staticClass: "text-center text-error" },
-                            _vm._l(_vm.errorSmsListS, function(error) {
-                              return _c("div", {
-                                key: error,
-                                domProps: { textContent: _vm._s(error) }
-                              })
-                            }),
-                            0
-                          )
-                        ]
-                      )
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-4" }, [
@@ -61982,35 +61845,7 @@ var render = function() {
                           2
                         )
                       ])
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        directives: [
-                          {
-                            name: "show",
-                            rawName: "v-show",
-                            value: _vm.errorSms,
-                            expression: "errorSms"
-                          }
-                        ],
-                        staticClass: "form-group row div-error"
-                      },
-                      [
-                        _c(
-                          "div",
-                          { staticClass: "text-center text-error" },
-                          _vm._l(_vm.errorSmsList, function(error) {
-                            return _c("div", {
-                              key: error,
-                              domProps: { textContent: _vm._s(error) }
-                            })
-                          }),
-                          0
-                        )
-                      ]
-                    )
+                    ])
                   ]
                 )
               ]),

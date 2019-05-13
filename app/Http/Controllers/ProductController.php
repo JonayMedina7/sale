@@ -21,11 +21,11 @@ class ProductController extends Controller
         
         if ($search=='') {
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
-            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_sell', 'products.stock', 'products.description', 'products.condition')
+            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition')
             ->orderBy('products.id', 'desc')->paginate(7);
         } else {
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
-            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_sell', 'products.stock', 'products.description', 'products.condition')
+            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition')
             ->where('products.'.$critery, 'like', '%'. $search . '%')
             ->orderBy('products.id', 'desc')->paginate(7);
             
@@ -54,11 +54,11 @@ class ProductController extends Controller
         
         if ($search=='') {
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
-            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_sell', 'products.stock', 'products.description', 'products.condition')
+            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition')
             ->orderBy('products.id', 'desc')->paginate(10);
         } else {
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
-            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_sell', 'products.stock', 'products.description', 'products.condition')
+            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition')
             ->where('products.'.$critery, 'like', '%'. $search . '%')
             ->orderBy('products.id', 'desc')->paginate(10);
             
@@ -72,7 +72,7 @@ class ProductController extends Controller
     {
 
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
-            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_sell', 'products.stock', 'products.description', 'products.condition')
+            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition')
             ->orderBy('products.name', 'desc')->get();
 
             $cont = Product::count();
@@ -90,12 +90,12 @@ class ProductController extends Controller
         
         if ($search=='') {
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
-            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_sell', 'products.stock', 'products.description', 'products.condition')
+            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition')
             ->where('products.stock','>','0')
             ->orderBy('products.id', 'desc')->paginate(10);
         } else {
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
-            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_sell', 'products.stock', 'products.description', 'products.condition')
+            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition')
             ->where('products.'.$critery, 'like', '%'. $search . '%')
             ->where('products.stock','>','0')
             ->orderBy('products.id', 'desc')->paginate(10);
@@ -125,7 +125,7 @@ class ProductController extends Controller
 
         $filter = $request->filter;
         $products = Product::where('code','=', $filter)
-        ->select('id','name', 'stock', 'price_sell')
+        ->select('id','name', 'stock', 'price_buy')
         ->where('stock','>','0')
         ->orderBy('name','asc')->take(1)->get();
 
@@ -148,7 +148,7 @@ class ProductController extends Controller
         $product->code = $request->code;
         $product->name = $request->name;
         $product->stock = $request->stock;
-        $product->price_sell = $request->price_sell;
+        $product->price_buy = $request->price_buy;
 
         $product->description = $request->description;
         $product->condition = '1';
@@ -173,7 +173,7 @@ class ProductController extends Controller
         $product->code = $request->code;
         $product->name = $request->name;
         $product->stock = $request->stock;
-        $product->price_sell = $request->price_sell;
+        $product->price_buy = $request->price_buy;
         
         $product->description = $request->description;
         $product->condition = '1';
