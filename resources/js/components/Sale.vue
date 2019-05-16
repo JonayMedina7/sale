@@ -614,7 +614,7 @@
             },
             pdfSale(id){
                 /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
-                window.open('http://localhost:8080/sistema1/public/sale/pdf/'+ id + ','+ '_blank');
+                window.open('http://localhost/sale/public/sale/pdf/'+ id + ','+ '_blank');
             },
             changePage(page, search, criterion){
                 let me = this;
@@ -745,7 +745,7 @@
                     me.code='';
                     me.arrayDetail=[];
                     /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
-                    window.open('http://localhost:8080/sistema1/public/sale/pdf/'+ response.data.id + ','+ '_blank');
+                    window.open('http://localhost/sale/public/sale/pdf/'+ response.data.id + ','+ '_blank');
 
                 })
                 .catch(function (error) {
