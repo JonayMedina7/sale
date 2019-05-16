@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateRetentionsTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('retentions', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('voucher_num', 10);
+            $table->dateTime('date');
+            $table->decimal('tax', 4, 2);
+            $table->decimal('total', 15, 2);
+            $table->string('status', 20);
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('retentions');
+    }
+}

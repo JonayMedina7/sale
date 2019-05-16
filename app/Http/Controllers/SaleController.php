@@ -12,7 +12,7 @@ class SaleController extends Controller
 {
      public function index(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        /*if (!$request->ajax()) return redirect('/');*/
         $search = $request->search;
         $criterion = $request->criterion;
         
@@ -41,6 +41,16 @@ class SaleController extends Controller
             'sales' => $sales
         ];
     }
+
+    public function saleId ()
+    {
+        /*if (!$request->ajax()) return redirect('/');*/
+
+        
+        $saleid = Sale::select('sales.id as saleid')->orderBy('sales.id', 'desc')->take(1)->get();
+
+        return ['saleid' => $saleid];
+    } 
 
     public function getHeader(Request $request)
     {

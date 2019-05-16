@@ -157,11 +157,11 @@
                 <p> @if ($s->voucher=='bill')
                     FACTURA N°: 
                 @elseif ($s->voucher=='credit')
-                    NOTA DE CRÉDITO N°: 
+                    NOTA DE CRÉDITO N°: 000
                 @elseif ($s->voucher=='note')
-                    VALE N°: 
+                    VALE N°: 00
                 @endif
-                {{ $s->voucher_serie }}-{{ $s->voucher_num }}</p>
+                {{ '000'.$s->voucher_num }}</p>
             </div>
         </header>
         <br>

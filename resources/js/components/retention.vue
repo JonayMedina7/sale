@@ -136,13 +136,9 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div @search="saleId()" class="form-group">
-                                        <div v-for="sale in arrayId" :key="sale.saleid">
-                                        <label>N° Factura</label>
-                                        <input disabled type="text" class="form-control" v-model="voucher_num=sale.saleid+1" placeholder="000x" name="">    
-                                        </div>
-                                        
-                                        
+                                    <div class="form-group">
+                                        <label>Numero Comprobante(*)</label>
+                                        <input type="text" class="form-control" v-model="voucher_num" placeholder="000x" name="">
                                     </div>
                                 </div>
                                 
@@ -383,6 +379,7 @@
                                             <th>Categoría</th>
                                             <th>Precio Venta</th>
                                             <th>Stock</th>
+                                            
                                             <th>Estado</th>
                                         </tr>
                                     </thead>
@@ -447,7 +444,6 @@
                 date : '',
                 tax : 0.16,
                 arraySale : [],
-                arrayId : [],
                 arrayDetail : [],
                 arrayClient : [],
                 total : 0.0,
@@ -464,7 +460,6 @@
                 totalPartial: 0.0,
                 modal1 : 0,
                 modal : 0,
-                envId: 0,
                 titleModal : '',
                 actionType : 0,
                 errorSmsS : 0,
@@ -481,8 +476,7 @@
                 criterion : 'voucher_num',
                 search : '',
                 criteryS: 'name',
-                searchS: '',
-                saleid:0
+                searchS: ''
             }
         },
         components: {
@@ -597,23 +591,6 @@
                 let me=this;
                 me.loading = true;
                 me.client_id = val1.id;
-            },
-            saleId(){
-                let me=this;
-                
-
-                var url= 'sale/saleId';
-                axios.get(url).then(function(response) {
-                    var response = response.data; 
-                    console.log(response);
-
-                    me.arrayId = response.saleid;
-                    /*me.voucher_num = me.arrayId[0]['id'];
-                    console.log(me.voucher_num);*/
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
             },
             productSearch(){
                 let me=this;
@@ -735,7 +712,7 @@
                     return;
                 };
                 let me=this;
-                console.log(this.saleid)
+                
                 axios.post('sale/register', {
 
                     
@@ -747,16 +724,12 @@
                     'voucher_serie': this.voucher_serie,
                     'tax': this.tax,
                     'total': this.total,
-                    'data': this.arrayDetail,
-                    
+                    'data': this.arrayDetail
                     
                 }).then(function(response) {
                     
                     me.list=1;
                     me.listSale(1,'','voucher_num');
-                    me.arrayId=[];
-                    me.saleid=0;
-                    me.saleId();
                     me.client_id=0;
                     me.vouche="bill";
                     me.user_id=0;
@@ -771,7 +744,6 @@
                     me.stock=0;
                     me.code='';
                     me.arrayDetail=[];
-                    
                     /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
                     window.open('http://localhost:8080/sistema1/public/sale/pdf/'+ response.data.id + ','+ '_blank');
 
@@ -795,6 +767,8 @@
                 })
 
                 if (me.client_id==0) me.errorSmsListS.push("Por favor Selecione un cliente");
+
+                if (me.voucher_num == 0) me.errorSmsListS.push("Ingrese un numero de Factura o nota de credito");
 
                 if (me.arrayDetail.length<=0) me.errorSmsListS.push("Por favor ingrese productos a la compra");
 
@@ -883,7 +857,6 @@
         },
         mounted() {
             this.listSale(1,this.search,this.name);
-            this.saleId();
         }
     };
 </script>

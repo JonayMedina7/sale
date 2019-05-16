@@ -5499,6 +5499,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -5518,6 +5521,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       date: '',
       tax: 0.16,
       arraySale: [],
+      arrayId: [],
       arrayDetail: [],
       arrayClient: [],
       total: 0.0,
@@ -5529,14 +5533,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       price: 0,
       quantity: 0,
       dispo: ''
-    }, _defineProperty(_ref, "total", 0.0), _defineProperty(_ref, "totalTax", 0.0), _defineProperty(_ref, "totalPartial", 0.0), _defineProperty(_ref, "modal1", 0), _defineProperty(_ref, "modal", 0), _defineProperty(_ref, "titleModal", ''), _defineProperty(_ref, "actionType", 0), _defineProperty(_ref, "errorSmsS", 0), _defineProperty(_ref, "errorSmsListS", []), _defineProperty(_ref, "pagination", {
+    }, _defineProperty(_ref, "total", 0.0), _defineProperty(_ref, "totalTax", 0.0), _defineProperty(_ref, "totalPartial", 0.0), _defineProperty(_ref, "modal1", 0), _defineProperty(_ref, "modal", 0), _defineProperty(_ref, "envId", 0), _defineProperty(_ref, "titleModal", ''), _defineProperty(_ref, "actionType", 0), _defineProperty(_ref, "errorSmsS", 0), _defineProperty(_ref, "errorSmsListS", []), _defineProperty(_ref, "pagination", {
       'total': 0,
       'current_page': 0,
       'per_page': 0,
       'last_page': 0,
       'from': 0,
       'to': 0
-    }), _defineProperty(_ref, "offset", 3), _defineProperty(_ref, "criterion", 'voucher_num'), _defineProperty(_ref, "search", ''), _defineProperty(_ref, "criteryS", 'name'), _defineProperty(_ref, "searchS", ''), _ref;
+    }), _defineProperty(_ref, "offset", 3), _defineProperty(_ref, "criterion", 'voucher_num'), _defineProperty(_ref, "search", ''), _defineProperty(_ref, "criteryS", 'name'), _defineProperty(_ref, "searchS", ''), _defineProperty(_ref, "saleid", 0), _ref;
   },
   components: {
     vSelect: vue_select__WEBPACK_IMPORTED_MODULE_0___default.a
@@ -5640,6 +5644,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var me = this;
       me.loading = true;
       me.client_id = val1.id;
+    },
+    saleId: function saleId() {
+      var me = this;
+      var url = 'sale/saleId';
+      axios.get(url).then(function (response) {
+        var response = response.data;
+        console.log(response);
+        me.arrayId = response.saleid;
+        /*me.voucher_num = me.arrayId[0]['id'];
+        console.log(me.voucher_num);*/
+      })["catch"](function (error) {
+        console.log(error);
+      });
     },
     productSearch: function productSearch() {
       var me = this;
@@ -5761,6 +5778,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       ;
       var me = this;
+      console.log(this.saleid);
       axios.post('sale/register', {
         'client_id': this.client_id,
         'user_id': this.user_id,
@@ -5774,6 +5792,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }).then(function (response) {
         me.list = 1;
         me.listSale(1, '', 'voucher_num');
+        me.arrayId = [];
+        me.saleid = 0;
+        me.saleId();
         me.client_id = 0;
         me.vouche = "bill";
         me.user_id = 0;
@@ -5807,7 +5828,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
       });
       if (me.client_id == 0) me.errorSmsListS.push("Por favor Selecione un cliente");
-      if (me.voucher_num == 0) me.errorSmsListS.push("Ingrese un numero de Factura o nota de credito");
       if (me.arrayDetail.length <= 0) me.errorSmsListS.push("Por favor ingrese productos a la compra");
       if (!me.tax) me.errorSmsListS.push("ingrese un impuesto valido");
       if (me.arrayDetail.length <= 0) me.errorSmsListS.push("Ingrese productos");
@@ -5882,6 +5902,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   mounted: function mounted() {
     this.listSale(1, this.search, this.name);
+    this.saleId();
   }
 });
 
@@ -56514,7 +56535,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "modal-header" }, [
-      _c("h4", { staticClass: "modal-title" }, [_vm._v("Eliminar Categoría")]),
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Eliminar Producto")]),
       _vm._v(" "),
       _c(
         "button",
@@ -59901,35 +59922,56 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-4" }, [
-                      _c("div", { staticClass: "form-group" }, [
-                        _c("label", [_vm._v("Numero Comprobante(*)")]),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.voucher_num,
-                              expression: "voucher_num"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          attrs: {
-                            type: "text",
-                            placeholder: "000x",
-                            name: ""
-                          },
-                          domProps: { value: _vm.voucher_num },
+                      _c(
+                        "div",
+                        {
+                          staticClass: "form-group",
                           on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.voucher_num = $event.target.value
+                            search: function($event) {
+                              return _vm.saleId()
                             }
                           }
-                        })
-                      ])
+                        },
+                        _vm._l(_vm.arrayId, function(sale) {
+                          return _c("div", { key: sale.saleid }, [
+                            _c("label", [_vm._v("N° Factura")]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: (_vm.voucher_num = sale.saleid + 1),
+                                  expression: "voucher_num=sale.saleid+1"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                disabled: "",
+                                type: "text",
+                                placeholder: "000x",
+                                name: ""
+                              },
+                              domProps: {
+                                value: (_vm.voucher_num = sale.saleid + 1)
+                              },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    (_vm.voucher_num = sale),
+                                    "saleid+1",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        }),
+                        0
+                      )
                     ])
                   ]),
                   _vm._v(" "),

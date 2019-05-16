@@ -74,6 +74,7 @@ Route::group(['middleware' =>['auth']], function()
 		route::get('/client/clientSelect', 'ClientController@clientSelect');
 
 		route::get('/sale', 'SaleController@index');
+		route::get('/sale/saleId', 'SaleController@saleId');
 		route::post('/sale/register', 'SaleController@store');
 		route::put('/sale/update', 'SaleController@update');
 		route::put('/sale/desactive', 'SaleController@desactive');
@@ -150,7 +151,8 @@ Route::group(['middleware' =>['auth']], function()
 		route::put('/sale/update', 'SaleController@update');
 		route::put('/sale/desactive', 'SaleController@desactive');
 		route::get('/sale/getHeader', 'SaleController@getHeader');
-		route::get('/sale/getDetail', 'SaleController@getDetail'); 
+		route::get('/sale/getDetail', 'SaleController@getDetail');
+		route::get('/sale/saleId', 'SaleController@saleId'); 
 
 
 	});
