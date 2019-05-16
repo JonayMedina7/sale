@@ -5680,7 +5680,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     pdfSale: function pdfSale(id) {
       /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
-      window.open('http://localhost:8080/sistema1/public/sale/pdf/' + id + ',' + '_blank');
+      window.open('http://localhost/sale/public/sale/pdf/' + id + ',' + '_blank');
     },
     changePage: function changePage(page, search, criterion) {
       var me = this; // actualiza la pagina 
@@ -5811,7 +5811,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         me.arrayDetail = [];
         /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
 
-        window.open('http://localhost:8080/sistema1/public/sale/pdf/' + response.data.id + ',' + '_blank');
+        window.open('http://localhost/sale/public/sale/pdf/' + response.data.id + ',' + '_blank');
       })["catch"](function (error) {
         console.log(error);
       });
