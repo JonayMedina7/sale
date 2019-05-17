@@ -22,6 +22,7 @@
 
         /*font-family: SourceSansPro;*/
         }
+        html, body { height: 100%; }
         nav{
             height: 80px;
         }
@@ -46,6 +47,12 @@
 
         /*text-align: justify;*/
         }
+        #sidebar {
+
+    height: 68%;
+    width: 100%;
+    border: solid 1px;
+}
 
 
         #inv{
@@ -53,13 +60,12 @@
         float: right;
         margin: 0px;
         padding: 0px;
-        font-size: 15px;
+        font-size: 25px;
         }
 
         table{
         /*position: relative;*/
         clear: left;
-        border: 1px solid #000;
         font-size: 11px;
         }
         /*#fact{
@@ -74,7 +80,8 @@
 
         #facliente{
         width: 100%;
-        border-collapse: collapse;
+        border: 1px solid #000;
+        
         border-spacing: 0;
         text-align: left;
         margin-bottom: 12px;
@@ -135,7 +142,7 @@
 
         #total {
         width: 100%;
-        
+        font-size: 16px;
         border-spacing: 0;
         margin-top: 15px;
         margin-bottom: 12px; 
@@ -152,8 +159,8 @@
         text-align: left;
         padding: 2% 6%; 
         }
-       div#footer { width: 100%; font-size: 13px; height: 30%; position: absolute; bottom: -.15in; text-align: right; border-top: 1px solid black; }
-       div#footer2 { width: 100%; font-size: 12px; height: 25%; position: absolute; bottom: -.15in; text-align: left;  }
+       div#footer { width: 99%; font-size: 13px; height: 25%; position: absolute; bottom: -.15in; text-align: right; border-top: 1px solid black;  }
+       div#footer2 { width: 100%; font-size: 12px; height: 95%; position: absolute; bottom: -.15in; text-align: left;  }
     
 
     </style>
@@ -170,17 +177,17 @@
             </div> 
             <div id="inv" class="clearfix">
                 <p><b> @if ($s->voucher=='bill')
-                    FACTURA N°: 
+                    FACTURA #: 
                 @elseif ($s->voucher=='credit')
                     NOTA DE CRÉDITO N°: 000
                 @elseif ($s->voucher=='note')
                     VALE N°: 00
                 @endif
-<<<<<<< HEAD
+
                 {{ '000'.$s->voucher_num }}</p>
-=======
-                {{ $s->voucher_serie }}-{{ $s->voucher_num }}<b></p>
->>>>>>> 5f8e7667df792db8ed06b362f144a849cd8241ed
+
+               
+
             </div>
         </header>
         <br>
@@ -215,8 +222,8 @@
             </div>
         </section>
         @endforeach
-        <section style="height: 200px !important ; overflow: hidden;">
-            <div style="height: 200px !important ; overflow: hidden;">
+        <section >
+            <div id="sidebar">
                 <table id="facarticulo"  >
                     <thead>
                         <tr style="border-right: 1px; ">
@@ -243,6 +250,7 @@
        
             
                 <div id="footer">
+                    
                     @foreach ($sale as $s)
                     <p>SUBTOTAL Bs:&nbsp;&nbsp;{{ round($s->total-($s->total*$s->tax),2) }}</p>
                     <p>IVA Bs:&nbsp;&nbsp;{{ round($s->total*$s->tax,2) }}</p>
@@ -258,7 +266,7 @@
 
         <footer>
             <div id="footer2">
-                <p>Recibido por: ____________________________</p>
+                <p>Recibido por: ____________________________</p><br>
                 <p><b>Observaciones:</b></p>
             </div>
         </footer>

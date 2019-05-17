@@ -46,7 +46,7 @@ class ClientController extends Controller
         $filter = $request->filter;
         $clients = Client::where('clients.name', 'like', '%'. $filter . '%')
         ->orWhere('clients.rif', 'like', '%'. $filter . '%')
-        ->select('clients.id', 'clients.name', 'clients.type', 'clients.rif')
+        ->select('clients.id', 'clients.name', 'clients.type', 'clients.rif', 'clients.address')
         ->orderBy('clients.name', 'asc')->get();
 
         return ['clients' => $clients];

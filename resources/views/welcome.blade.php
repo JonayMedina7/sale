@@ -80,7 +80,8 @@
 
         #facliente{
         width: 100%;
-        border-collapse: collapse;
+        border: 1px solid #000;
+        
         border-spacing: 0;
         text-align: left;
         margin-bottom: 12px;
@@ -158,8 +159,8 @@
         text-align: left;
         padding: 2% 6%; 
         }
-       div#footer { width: 100%; font-size: 13px; height: 30%; position: absolute; bottom: -.15in; text-align: right; border: solid black; }
-       div#footer2 { width: 100%; font-size: 12px; height: 25%; position: absolute; bottom: -.15in; text-align: left;  }
+       div#footer { width: 99%; font-size: 13px; height: 16%; position: absolute; bottom: -.15in; text-align: right; border-top: 1px solid black;  }
+       div#footer2 { width: 100%; font-size: 12px; height: 15%; position: absolute; bottom: -.15in; text-align: left;  }
     
 
     </style>
@@ -249,7 +250,7 @@
        
             
                 <div id="footer">
-                    <table border="solid">
+                    <table >
                     @foreach ($sale as $s)
                     <p>SUBTOTAL Bs:&nbsp;&nbsp;{{ round($s->total-($s->total*$s->tax),2) }}</p>
                     <p>IVA Bs:&nbsp;&nbsp;{{ round($s->total*$s->tax,2) }}</p>

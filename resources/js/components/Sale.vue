@@ -10,9 +10,9 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> ventas
-                        <button type="button" class="btn btn-secondary" @click="showDetail()">
-                            <i class="icon-plus"></i>&nbsp;Nuevo
+                        <i class="fa fa-align-justify"></i> Ventas&nbsp;&nbsp;
+                        <button type="button" class="btn btn-success" @click="showDetail()">
+                            <i class="icon-plus"></i>&nbsp;Crear Factura
                         </button>
                     </div>
                     <!-- litado registros -->
@@ -21,29 +21,32 @@
                             <div class="form-group row">
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <select class="form-control col-md-3" v-model="criterion">
+                                        <select class="form-control col-md-6" v-model="criterion">
                                           <option value="voucher">Tipo de Comprobante</option>
-                                          <option value="voucher_num">numero de comprobante</option>
+                                          <option value="voucher_num">Numero de comprobante</option>
                                           <option value="date">Fecha-hora</option>
                                         </select>
                                         <input type="text" v-model="search" @keyup.enter="listSale(1,search,criterion)" class="form-control" placeholder="Texto a Buscar">
-                                        <button type="submit" @click="listSale(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
+                                        <button type="submit" @click="listSale(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                     </div>
                                 </div>
                             </div>
+                             <div class="box-header">
+  <center><h3 class="box-title">Listado de Facturas</h3></center>
+  </div>  <br><hr>  
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-sm">
                                     <thead>
                                         <tr>
                                             <th>Opciones</th>
-                                            <th>Nombre Usuario</th>
+                                            
                                             <th>Cliente</th>
                                             <th>Tipo de comprobante</th>
                                             <th>Serie comprobante</th>
                                             <th>Número comprobante</th>
                                             <th>Fecha Hora</th>
                                             <th>Total</th>
-                                            <th>Impuesto</th>
+                                            
                                             <th>Estado</th>
                                         </tr>
                                     </thead>
@@ -64,7 +67,7 @@
                                                 </template>
                                                 
                                             </td>
-                                            <td v-text="sale.user"></td>
+                                           
                                             <td v-text="sale.name"></td>
                                             <td v-if="sale.voucher=='bill'">Factura</td>
                                             <td v-else-if="sale.voucher=='note'">Vale</td>
@@ -73,7 +76,7 @@
                                             <td v-text="sale.voucher_num"></td>
                                             <td v-text="sale.date"></td>
                                             <td v-text="sale.total"></td>
-                                            <td v-text="sale.tax"></td>
+                                           
                                             <td v-text="sale.status"></td>                                     
                                         </tr>
                                         
@@ -103,7 +106,7 @@
                     <template v-else-if="list==0">
                         <div class="card-body">
                             <div class="form-group row border">
-                                <div class="col-md-9">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Cliente(*)</label>
                                         <v-select  @search="clientSelect" label="name" :options="arrayClient"
@@ -114,10 +117,30 @@
                                         </v-select>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <label for="">Impuesto(*)</label>
-                                    <input type="text" class="form-control" v-model="tax" name="" >
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                    <label >Razon Social(*):</label>
+                                    <h4><span v-text="name" style="text-transform: uppercase;"> </span></h4>
                                 </div>
+                            </div>
+                              <div  class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Rif o C.I(*)</label>
+                                        
+                                          <h4><span v-text="type + '-' + rif" style="text-transform: uppercase;"></span> </h4> 
+                                          
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-group">
+                                    <label >Direcciòn(*):</label>
+                                    <h4><span v-text="address" style="text-transform: uppercase;"> </span></h4>
+                                </div>
+                            </div>
+
+
+                               
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Tipo comprobante(*)</label>
@@ -131,8 +154,8 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Serie Comprobante</label>
-                                        <input type="text" class="form-control" v-model="voucher_serie" placeholder="000x" name="">
+                                        <label>Nº de Control</label>
+                                        <input type="text" class="form-control" v-model="voucher_serie" placeholder="0000-0" name="">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -164,14 +187,9 @@
                                         <input type="number" step="any" class="form-control" v-model="price" name="">
                                     </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label>Diponible</label>
-                                        <span class="form-control" v-text="stock"></span>
-                                    </div>
-                                </div>
+                                
 
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Cantidad <span style="color:red;" v-show="quantity==0">(*Ingrese cantidad)</span></label>
                                         <input type="number" class="form-control" v-model="quantity" name="">
@@ -193,7 +211,7 @@
                                                 <th>Precio</th>
                                                 <th>Cantidad</th>
                                                 <th>Disponibilidad</th>
-                                                <th>subTotal</th> 
+                                                <th>SubTotal</th> 
                                             </tr>
                                         </thead>
                                         <tbody v-if="arrayDetail.length">
@@ -242,7 +260,7 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-12">
-                                    <button type="button" class="btn btn-secondary" @click="hideDetail()">Cerrar</button>
+                                    <button type="button" class="btn btn-danger" @click="hideDetail()">Cerrar</button>
                                     <button type="button" class="btn btn-primary" @click="registerSale()">Registrar Venta</button>
                                 </div>
                             </div>
@@ -440,6 +458,10 @@
                 user_id : 0,
                 client_id : 0,
                 client: '',
+                type: '',
+                rif: '',
+                address: '',
+                name:'',
                 user: '',
                 voucher: 'bill',
                 voucher_num : '',
@@ -593,10 +615,15 @@
                 });
             },
             getClientInfo(val1){
-
+                console.log(val1);
                 let me=this;
                 me.loading = true;
                 me.client_id = val1.id;
+                me.type = val1.type;
+                me.rif = val1.rif;
+                me.address = val1.address;
+                me.name = val1.name;
+
             },
             saleId(){
                 let me=this;
