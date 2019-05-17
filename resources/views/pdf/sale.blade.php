@@ -215,11 +215,11 @@
             </div>
         </section>
         @endforeach
-        <section>
-            <div style="height: 40%;">
-                <table id="facarticulo" border="1" >
+        <section style="height: 200px !important ; overflow: hidden;">
+            <div style="height: 200px !important ; overflow: hidden;">
+                <table id="facarticulo"  >
                     <thead>
-                        <tr >
+                        <tr style="border-right: 1px; ">
                             <th style="text-align: center; width: 5%;">CANT</th>
                             <th style="text-align: center; width: 65%;">DESCRIPCION</th>
                             <th style="text-align: right; width: 15%;">PRECIO UNIT</th>
