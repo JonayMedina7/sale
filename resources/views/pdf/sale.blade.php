@@ -48,11 +48,10 @@
         /*text-align: justify;*/
         }
         #sidebar {
-
-    height: 68%;
-    width: 100%;
-    border: solid 1px;
-}
+        height: 48%;
+        width: 100%;
+        border: solid 1px;
+        }
 
 
         #inv{
@@ -60,7 +59,7 @@
         float: right;
         margin: 0px;
         padding: 0px;
-        font-size: 25px;
+        font-size: 15px;
         }
 
         table{
@@ -142,7 +141,7 @@
 
         #total {
         width: 100%;
-        font-size: 16px;
+        
         border-spacing: 0;
         margin-top: 15px;
         margin-bottom: 12px; 
@@ -154,13 +153,56 @@
         font-weight: bold;
         
         }
-        
-        #gracias{
-        text-align: left;
-        padding: 2% 6%; 
+        footer {
+            margin-top: 5px;
+            margin-right: -2px;
         }
-       div#footer { width: 99%; font-size: 13px; height: 25%; position: absolute; bottom: -.15in; text-align: right; border-top: 1px solid black;  }
-       div#footer2 { width: 100%; font-size: 12px; height: 95%; position: absolute; bottom: -.15in; text-align: left;  }
+        #footer {
+            padding: 2px 7px 0 22px;
+            float: right;
+            text-align: right;
+            border: #000 1px solid;
+            font-size: 12px;
+        }
+        #footer2 {
+            float: left;
+            padding: 6px 0px 0 12px;
+            font-size: 13px;
+            height: 15%;
+        }
+        #footer2 p {
+            padding-top: 10px;
+        }
+
+        .border1 {
+        position:absolute;
+        left:60px;
+        top:207px;
+        width:1px;
+        height:48.3%;
+        border-left: 1px solid black;
+        }
+
+        .border2 {
+        position:absolute;
+        left: 682px;
+        top:207px;
+        width:1px;
+        height: 48.3%;
+        border-left: 1px solid black;
+        }
+
+        .border3 {
+        position:absolute;
+        left:802px;
+        top:207px;
+        width:1px;
+        height: 48.3%;
+        border-left: 1px solid black;
+        }
+        
+       /*div#footer { width: 99%; font-size: 13px; height: 16%; position: absolute; bottom: -.15in; text-align: right; border-top: 1px solid black;  }
+       div#footer2 { width: 100%; font-size: 12px; height: 15%; position: absolute; bottom: -.15in; text-align: left;  }*/
     
 
     </style>
@@ -170,6 +212,7 @@
         <nav>
             
         </nav>
+        {{-- Inicio Header --}}
         <header class="clearfix">
          
             <div id="data" class="clearfix">
@@ -177,7 +220,7 @@
             </div> 
             <div id="inv" class="clearfix">
                 <p><b> @if ($s->voucher=='bill')
-                    FACTURA #: 
+                    FACTURA N°: 
                 @elseif ($s->voucher=='credit')
                     NOTA DE CRÉDITO N°: 000
                 @elseif ($s->voucher=='note')
@@ -190,7 +233,9 @@
 
             </div>
         </header>
+        {{-- Fin Header --}}
         <br>
+        {{-- Inicio Seccion info Cliente --}}
         <section>
             <div>
                 <table id="facliente"  >
@@ -221,12 +266,18 @@
                 </table>
             </div>
         </section>
+        {{-- Fin Seccion info Cliente --}}
         @endforeach
+
+        {{-- Inicio Seccion detalles factura --}}
         <section >
             <div id="sidebar">
                 <table id="facarticulo"  >
                     <thead>
                         <tr style="border-right: 1px; ">
+                            <p class="border1"></p>
+                            <p class="border2"></p>
+                            <p class="border3"></p>
                             <th style="text-align: center; width: 5%;">CANT</th>
                             <th style="text-align: center; width: 65%;">DESCRIPCION</th>
                             <th style="text-align: right; width: 15%;">PRECIO UNIT</th>
@@ -247,28 +298,22 @@
                 </table>
             </div>
         </section>
-       
-            
-                <div id="footer">
-                    
+       {{-- Fin Seccion detalles factura --}}
+
+       {{-- Inicio totales factura --}}
+        <footer>
+            <div id="footer" >
                     @foreach ($sale as $s)
                     <p>SUBTOTAL Bs:&nbsp;&nbsp;{{ round($s->total-($s->total*$s->tax),2) }}</p>
                     <p>IVA Bs:&nbsp;&nbsp;{{ round($s->total*$s->tax,2) }}</p>
-                    <p id="total"><b>TOTAL Bs:&nbsp;&nbsp; {{ $s->total }}<b></p>
+                    <p id="total">TOTAL Bs:&nbsp;&nbsp; {{ $s->total }}</p>
                       @endforeach
- 
-</div>
-               
-                
-            
-            
-        
-
-        <footer>
+            </div>
             <div id="footer2">
-                <p>Recibido por: ____________________________</p><br>
+                <p>Recibido por: ____________________________</p>
                 <p><b>Observaciones:</b></p>
             </div>
         </footer>
+        {{-- Fin totales factura --}}
     </body>
 </html>
