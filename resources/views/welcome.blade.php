@@ -128,7 +128,7 @@
         font-size: 11px;
         }
         #facarticulo td{
-             
+             position: absolute;
              font-size: 11px;
         }
 
@@ -155,7 +155,6 @@
         }
         footer {
             margin-top: 5px;
-            margin-right: -2px;
         }
         #footer {
             padding: 2px 7px 0 22px;
@@ -163,12 +162,14 @@
             text-align: right;
             border: #000 1px solid;
             font-size: 12px;
+            width: 20%;
+            
         }
         #footer2 {
             float: left;
             padding: 6px 0px 0 12px;
             font-size: 13px;
-            height: 15%;
+            
         }
         #footer2 p {
             padding-top: 10px;
@@ -176,8 +177,8 @@
 
         .border1 {
         position:absolute;
-        left:60px;
-        top:207px;
+        left:56px;
+        top:228px;
         width:1px;
         height:48.3%;
         border-left: 1px solid black;
@@ -185,8 +186,8 @@
 
         .border2 {
         position:absolute;
-        left: 682px;
-        top:207px;
+        left: 532px;
+        top:228px;
         width:1px;
         height: 48.3%;
         border-left: 1px solid black;
@@ -194,8 +195,8 @@
 
         .border3 {
         position:absolute;
-        left:802px;
-        top:207px;
+        left:629px;
+        top:228px;
         width:1px;
         height: 48.3%;
         border-left: 1px solid black;
@@ -242,8 +243,7 @@
                                          
                         <tr>
                             <td colspan="6"  width="100%" align="center">DATOS DE CLIENTE</td>
-                            
-                   </tr>
+                        </tr>
                    
                     
                         <tr>
@@ -271,6 +271,7 @@
 
         {{-- Inicio Seccion detalles factura --}}
         <section >
+
             <div id="sidebar">
                 <table id="facarticulo"  >
                     <thead>
@@ -295,6 +296,7 @@
                         </tr>
                         @endforeach
                     </tbody>
+                                
                 </table>
             </div>
         </section>
@@ -303,11 +305,12 @@
        {{-- Inicio totales factura --}}
         <footer>
             <div id="footer" >
+
                     @foreach ($sale as $s)
                     <p>SUBTOTAL Bs:&nbsp;&nbsp;{{ round($s->total-($s->total*$s->tax),2) }}</p>
                     <p>IVA Bs:&nbsp;&nbsp;{{ round($s->total*$s->tax,2) }}</p>
                     <p id="total">TOTAL Bs:&nbsp;&nbsp; {{ $s->total }}</p>
-                      @endforeach
+                    @endforeach
             </div>
             <div id="footer2">
                 <p>Recibido por: ____________________________</p>
