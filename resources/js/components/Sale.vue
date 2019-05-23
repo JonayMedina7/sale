@@ -164,8 +164,6 @@
                                         <label>N° Factura</label>
                                         <input disabled type="text" class="form-control" v-model="voucher_num=sale.saleid+1" placeholder="000x" name="">    
                                         </div>
-                                        
-                                        
                                     </div>
                                 </div>
                                 
@@ -615,7 +613,7 @@
                 });
             },
             getClientInfo(val1){
-                console.log(val1);
+                // console.log(val1);
                 let me=this;
                 me.loading = true;
                 me.client_id = val1.id;

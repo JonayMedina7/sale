@@ -22,8 +22,8 @@ Route::group(['middleware' =>['auth']], function()
 	Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 
 	Route::get('welcome', function () {
-    return view('welcome');
-	});
+    return view('welcome');	});
+
 	route::get('/dashboard', 'DashboardController');
 
 
@@ -86,7 +86,7 @@ Route::group(['middleware' =>['auth']], function()
 		route::get('/product/listProductSale', 'ProductController@listProductSale');
 		route::get('/product/productSearchSale', 'ProductController@productSearchSale');
 
-
+		route::get('/retencion', 'RetentionController@index');
 	});
 
 	Route::group(['middleware' =>['admin']], function()
@@ -154,6 +154,7 @@ Route::group(['middleware' =>['auth']], function()
 		route::get('/sale/getDetail', 'SaleController@getDetail');
 		route::get('/sale/saleId', 'SaleController@saleId'); 
 
+		route::get('/retencion', 'RetentionController@index');
 
 	});
 	

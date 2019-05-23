@@ -50,7 +50,16 @@ class SaleController extends Controller
         $saleid = Sale::select('sales.id as saleid')->orderBy('sales.id', 'desc')->take(1)->get();
 
         return ['saleid' => $saleid];
-    } 
+    }
+
+    public function saleSearchRet(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+
+        $filter = $request->filter;
+        $sales = Sale::where('voucher_num','=', $filter)
+        ->select('id','')
+    }
 
     public function getHeader(Request $request)
     {

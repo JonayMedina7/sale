@@ -50,10 +50,14 @@
                   </template>
 
                   <template v-if="menu==11">
-                    <h1> contenido ayuda de sistema</h1>
+                    <ret></ret>
                   </template>
 
                   <template v-if="menu==12">
+                    <h1> contenido ayuda de sistema</h1>
+                  </template>
+
+                  <template v-if="menu==13">
                     <h1> contenido menu acerca del sistema</h1>
                   </template>                    
                 @elseif (Auth::user()->role_id == 2)

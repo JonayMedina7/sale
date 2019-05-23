@@ -11,19 +11,21 @@ class RetentionController extends Controller
 {
      public function index(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        // if (!$request->ajax()) return redirect('/');
         $search = $request->search;
         $criterion = $request->criterion;
         
         if ($search=='') {
-            $retention = Retention::join('sales', 'retentions.ret', '=', 'sales.id')
-            ->join('users', 'retentions.user_id', '=', 'users.id')
-            ->select('retentions.id', 'retentions.voucher', 'retentions.voucher_serie', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.status', 'sales.name', 'sales.type', 'sales.rif', 'users.user')
+            $retentions = Retention::join('sales', 'retentions.id', '=', 'sales.ret_id')
+            ->join('users', 'sales.user_id', '=', 'users.id')
+            ->join('clients', 'sales.client_id', '=', 'clients.id')
+            ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.status', 'sales.user_id', 'sales.client_id', 'sales.voucher', 'sales.voucher_num as sale_num', 'sales.total as totals' , 'users.user', 'clients.name', 'clients.type', 'clients.rif')
             ->orderBy('retentions.id', 'desc')->paginate(10);
         } else {
-            $retentions = retention::join('clients', 'retentions.client_id', '=', 'clients.id')
-            ->join('users', 'retentions.user_id', '=', 'users.id')
-            ->select('retentions.id', 'retentions.voucher', 'retentions.voucher_serial', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
+            $retentions = retention::join('sales', 'retentions.id', '=', 'sales.ret_id')
+            ->join('users', 'sales.user_id', '=', 'users.id')
+            ->join('clients', 'sales.client_id', '=', 'clients.id')
+            ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.status', 'sales.user_id', 'sales.client_id', 'sales.voucher', 'sales.voucher_num as sale_num', 'sales.total as totals' , 'users.user', 'clients.name', 'clients.type', 'clients.rif')
             ->where('retentions.'.$criterion, 'like', '%'. $search . '%')->orderBy('retentions.id', 'desc')->paginate(4);
         }
 

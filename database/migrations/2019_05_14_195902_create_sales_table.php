@@ -21,6 +21,8 @@ class CreateSalesTable extends Migration
             $table->enum('voucher',['bill', 'note', 'credit'])->default('bill');
             $table->string('voucher_serie', 7)->nullable();
             $table->string('voucher_num', 10);
+            $table->bigInteger('ret_id')->unsigned();
+            $table->foreign('ret_id')->references('id')->on('retentions');
             $table->dateTime('date');
             $table->decimal('tax', 4, 2);
             $table->decimal('total', 15, 2);

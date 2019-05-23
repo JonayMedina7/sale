@@ -46,6 +46,8 @@ Vue.component('finds', require('./components/FindSale.vue').default);
 
 Vue.component('dash', require('./components/Dashboard.vue').default);
 
+Vue.component('ret', require('./components/retention.vue').default);
+
 
 
 /**

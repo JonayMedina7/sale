@@ -10,7 +10,7 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> ventas
+                        <i class="fa fa-align-justify"></i> Retenciones
                         <button type="button" class="btn btn-secondary" @click="showDetail()">
                             <i class="icon-plus"></i>&nbsp;Nuevo
                         </button>
@@ -26,8 +26,8 @@
                                           <option value="voucher_num">numero de comprobante</option>
                                           <option value="date">Fecha-hora</option>
                                         </select>
-                                        <input type="text" v-model="search" @keyup.enter="listSale(1,search,criterion)" class="form-control" placeholder="Texto a Buscar">
-                                        <button type="submit" @click="listSale(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
+                                        <input type="text" v-model="search" @keyup.enter="listRetention(1,search,criterion)" class="form-control" placeholder="Texto a Buscar">
+                                        <button type="submit" @click="listRetention(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
                                     </div>
                                 </div>
                             </div>
@@ -36,45 +36,45 @@
                                     <thead>
                                         <tr>
                                             <th>Opciones</th>
-                                            <th>Nombre Usuario</th>
+                                            <th>Numero retención</th>
                                             <th>Cliente</th>
                                             <th>Tipo de comprobante</th>
-                                            <th>Serie comprobante</th>
                                             <th>Número comprobante</th>
                                             <th>Fecha Hora</th>
-                                            <th>Total</th>
+                                            <th>Total Retención</th>
+                                            <th>Total Factura</th>
                                             <th>Impuesto</th>
                                             <th>Estado</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="sale in arraySale" :key="sale.id">
+                                        <tr v-for="ret in arrayRet" :key="ret.id">
                                             <td>
-                                                <button type="button" class="btn btn-success btn-sm" @click="showSale(sale.id)">
+                                                <button type="button" class="btn btn-success btn-sm" @click="showRet(ret.id)">
                                                   <i class="icon-eye"></i>
                                                 </button> &nbsp;
-                                                <button type="button" class="btn btn-info btn-sm" @click="pdfSale(sale.id)">
+                                                <button type="button" class="btn btn-info btn-sm" @click="pdfRet(ret.id)">
                                                   <i class="icon-doc"></i>
                                                 </button> &nbsp;
 
-                                                <template  v-if="sale.status=='Registrado'">
-                                                    <button type="button" @click="desactiveSale(sale.id)" class="btn btn-danger btn-sm" >
+                                                <template  v-if="ret.status=='Registrado'">
+                                                    <button type="button" @click="desactiveRet(ret.id)" class="btn btn-danger btn-sm" >
                                                       <i class="icon-trash"></i>
                                                     </button>
                                                 </template>
                                                 
                                             </td>
-                                            <td v-text="sale.user"></td>
-                                            <td v-text="sale.name"></td>
-                                            <td v-if="sale.voucher=='bill'">Factura</td>
-                                            <td v-else-if="sale.voucher=='note'">Vale</td>
-                                            <td v-else-if="sale.voucher=='credit'">Nota de Credito</td>
-                                            <td v-text="sale.voucher_serie"></td>
-                                            <td v-text="sale.voucher_num"></td>
-                                            <td v-text="sale.date"></td>
-                                            <td v-text="sale.total"></td>
-                                            <td v-text="sale.tax"></td>
-                                            <td v-text="sale.status"></td>                                     
+                                            <td v-text="ret.voucher_num"></td>
+                                            <td v-text="ret.name"></td>
+                                            <td v-if="ret.voucher=='bill'">Factura</td>
+                                            <td v-else-if="ret.voucher=='note'">Vale</td>
+                                            <td v-else-if="ret.voucher=='credit'">Nota de Credito</td>
+                                            <td v-text="ret.sale_num"></td>
+                                            <td v-text="ret.date"></td>
+                                            <td v-text="ret.total"></td>
+                                            <td v-text="ret.totals"></td>
+                                            <td v-text="ret.tax"></td>
+                                            <td v-text="ret.status"></td>                                     
                                         </tr>
                                         
                                     </tbody>
@@ -114,6 +114,27 @@
                                         </v-select>
                                     </div>
                                 </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label >Razon Social(*):</label>
+                                        <h4><span v-text="name" style="text-transform: uppercase;"> </span></h4>
+                                    </div>
+                                </div>
+                                <div  class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Rif o C.I(*)</label>
+                                        
+                                          <h4><span v-text="type + '-' + rif" style="text-transform: uppercase;"></span> </h4> 
+                                          
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-group">
+                                        <label >Direcciòn(*):</label>
+                                        <h4><span v-text="address" style="text-transform: uppercase;"> </span></h4>
+                                    </div>
+                                </div>
                                 <div class="col-md-3">
                                     <label for="">Impuesto(*)</label>
                                     <input type="text" class="form-control" v-model="tax" name="" >
@@ -131,12 +152,6 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Serie Comprobante</label>
-                                        <input type="text" class="form-control" v-model="voucher_serie" placeholder="000x" name="">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
                                         <label>Numero Comprobante(*)</label>
                                         <input type="text" class="form-control" v-model="voucher_num" placeholder="000x" name="">
                                     </div>
@@ -146,11 +161,11 @@
                             <div class="form-group row border">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Articulo <span style="color:red;" v-show="product_id==0">(*Seleccione)</span></label>
+                                        <label>Facturas <span style="color:red;" v-show="product_id==0">(*Seleccione)</span></label>
                                         <div class="form-inline">
-                                            <input type="text" class="form-control" v-model="code" @keyup.enter="productSearch()" placeholder="Ingrese Producto" name="">
-                                            <button @click="openModal()" class="btn btn-primary">...</button>
-                                            <input type="text" readonly class="form-control" v-model="product" name="">
+                                            <input type="text" class="form-control" v-model="code" @keyup.enter="saleSearch()" placeholder="Ingrese numero de Venta" name="">
+                                            <button @click="openModalR()" class="btn btn-primary">...</button>
+                                            <input type="text" readonly class="form-control" v-model="sale" name="">
                                         </div>
                                     </div>
                                 </div>
@@ -198,7 +213,7 @@
                                                     <button @click="deleteDetail(index)" type="button" class="btn btn-danger btn-sm"><i class="icon-close"></i>
                                                     </button>
                                                 </td>
-                                                <td v-text="detail.product"></td>
+                                                <td v-text="detail.sale"></td>
                                                 <td>
                                                     <input v-model="detail.price" type="number" class="form-control" name="">
                                                 </td>
@@ -239,7 +254,7 @@
                             <div class="form-group row">
                                 <div class="col-md-12">
                                     <button type="button" class="btn btn-secondary" @click="hideDetail()">Cerrar</button>
-                                    <button type="button" class="btn btn-primary" @click="registerSale()">Registrar Venta</button>
+                                    <button type="button" class="btn btn-primary" @click="registerRet()">Registrar Venta</button>
                                 </div>
                             </div>
                         </div>
@@ -304,7 +319,7 @@
                                         <tbody v-if="arrayDetail.length">
                                             <tr v-for="detail in arrayDetail" :key="detail.id">
                                                 
-                                                <td v-text="detail.product" ></td>
+                                                <td v-text="detail.sale" ></td>
                                                 <td v-text="detail.price" ></td>
                                                 <td v-text="detail.quantity" ></td>
                                                 <td>
@@ -360,12 +375,12 @@
                             <div class="form-group row">
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <select class="form-control col-md-3" v-model="criteryS">
+                                        <select class="form-control col-md-3" v-model="criteryR">
                                           <option value="name">Nombre</option>
                                           <option value="code">Codigo</option>
                                         </select>
-                                        <input type="text" v-model="search" @keyup.enter="listProductSale(searchS,criteryS)" class="form-control" placeholder="Ingrese datos a Buscar">
-                                        <button type="submit" @click="listProductSale(searchS,criteryS)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
+                                        <input type="text" v-model="search" @keyup.enter="listProductSale(searchR,criteryR)" class="form-control" placeholder="Ingrese datos a Buscar">
+                                        <button type="submit" @click="listProductSale(searchR,criteryR)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
                                     </div>
                                 </div>
                             </div>
@@ -384,19 +399,19 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="product in arrayProduct" :key="product.id">
+                                        <tr v-for="sale in arraySale" :key="sale.id">
                                             <td>
-                                                <button type="button" class="btn btn-success btn-sm" @click="addDetailModal(product)">
+                                                <button type="button" class="btn btn-success btn-sm" @click="addDetailModal(sale)">
                                                   <i class="icon-check"></i>
                                                 </button>
                                             </td>
-                                            <td v-text="product.code"></td>
-                                            <td v-text="product.name"></td>
-                                            <td v-text="product.category_name"></td>
-                                            <td v-text="product.price_sell"></td>
-                                            <td v-text="product.stock"></td>
+                                            <td v-text="sale.code"></td>
+                                            <td v-text="sale.name"></td>
+                                            <td v-text="sale.category_name"></td>
+                                            <td v-text="sale.price_sell"></td>
+                                            <td v-text="sale.stock"></td>
                                             <td>
-                                                <div v-if="product.condition">
+                                                <div v-if="sale.condition">
                                                     <span class="badge badge-success">Activo</span>
                                                 </div>
 
@@ -412,7 +427,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="closeModal()">Cerrar</button>
-                            <button v-if="actionType==1" type="button" class="btn btn-primary" @click="registerSale()">Guardar</button>
+                            <button v-if="actionType==1" type="button" class="btn btn-primary" @click="registerRet()">Guardar</button>
                             <button v-if="actionType==2" type="button" class="btn btn-primary" @click="updatesale()">Actualizar</button>
                         </div>
                     </div>
@@ -432,38 +447,34 @@
     export default {
         data (){
             return {
-                sale_id : 0,
-                product_id : 0,
                 user_id : 0,
                 client_id : 0,
                 client: '',
-                user: '',
-                voucher: 'bill',
                 voucher_num : '',
-                voucher_serie : '',
                 date : '',
-                tax : 0.16,
-                arraySale : [],
-                arrayDetail : [],
-                arrayClient : [],
+                tax : 0,
                 total : 0.0,
+                status: '',
+                sale_num: '',
+                totals: '',
+                user_id: 0,
+                client_id: 0,
+                user: '',
+                name:'',
+                type: '',
+                rif: 0,
+                arrayRet : [],
+                arrayClient : [],
+                arraySale: [],
                 list : 1,
-                arrayProduct : [],
-                stock: 0,
-                code : '',
-                product : '',
-                price : 0,
-                quantity : 0,
-                dispo:'',
-                 total: 0.0,
                 totalTax: 0.0,
                 totalPartial: 0.0,
                 modal1 : 0,
                 modal : 0,
                 titleModal : '',
                 actionType : 0,
-                errorSmsS : 0,
-                errorSmsListS : [],
+                errorSmsR : 0,
+                errorSmsListR : [],
                 pagination : {
                     'total' : 0,
                     'current_page' : 0,
@@ -475,8 +486,8 @@
                 offset : 3,
                 criterion : 'voucher_num',
                 search : '',
-                criteryS: 'name',
-                searchS: ''
+                criteryR: 'name',
+                searchR: ''
             }
         },
         components: {
@@ -519,39 +530,39 @@
 
         },
         methods : {
-            listSale (page,search,criterion){
+            listRetention (page,search,criterion){
                 
                 let me=this;
 
-                var url='sale?page=' + page + '&search=' + search + '&criterion=' + criterion;
+                var url='retencion?page=' + page + '&search=' + search + '&criterion=' + criterion;
                 axios.get(url).then(function(response) {
                     var response = response.data; 
-                     me.arraySale = response.sales.data;
+                     me.arrayRet = response.retentions.data;
                      me.pagination = response.pagination;
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
             },
-            showSale(id){
+            showRet(id){
                 let me=this;
                 me.list=2;
 
                 //obtener los detalles de la compra
-                var arraySaleTemp=[];
+                var arrayRetTemp=[];
 
                 var url= 'sale/getHeader?id='+id;
                 axios.get(url).then(function(response) {
                     var response = response.data; 
-                    me.arraySaleTemp = response.sale;
+                    me.arrayRetTemp = response.sale;
                     
-                    me.client = me.arraySaleTemp[0]['name'];
-                    me.user = me.arraySaleTemp[0]['user'];
-                    me.voucher = me.arraySaleTemp[0]['voucher'];
-                    me.voucher_serie = me.arraySaleTemp[0]['voucher_serie'];
-                    me.voucher_num = me.arraySaleTemp[0]['voucher_num'];
-                    me.tax = me.arraySaleTemp[0]['tax'];
-                    me.total = me.arraySaleTemp[0]['total'];
+                    me.client = me.arrayRetTemp[0]['name'];
+                    me.user = me.arrayRetTemp[0]['user'];
+                    me.voucher = me.arrayRetTemp[0]['voucher'];
+                    me.voucher_serie = me.arrayRetTemp[0]['voucher_serie'];
+                    me.voucher_num = me.arrayRetTemp[0]['voucher_num'];
+                    me.tax = me.arrayRetTemp[0]['tax'];
+                    me.total = me.arrayRetTemp[0]['total'];
 
                 })
                 .catch(function (error) {
@@ -591,20 +602,24 @@
                 let me=this;
                 me.loading = true;
                 me.client_id = val1.id;
+                me.type = val1.type;
+                me.rif = val1.rif;
+                me.address = val1.address;
+                me.name = val1.name;
             },
-            productSearch(){
+            saleSearch(){
                 let me=this;
-                var url='product/productSearchSale?filter=' + me.code;
+                var url='sale/saleSearch?filter=' + me.code;
                 axios.get(url).then(function(response){
                     var response = response.data;
-                    me.arrayProduct = response.products;
-                    if (me.arrayProduct.length>0) {
-                        me.product= me.arrayProduct[0]['name'];
-                        me.product_id= me.arrayProduct[0]['id'];
-                        me.stock= me.arrayProduct[0]['stock'];
-                        me.price= me.arrayProduct[0]['price_sell'];
+                    me.arraySale = response.products;
+                    if (me.arraySale.length>0) {
+                        me.sale= me.arraySale[0]['name'];
+                        me.product_id= me.arraySale[0]['id'];
+                        me.stock= me.arraySale[0]['stock'];
+                        me.price= me.arraySale[0]['price_sell'];
                     }else {
-                        me.product = 'No existe le Producto';
+                        me.sale = 'No existe le Producto';
                         me.product_id =0;
                     }
                 })
@@ -612,7 +627,7 @@
                     console.log(error);
                 });
             },
-            pdfSale(id){
+            pdfRet(id){
                 /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
                 window.open('http://localhost:8080/sistema1/public/sale/pdf/'+ id + ','+ '_blank');
             },
@@ -621,7 +636,7 @@
                 // actualiza la pagina 
                 me.pagination.current_page = page;
                 // envia la peticion para visualizar la data de esa pagina
-                me.listSale(page, search, criterion);
+                me.listRetention(page, search, criterion);
             },
             find(id){
                 var sw=0;
@@ -658,14 +673,14 @@
                         }else{
                             me.arrayDetail.push({
                         product_id: me.product_id,
-                            product: me.product,
+                            sale: me.sale,
                             quantity: me.quantity,
                             price: me.price,
                             stock: me.stock
                             });
                             me.code='';
                             me.product_id=0;
-                            me.product="";
+                            me.sale="";
                             me.quantity=0;
                             me.price=0;
                             me.stock=0; 
@@ -687,7 +702,7 @@
                 }else {
                     me.arrayDetail.push({
                         product_id: data['id'],
-                        product: data['name'],
+                        sale: data['name'],
                         quantity: 1,
                         price: data['price_sell'],
                         stock: data['stock']
@@ -695,19 +710,19 @@
                 }
                 
             },
-            listProductSale (searchS,criteryS){
+            listProductSale (searchR,criteryR){
                 let me=this;
 
-                var url='product/listProductSale?search=' + searchS + '&critery=' + criteryS;
+                var url='sale/listProductSale?search=' + searchR + '&critery=' + criteryR;
                 axios.get(url).then(function(response) {
                     var response = response.data;
-                     me.arrayProduct = response.products.data;
+                     me.arraySale = response.products.data;
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
             },
-            registerSale (){
+            registerRet (){
                 if (this.validateSale()) {
                     return;
                 };
@@ -729,7 +744,7 @@
                 }).then(function(response) {
                     
                     me.list=1;
-                    me.listSale(1,'','voucher_num');
+                    me.listRetention(1,'','voucher_num');
                     me.client_id=0;
                     me.vouche="bill";
                     me.user_id=0;
@@ -738,7 +753,7 @@
                     me.voucher_serie='';
                     me.tax=0.16;
                     me.total=0.0;
-                    me.product='';
+                    me.sale='';
                     me.quantity=0;
                     me.price=0;
                     me.stock=0;
@@ -754,36 +769,36 @@
             },
             validateSale(){
                 let me=this;
-                me.errorSmsS=0;
-                me.errorSmsListS =[];
+                me.errorSmsR=0;
+                me.errorSmsListR =[];
 
                 var prod;
 
                 me.arrayDetail.map(function(x){
                     if (x.quantity>x.stock) {
-                        prod=x.product + " con Stock insuficiente";
-                        me.errorSmsListS.push(prod);
+                        prod=x.sale + " con Stock insuficiente";
+                        me.errorSmsListR.push(prod);
                     }
                 })
 
-                if (me.client_id==0) me.errorSmsListS.push("Por favor Selecione un cliente");
+                if (me.client_id==0) me.errorSmsListR.push("Por favor Selecione un cliente");
 
-                if (me.voucher_num == 0) me.errorSmsListS.push("Ingrese un numero de Factura o nota de credito");
+                if (me.voucher_num == 0) me.errorSmsListR.push("Ingrese un numero de Factura o nota de credito");
 
-                if (me.arrayDetail.length<=0) me.errorSmsListS.push("Por favor ingrese productos a la compra");
+                if (me.arrayDetail.length<=0) me.errorSmsListR.push("Por favor ingrese productos a la compra");
 
-                if (!me.tax) me.errorSmsListS.push("ingrese un impuesto valido");
+                if (!me.tax) me.errorSmsListR.push("ingrese un impuesto valido");
 
-                if (me.arrayDetail.length<=0) me.errorSmsListS.push("Ingrese productos");
+                if (me.arrayDetail.length<=0) me.errorSmsListR.push("Ingrese productos");
 
 
 
-                if (me.errorSmsListS.length) me.errorSmsS = 1;
+                if (me.errorSmsListR.length) me.errorSmsR = 1;
                 Swal.fire({
                     confirmButtonText: 'Aceptar!',
                     confirmButtonClass: 'btn btn-danger',
                     confirmButtonColor: '#3085d6',
-                    html: `${this.errorSmsListS.map( er =>`<br><br>${er}`)}`,
+                    html: `${this.errorSmsListR.map( er =>`<br><br>${er}`)}`,
                     showCancelButton: false
                 });
                 return this.errorSms;
@@ -801,7 +816,7 @@
                 me.voucher_serie='';
                 me.tax=0.16;
                 me.total=0.0;
-                me.product='';
+                me.sale='';
                 me.quantity=0;
                 me.price=0;
                 me.arrayDetail=[];
@@ -813,12 +828,12 @@
             closeModal(){
                 this.modal=0;
             },
-            openModal(){
-                this.arrayProduct=[];
+            openModalR(){
+                this.arraySale=[];
                 this.titleModal    = 'Seleccione uno o mas Productos';
                 this.modal         = 1;
             },
-            desactiveSale(id){
+            desactiveRet(id){
                 Swal.fire({
                     title: 'Esta seguro de anular esta venta?',
                     type: 'warning',
@@ -838,7 +853,7 @@
                         axios.put('sale/desactive', {
                             'id': id
                         }).then(function (response){
-                           me.listSale(1,'','voucher_num');
+                           me.listRetention(1,'','voucher_num');
                             Swal.fire(
                                 'Anulado!',
                                 'La venta ha sido anulada con éxito.',
@@ -856,7 +871,7 @@
             }
         },
         mounted() {
-            this.listSale(1,this.search,this.name);
+            this.listRetention(1,this.search,this.name);
         }
     };
 </script>
