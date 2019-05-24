@@ -54,11 +54,17 @@ class SaleController extends Controller
 
     public function saleSearchRet(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        // if (!$request->ajax()) return redirect('/');
 
         $filter = $request->filter;
+        $id = $request->id;
         $sales = Sale::where('voucher_num','=', $filter)
-        ->select('id','')
+        ->select('id','voucher', 'voucher_num as sale_num', 'total as totals', 'tax')
+        ->where('ret_id','=', '0' )
+        ->where('client_id', '=', $id)
+        ->orderBy('id', 'desc')->take(1)->get();
+
+        return ['sales' => $sales];
     }
 
     public function getHeader(Request $request)

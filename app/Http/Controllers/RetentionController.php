@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Retention;
+use App\Sale;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -45,16 +46,28 @@ class RetentionController extends Controller
 
     public function getHeader(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        // if (!$request->ajax()) return redirect('/');
         $id = $request->id;
         
-        $retention = retention::join('clients', 'retentions.client_id', '=', 'clients.id')
-        ->join('users', 'retentions.user_id', '=', 'users.id')
-        ->select('retentions.id', 'retentions.voucher', 'retentions.voucher_serie', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
-        ->where('retentions.id','=',$id)
-        ->orderBy('retentions.id', 'desc')->take(1)->get();
+        $retention = Retention::join('sales', 'retentions.id', '=', 'sales.ret_id')
+            ->join('users', 'sales.user_id', '=', 'users.id')
+            ->join('clients', 'sales.client_id', '=', 'clients.id')
+            ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.status', 'sales.user_id', 'sales.client_id', 'users.user', 'clients.name', 'clients.type', 'clients.rif')
+            ->where('retentions.id','=',$id)
+            ->orderBy('retentions.id', 'desc')->take(1)->get();
         
         return ['retention' => $retention];
+    }
+
+    public function getDetail(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+        $id = $request->id;
+
+        $details = Sale::select('sales.id', 'sales.voucher', 'sales.voucher_num as sale_num', 'sales.total as totals', 'sales.date as dates')
+                        ->where('sales.ret_id','=',$id)
+                        ->orderBy('sales.id', 'desc')->get();
+        return ['details' => $details];
     }
 
     public function pdf(Request $request, $id)

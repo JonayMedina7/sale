@@ -11,7 +11,7 @@
                 <div class="card">
                     <div class="card-header">
                         <i class="fa fa-align-justify"></i> Retenciones
-                        <button type="button" class="btn btn-secondary" @click="showDetail()">
+                        <button type="button" class="btn btn-secondary" @click="showInsert()">
                             <i class="icon-plus"></i>&nbsp;Nuevo
                         </button>
                     </div>
@@ -68,7 +68,7 @@
                                             <td v-text="ret.name"></td>
                                             <td v-if="ret.voucher=='bill'">Factura</td>
                                             <td v-else-if="ret.voucher=='note'">Vale</td>
-                                            <td v-else-if="ret.voucher=='credit'">Nota de Credito</td>
+                                            <td v-else-if="ret.voucher=='credit'">Nota de Crédito</td>
                                             <td v-text="ret.sale_num"></td>
                                             <td v-text="ret.date"></td>
                                             <td v-text="ret.total"></td>
@@ -84,14 +84,14 @@
                             <nav>
                                 <ul class="pagination">
                                     <li class="page-item" v-if="pagination.current_page > 1">
-                                        <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page -1, search, criterion)">Ant</a>
+                                        <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page -1, search, criterion)">Ant.</a>
                                     </li>
                                     <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActive ? 'active' : '']">
                                         <a class="page-link" href="#" @click.prevent="changePage(page, search, criterion)" v-text="page"></a>
                                     </li>
                                     
                                     <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                        <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page +1, search, criterion)">Sig</a>
+                                        <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page +1, search, criterion)">Sig.</a>
                                     </li>
                                 </ul>
                             </nav>
@@ -106,7 +106,7 @@
                                 <div class="col-md-9">
                                     <div class="form-group">
                                         <label for="">Cliente(*)</label>
-                                        <v-select  @search="clientSelect" label="name" :options="arrayClient"
+                                        <v-select  @search="clientSelectr" label="name" :options="arrayClient"
                                         placeholder="Buscar Cliente"
                                         @input="getClientInfo"
                                         > 
@@ -116,7 +116,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label >Razon Social(*):</label>
+                                        <label >Razón Social(*):</label>
                                         <h4><span v-text="name" style="text-transform: uppercase;"> </span></h4>
                                     </div>
                                 </div>
@@ -131,30 +131,13 @@
                                 </div>
                                 <div class="col-md-9">
                                     <div class="form-group">
-                                        <label >Direcciòn(*):</label>
+                                        <label >Dirección(*):</label>
                                         <h4><span v-text="address" style="text-transform: uppercase;"> </span></h4>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="">Impuesto(*)</label>
                                     <input type="text" class="form-control" v-model="tax" name="" >
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Tipo comprobante(*)</label>
-                                        <select class="form-control" v-model="voucher">
-                                            <option value="0">Seleccione</option>
-                                            <option value="note">Vale</option>
-                                            <option value="bill">Factura</option>
-                                            <option value="credit">Nota de Credito</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Numero Comprobante(*)</label>
-                                        <input type="text" class="form-control" v-model="voucher_num" placeholder="000x" name="">
-                                    </div>
                                 </div>
                                 
                             </div>
@@ -163,29 +146,32 @@
                                     <div class="form-group">
                                         <label>Facturas <span style="color:red;" v-show="product_id==0">(*Seleccione)</span></label>
                                         <div class="form-inline">
-                                            <input type="text" class="form-control" v-model="code" @keyup.enter="saleSearch()" placeholder="Ingrese numero de Venta" name="">
-                                            <button @click="openModalR()" class="btn btn-primary">...</button>
-                                            <input type="text" readonly class="form-control" v-model="sale" name="">
+                                            <input type="text" class="form-control" v-model="sale_num" @keyup.enter="saleSearch()" placeholder="Ingrese numero de Venta" name="">
+                                            <button @click="openModalr()" class="btn btn-primary">...</button>
+                                            <input type="text" readonly class="form-control" v-model="sale_num" name="">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <label>Precio <span style="color:red;" v-show="price==0">(*Ingrese precio)</span></label>
-                                        <input type="number" step="any" class="form-control" v-model="price" name="">
+                                        <label>Numero de Documento</label>
+                                        <input type="number" readonly step="any" class="form-control" v-model="sale_num" name="">
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <label>Diponible</label>
-                                        <span class="form-control" v-text="stock"></span>
+                                        <label>Tipo de Documento</label>
+                                        <span class="form-control" v-if="voucher=='bill'">Factura</span>
+                                            <span class="form-control" v-else-if="voucher=='note'">Vale</span>
+                                            <span class="form-control" v-else-if="voucher=='credit'">Nota de Crédito</span>
+                                        
                                     </div>
                                 </div>
 
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <label>Cantidad <span style="color:red;" v-show="quantity==0">(*Ingrese cantidad)</span></label>
-                                        <input type="number" class="form-control" v-model="quantity" name="">
+                                        <label>Base Imponible</label>
+                                        <input type="number" readonly class="form-control" v-model="tax" name="">
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -207,8 +193,8 @@
                                                 <th>subTotal</th> 
                                             </tr>
                                         </thead>
-                                        <tbody v-if="arrayDetail.length">
-                                            <tr v-for="(detail, index) in arrayDetail" :key="detail.id">
+                                        <tbody v-if="arrayDetailr.length">
+                                            <tr v-for="(detail, index) in arrayDetailr" :key="detail.id">
                                                 <td>
                                                     <button @click="deleteDetail(index)" type="button" class="btn btn-danger btn-sm"><i class="icon-close"></i>
                                                     </button>
@@ -244,7 +230,7 @@
                                         <tbody v-else>
                                             <tr>
                                                 <td >
-                                                    No hay articulos agredados
+                                                    No hay artículos agregados
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -253,8 +239,8 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-12">
-                                    <button type="button" class="btn btn-secondary" @click="hideDetail()">Cerrar</button>
-                                    <button type="button" class="btn btn-primary" @click="registerRet()">Registrar Venta</button>
+                                    <button type="button" class="btn btn-secondary" @click="hideRet()">Cerrar</button>
+                                    <button type="button" class="btn btn-primary" @click="registerRet()">Registrar Retención</button>
                                 </div>
                             </div>
                         </div>
@@ -268,9 +254,18 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="client">Cliente</label>
-                                        <p v-text="client"></p>
+                                        <strong><p class="upper" v-text="name"></p></strong>
+
                                     </div>
                                 </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="client">rif</label>
+                                        <strong><p v-text="type + ': '+ rif"></p></strong>
+
+                                    </div>
+                                </div>
+                                
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="user">Vendedor</label>
@@ -281,25 +276,18 @@
                                     <label for="tax">Impuesto</label>
                                     <p v-text="tax"></p>
                                 </div>
+                                
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Tipo comprobante</label>
-
-                                        <p v-if="voucher=='bill'">Factura</p>
-                                        <p v-else-if="voucher=='note'">Vale</p>
-                                        <p v-else-if="voucher=='credit'">Nota de credito</p>
+                                        <label>Numero de Retención</label>
+                                        <span v-text="voucher_num"></span>
+                                        <span v-text="status"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Serie Comprobante</label>
-                                        <p v-text="voucher_serie"></p>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label>Numero Comprobante</label>
-                                        <p v-text="voucher_num"></p>
+                                        <label>Fecha de Retención</label>
+                                        <p v-text="date"></p>
                                     </div>
                                 </div>
                                 
@@ -310,23 +298,22 @@
                                     <table class="table table-bordered table-striped table-sm">
                                         <thead>
                                             <tr>
-                                                <th>Artículo</th>
-                                                <th>Precio</th>
-                                                <th>Cantidad</th>
-                                                <th>subTotal</th> 
+                                                <th>Tipo de Documento</th>
+                                                <th>Nro.</th>
+                                                <th>Fecha Documento</th>
+                                                <th>Total</th>
+                                                <th>Opciones</th> 
                                             </tr>
                                         </thead>
-                                        <tbody v-if="arrayDetail.length">
-                                            <tr v-for="detail in arrayDetail" :key="detail.id">
+                                        <tbody v-if="arrayDetailr.length">
+                                            <tr v-for="detail in arrayDetailr" :key="detail.id">
                                                 
-                                                <td v-text="detail.sale" ></td>
-                                                <td v-text="detail.price" ></td>
-                                                <td v-text="detail.quantity" ></td>
-                                                <td>
-                                                    {{ detail.price*detail.quantity }}
-                                                </td>
+                                                <td v-text="detail.voucher" ></td>
+                                                <td v-text="detail.sale_num" ></td>
+                                                <td v-text="detail.dates" ></td>
+                                                <td v-text="detail.totals"></td>
                                             </tr>
-                                            <tr style="background-color: #CEECFS;">
+                                            <!-- <tr style="background-color: #CEECFS;">
                                                 <td colspan="3" align="right"><strong>Total Parcial: </strong></td>
                                                 <td>$ {{ totalPartial=(total-totalTax).toFixed(2) }}</td>
                                             </tr>
@@ -337,7 +324,7 @@
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="3" align="right"><strong>Total a Pagar: </strong></td>
                                                 <td>$ {{ total }}</td>
-                                            </tr>
+                                            </tr> -->
                                         </tbody>
                                         <tbody v-else>
                                             <tr>
@@ -351,7 +338,7 @@
                             </div>  
                             <div class="form-group row">
                                 <div class="col-md-12">
-                                    <button type="button" class="btn btn-secondary" @click="hideDetail()">Cerrar</button>
+                                    <button type="button" class="btn btn-secondary" @click="hideRet()">Cerrar</button>
                                 </div>
                             </div>
                         </div>
@@ -449,21 +436,24 @@
             return {
                 user_id : 0,
                 client_id : 0,
+                sale_id: 0,
+                id: 0,
+                ret_id: 0,
                 client: '',
                 voucher_num : '',
                 date : '',
-                tax : 0,
+                dates: '',
+                tax : 0.16,
                 total : 0.0,
                 status: '',
                 sale_num: '',
                 totals: '',
-                user_id: 0,
-                client_id: 0,
                 user: '',
                 name:'',
                 type: '',
                 rif: 0,
                 arrayRet : [],
+                arrayDetailr: [],
                 arrayClient : [],
                 arraySale: [],
                 list : 1,
@@ -522,8 +512,8 @@
             },
             calculateTotal: function(){
                 var result=0.0;
-                for (var i = 0; i <this.arrayDetail.length; i++) {
-                    result = result +(this.arrayDetail[i].price*this.arrayDetail[i].quantity)
+                for (var i = 0; i <this.arrayDetailr.length; i++) {
+                    result = result +(this.arrayDetailr[i].price*this.arrayDetailr[i].quantity)
                 }
                 return result;
             }
@@ -534,7 +524,7 @@
                 
                 let me=this;
 
-                var url='retencion?page=' + page + '&search=' + search + '&criterion=' + criterion;
+                var url='retention?page=' + page + '&search=' + search + '&criterion=' + criterion;
                 axios.get(url).then(function(response) {
                     var response = response.data; 
                      me.arrayRet = response.retentions.data;
@@ -546,86 +536,147 @@
             },
             showRet(id){
                 let me=this;
+
+                // otorga el valor 2 a la variable Lista para abrir la vista 
                 me.list=2;
 
-                //obtener los detalles de la compra
-                var arrayRetTemp=[];
+                var arrayRetTemp = [];
 
-                var url= 'sale/getHeader?id='+id;
+                // obtener los datos de la retencion, el usuario, el cliente mediante el id del cliente
+                var url = 'retention/getHeader?id='+id;
                 axios.get(url).then(function(response) {
-                    var response = response.data; 
-                    me.arrayRetTemp = response.sale;
-                    
-                    me.client = me.arrayRetTemp[0]['name'];
-                    me.user = me.arrayRetTemp[0]['user'];
-                    me.voucher = me.arrayRetTemp[0]['voucher'];
-                    me.voucher_serie = me.arrayRetTemp[0]['voucher_serie'];
+                    var responseR = response.data;
+                    me.arrayRetTemp = responseR.retention;
+
                     me.voucher_num = me.arrayRetTemp[0]['voucher_num'];
+                    me.date = me.arrayRetTemp[0]['date'];
                     me.tax = me.arrayRetTemp[0]['tax'];
                     me.total = me.arrayRetTemp[0]['total'];
-
+                    me.status = me.arrayRetTemp[0]['status'];
+                    me.user_id = me.arrayRetTemp[0]['user_id'];
+                    me.client_id = me.arrayRetTemp[0]['client_id'];
+                    me.user = me.arrayRetTemp[0]['user'];
+                    me.name = me.arrayRetTemp[0]['name'];
+                    me.type = me.arrayRetTemp[0]['type'];
+                    me.rif = me.arrayRetTemp[0]['rif'];
+                    me.address = me.arrayRetTemp[0]['address'];
                 })
-                .catch(function (error) {
+                .catch(function(error) {
                     console.log(error);
                 });
-                
-                // obtener los datos de los detalles de la compra
 
-                var urld= 'sale/getDetail?id='+id;
-                axios.get(urld).then(function(response) {
-                    var response = response.data; 
-                    me.arrayDetail = response.details;
-                    
+                // obtener las faturas asignadas a la retencion seleccionada
+                
+                var urlr = 'retention/getDetail?id='+id;
+                axios.get(urlr).then(function(response) {
+                    var responseD = response.data;
+                    me.arrayDetailr = responseD.details;
                 })
-                .catch(function (error) {
+                .catch(function(error) {
                     console.log(error);
                 });
             },
-            clientSelect(search,loading){
+            showInsert(){
+                let me=this;
+                me.list=0;
+
+                me.date='';
+                me.total=0;
+                me.totals=0;
+                me.client_id=0;
+                me.user_id=0;
+                me.name='';
+                me.type='';
+                me.rif='';
+                me.address='';
+                me.voucher_num=0;
+                me.voucher='bill';
+                me.sale_num=0;
+                me.arrayDetailr=[];
+
+            },
+            clientSelectr(search,loading){
                 let me=this;
                 loading(true)
 
-                var url= 'client/clientSelect?filter='+search;
+                var url='client/clientSelect?filter='+search;
                 axios.get(url).then(function(response) {
-                    var response = response.data; 
-                    /*console.log(response);*/
-
-                    me.arrayClient = response.clients;
+                    var responser = response.data;
+                    me.arrayClient = responser.clients;
                     loading(false)
                 })
-                .catch(function (error) {
+                .catch(function(error) {
                     console.log(error);
                 });
             },
-            getClientInfo(val1){
-
+            getClientInfo(val){
                 let me=this;
-                me.loading = true;
-                me.client_id = val1.id;
-                me.type = val1.type;
-                me.rif = val1.rif;
-                me.address = val1.address;
-                me.name = val1.name;
+                me.loading=true;
+                me.client_id=val.id;
+                me.name=val.name;
+                me.type=val.type;
+                me.rif=val.rif;
+                me.address=val.address;
+
             },
             saleSearch(){
                 let me=this;
-                var url='sale/saleSearch?filter=' + me.code;
+                var url='sale/saleSearchRet?filter='+me.sale_num + '&id='+me.client_id;
                 axios.get(url).then(function(response){
                     var response = response.data;
-                    me.arraySale = response.products;
+                    me.arraySale = response.sales;
+                    console.log(me.arraySale);
+
                     if (me.arraySale.length>0) {
-                        me.sale= me.arraySale[0]['name'];
-                        me.product_id= me.arraySale[0]['id'];
-                        me.stock= me.arraySale[0]['stock'];
-                        me.price= me.arraySale[0]['price_sell'];
-                    }else {
-                        me.sale = 'No existe le Producto';
-                        me.product_id =0;
+                        me.sale_id = me.arraySale[0]['id'];
+                        me.sale_num = me.arraySale[0]['sale_num'];
+                        me.voucher = me.arraySale[0]['voucher'];
+                        me.totals = me.arraySale[0]['totals'];
+                        me.tax = me.arraySale[0]['tax'];
+                    } else {
+                        me.sale_num = 'El nro. factura no existe o no pertenece al cliente';
+                        me.sale_id = 0;
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                        console.log(error);
                 });
+            },
+            addDetail(){
+                let me = this;
+
+                if(me.find(me.sale_id)){
+                    Swal.fire({
+                    type: 'error',
+                    title: 'Error...',
+                    text: 'El Artículo ya se encuentra agregado!',
+                    });
+                }else {
+                    me.arrayDetailr.push({
+                        sale_id: me.sale_id,
+                        sale_num: me.sale_num,
+                        voucher: me.voucher,
+                        totals: me.totals,
+                        tax: me.tax
+                    });
+                    me.sale_id=0;
+                    me.sale_num='';
+                    me.voucher='';
+                    me.totals=0;
+                    me.tax=0.0;
+                }
+            },
+            find(id){
+                var sw=0;
+                for(var i=0; i<this.arrayDetailr.length; i++){
+                    if (this.arrayDetailr[i].sale_id == id) {
+                        sw=true;
+                    }
+                }
+                return sw;
+            }
+            hideRet(){
+                this.list=1;
             },
             pdfRet(id){
                 /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
@@ -636,136 +687,7 @@
                 // actualiza la pagina 
                 me.pagination.current_page = page;
                 // envia la peticion para visualizar la data de esa pagina
-                me.listRetention(page, search, criterion);
-            },
-            find(id){
-                var sw=0;
-                for(var i=0;i<this.arrayDetail.length;i++){
-                    if (this.arrayDetail[i].product_id == id) {
-                        sw=true;
-                    }
-                }
-                return sw;
-            },
-            deleteDetail(index){
-                let me=this;
-                me.arrayDetail.splice(index, 1);
-            },
-            addDetail(){
-                let me = this;
-
-                if ( me.product_id==0 || me.quantity==0 || me.price==0 ) {
-                }else {
-                    if (me.find(me.product_id)) {
-                        Swal.fire({
-                            type: 'error',
-                            title: 'Error...',
-                            text: 'El Artículo ya se encuentra agregado!',
-                            })
-                            /*alert('Ya se encuentra registrado el producto');*/
-                    }else {
-                        if (me.quantity>me.stock) {
-                            Swal.fire({
-                            type: 'error',
-                            title: 'Error...',
-                            text: 'El stock no es suficiente!',
-                            })
-                        }else{
-                            me.arrayDetail.push({
-                        product_id: me.product_id,
-                            sale: me.sale,
-                            quantity: me.quantity,
-                            price: me.price,
-                            stock: me.stock
-                            });
-                            me.code='';
-                            me.product_id=0;
-                            me.sale="";
-                            me.quantity=0;
-                            me.price=0;
-                            me.stock=0; 
-                        }
-                    }
-                } 
-            },
-
-            addDetailModal(data =[]){
-                let me = this;
-
-                if (me.find(data['id'])) {
-                   Swal.fire({
-                        type: 'error',
-                        title: 'Error...',
-                        text: 'El Artículo ya se encuentra agregado!',
-                    })
-                        /*alert('Ya se encuentra registrado el producto');*/
-                }else {
-                    me.arrayDetail.push({
-                        product_id: data['id'],
-                        sale: data['name'],
-                        quantity: 1,
-                        price: data['price_sell'],
-                        stock: data['stock']
-                    });
-                }
-                
-            },
-            listProductSale (searchR,criteryR){
-                let me=this;
-
-                var url='sale/listProductSale?search=' + searchR + '&critery=' + criteryR;
-                axios.get(url).then(function(response) {
-                    var response = response.data;
-                     me.arraySale = response.products.data;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-            },
-            registerRet (){
-                if (this.validateSale()) {
-                    return;
-                };
-                let me=this;
-                
-                axios.post('sale/register', {
-
-                    
-                    'client_id':this.client_id,
-                    'user_id': this.user_id,
-                    'product_id': this.product_id,
-                    'voucher': this.voucher,
-                    'voucher_num': this.voucher_num,
-                    'voucher_serie': this.voucher_serie,
-                    'tax': this.tax,
-                    'total': this.total,
-                    'data': this.arrayDetail
-                    
-                }).then(function(response) {
-                    
-                    me.list=1;
-                    me.listRetention(1,'','voucher_num');
-                    me.client_id=0;
-                    me.vouche="bill";
-                    me.user_id=0;
-                    me.product_id=0;
-                    me.voucher_num='';
-                    me.voucher_serie='';
-                    me.tax=0.16;
-                    me.total=0.0;
-                    me.sale='';
-                    me.quantity=0;
-                    me.price=0;
-                    me.stock=0;
-                    me.code='';
-                    me.arrayDetail=[];
-                    /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
-                    window.open('http://localhost:8080/sistema1/public/sale/pdf/'+ response.data.id + ','+ '_blank');
-
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+                me.listSale(page, search, criterion);
             },
             validateSale(){
                 let me=this;
@@ -774,22 +696,22 @@
 
                 var prod;
 
-                me.arrayDetail.map(function(x){
+                me.arrayDetailr.map(function(x){
                     if (x.quantity>x.stock) {
                         prod=x.sale + " con Stock insuficiente";
                         me.errorSmsListR.push(prod);
                     }
                 })
 
-                if (me.client_id==0) me.errorSmsListR.push("Por favor Selecione un cliente");
+                if (me.client_id==0) me.errorSmsListR.push("Por favor Seleccione un cliente");
 
-                if (me.voucher_num == 0) me.errorSmsListR.push("Ingrese un numero de Factura o nota de credito");
+                if (me.voucher_num == 0) me.errorSmsListR.push("Ingrese un numero de Factura o nota de crédito");
 
-                if (me.arrayDetail.length<=0) me.errorSmsListR.push("Por favor ingrese productos a la compra");
+                if (me.arrayDetailr.length<=0) me.errorSmsListR.push("Por favor ingrese productos a la compra");
 
                 if (!me.tax) me.errorSmsListR.push("ingrese un impuesto valido");
 
-                if (me.arrayDetail.length<=0) me.errorSmsListR.push("Ingrese productos");
+                if (me.arrayDetailr.length<=0) me.errorSmsListR.push("Ingrese productos");
 
 
 
@@ -803,34 +725,12 @@
                 });
                 return this.errorSms;
             },
-           
-            showDetail(){
-                let me=this;
-                me.list=0;
-
-                me.provider_id=0;
-                me.vouche="bill";
-                me.user_id=0;
-                me.product_id=0;
-                me.voucher_num='';
-                me.voucher_serie='';
-                me.tax=0.16;
-                me.total=0.0;
-                me.sale='';
-                me.quantity=0;
-                me.price=0;
-                me.arrayDetail=[];
-
-            },
-            hideDetail(){
-                this.list=1;
-            },
             closeModal(){
                 this.modal=0;
             },
-            openModalR(){
+            openModalr(){
                 this.arraySale=[];
-                this.titleModal    = 'Seleccione uno o mas Productos';
+                this.titleModal    = 'Seleccione una o mas Facturas';
                 this.modal         = 1;
             },
             desactiveRet(id){
@@ -857,7 +757,7 @@
                             Swal.fire(
                                 'Anulado!',
                                 'La venta ha sido anulada con éxito.',
-                                'success'
+                                'Aceptar'
                                 )
                         }) .catch(function (error) {
                             console.log(error);
@@ -892,6 +792,9 @@
         display: flex;
         justify-content: center;
 
+    }
+    .upper{
+        text-transform: uppercase;
     }
     .text-error{
         color: red !important;

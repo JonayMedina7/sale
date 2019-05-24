@@ -31,9 +31,9 @@
                                     </div>
                                 </div>
                             </div>
-                             <div class="box-header">
-  <center><h3 class="box-title">Listado de Facturas</h3></center>
-  </div>  <br><hr>  
+                                <div class="box-header">
+                                    <center><h3 class="box-title">Listado de Facturas</h3></center>
+                                </div>  <br><hr>  
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-sm">
                                     <thead>
@@ -844,8 +844,8 @@
                 let me=this;
                 me.list=0;
 
-                me.provider_id=0;
-                me.vouche="bill";
+                me.client_id=0;
+                me.voucher="bill";
                 me.user_id=0;
                 me.product_id=0;
                 me.voucher_num='';
