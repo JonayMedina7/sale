@@ -139,6 +139,10 @@
                                     <label for="">Impuesto(*)</label>
                                     <input type="text" class="form-control" v-model="tax" name="" >
                                 </div>
+                                <div class="col-md-3">
+                                    <label for=""> % Retenido</label>
+                                    <input type="text" class="form-control" v-model="retention" name="" >
+                                </div>
                                 
                             </div>
                             <div class="form-group row border">
@@ -148,7 +152,7 @@
                                         <div class="form-inline">
                                             <input type="text" class="form-control" v-model="sale_num" @keyup.enter="saleSearch()" placeholder="Ingrese numero de Venta" name="">
                                             <button @click="openModalr()" class="btn btn-primary">...</button>
-                                            <input type="text" readonly class="form-control" v-model="sale_num" name="">
+                                            <input type="text" readonly class="form-control" v-model="sale_num" name="" placeholder="ENTER para buscar">
                                         </div>
                                     </div>
                                 </div>
@@ -189,7 +193,8 @@
                                                 <th>Documento</th>
                                                 <th>Monto Factura</th>
                                                 <th>Impuesto</th>
-                                                <th>subTotal</th> 
+                                                <th>Monto de Impuesto</th>
+                                                <th>Monto Retenido</th>
                                             </tr>
                                         </thead>
                                         <tbody v-if="arrayDetailr.length">
@@ -200,19 +205,19 @@
                                                 </td>
                                                 <td v-text="detail.sale_num"></td>
                                                 <td>
-                                                    <span class="form-control" v-if="voucher=='bill'">Factura</span>
-                                                    <span class="form-control" v-else-if="voucher=='note'">Vale</span>
-                                                    <span class="form-control" v-else-if="voucher=='credit'">Nota de Crédito</span>
+                                                    <span class="form-control" v-if="detail.voucher=='bill'">Factura</span>
+                                                    <span class="form-control" v-else-if="detail.voucher=='note'">Vale</span>
+                                                    <span class="form-control" v-else-if="detail.voucher=='credit'">Nota de Crédito</span>
                                                 </td>
                                                 <td>
                                                     
                                                     <input v-model="detail.totals" type="number"  class="form-control" name="">
                                                 </td>
                                                 <td>
-                                                    <input v-model="detail.tax" type="number"  class="form-control" name="">
+                                                    <input v-model="detail.tax_mount" type="number"  class="form-control" name="">
                                                 </td>
                                                 <td>
-                                                    {{ detail.totals*detail.tax }}
+                                                    {{ detail.tax_mount*retention }}
                                                 </td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
@@ -454,6 +459,7 @@
                 name:'',
                 type: '',
                 rif: 0,
+                retention: '',
                 arrayRet : [],
                 arrayDetailr: [],
                 arrayClient : [],
@@ -553,6 +559,7 @@
                     me.voucher_num = me.arrayRetTemp[0]['voucher_num'];
                     me.date = me.arrayRetTemp[0]['date'];
                     me.tax = me.arrayRetTemp[0]['tax'];
+                    me.tax_mount = me.arrayRetTemp[0]['tax_mount'];
                     me.total = me.arrayRetTemp[0]['total'];
                     me.status = me.arrayRetTemp[0]['status'];
                     me.user_id = me.arrayRetTemp[0]['user_id'];
@@ -593,7 +600,7 @@
                 me.address='';
                 me.voucher_num=0;
                 me.voucher='bill';
-                me.sale_num=0;
+                me.sale_num='';
                 me.arrayDetailr=[];
 
             },
@@ -619,6 +626,7 @@
                 me.type=val.type;
                 me.rif=val.rif;
                 me.address=val.address;
+                me.retention=val.retention;
 
             },
             saleSearch(){

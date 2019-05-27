@@ -6920,6 +6920,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -6944,6 +6949,7 @@ __webpack_require__.r(__webpack_exports__);
       name: '',
       type: '',
       rif: 0,
+      retention: '',
       arrayRet: [],
       arrayDetailr: [],
       arrayClient: [],
@@ -7041,6 +7047,7 @@ __webpack_require__.r(__webpack_exports__);
         me.voucher_num = me.arrayRetTemp[0]['voucher_num'];
         me.date = me.arrayRetTemp[0]['date'];
         me.tax = me.arrayRetTemp[0]['tax'];
+        me.tax_mount = me.arrayRetTemp[0]['tax_mount'];
         me.total = me.arrayRetTemp[0]['total'];
         me.status = me.arrayRetTemp[0]['status'];
         me.user_id = me.arrayRetTemp[0]['user_id'];
@@ -7076,7 +7083,7 @@ __webpack_require__.r(__webpack_exports__);
       me.address = '';
       me.voucher_num = 0;
       me.voucher = 'bill';
-      me.sale_num = 0;
+      me.sale_num = '';
       me.arrayDetailr = [];
     },
     clientSelectr: function clientSelectr(search, loading) {
@@ -7099,6 +7106,7 @@ __webpack_require__.r(__webpack_exports__);
       me.type = val.type;
       me.rif = val.rif;
       me.address = val.address;
+      me.retention = val.retention;
     },
     saleSearch: function saleSearch() {
       var me = this;
@@ -60953,7 +60961,12 @@ var render = function() {
                               }
                             ],
                             staticClass: "form-control",
-                            attrs: { type: "text", readonly: "", name: "" },
+                            attrs: {
+                              type: "text",
+                              readonly: "",
+                              name: "",
+                              placeholder: "ENTER para buscar"
+                            },
                             domProps: { value: _vm.product },
                             on: {
                               input: function($event) {
@@ -63482,6 +63495,34 @@ var render = function() {
                           }
                         }
                       })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-3" }, [
+                      _c("label", { attrs: { for: "" } }, [
+                        _vm._v(" % Retenido")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.retention,
+                            expression: "retention"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", name: "" },
+                        domProps: { value: _vm.retention },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.retention = $event.target.value
+                          }
+                        }
+                      })
                     ])
                   ]),
                   _vm._v(" "),
@@ -63572,7 +63613,12 @@ var render = function() {
                               }
                             ],
                             staticClass: "form-control",
-                            attrs: { type: "text", readonly: "", name: "" },
+                            attrs: {
+                              type: "text",
+                              readonly: "",
+                              name: "",
+                              placeholder: "ENTER para buscar"
+                            },
                             domProps: { value: _vm.sale_num },
                             on: {
                               input: function($event) {
@@ -63734,19 +63780,19 @@ var render = function() {
                                       }),
                                       _vm._v(" "),
                                       _c("td", [
-                                        _vm.voucher == "bill"
+                                        detail.voucher == "bill"
                                           ? _c(
                                               "span",
                                               { staticClass: "form-control" },
                                               [_vm._v("Factura")]
                                             )
-                                          : _vm.voucher == "note"
+                                          : detail.voucher == "note"
                                           ? _c(
                                               "span",
                                               { staticClass: "form-control" },
                                               [_vm._v("Vale")]
                                             )
-                                          : _vm.voucher == "credit"
+                                          : detail.voucher == "credit"
                                           ? _c(
                                               "span",
                                               { staticClass: "form-control" },
@@ -63789,13 +63835,13 @@ var render = function() {
                                             {
                                               name: "model",
                                               rawName: "v-model",
-                                              value: detail.tax,
-                                              expression: "detail.tax"
+                                              value: detail.tax_mount,
+                                              expression: "detail.tax_mount"
                                             }
                                           ],
                                           staticClass: "form-control",
                                           attrs: { type: "number", name: "" },
-                                          domProps: { value: detail.tax },
+                                          domProps: { value: detail.tax_mount },
                                           on: {
                                             input: function($event) {
                                               if ($event.target.composing) {
@@ -63803,7 +63849,7 @@ var render = function() {
                                               }
                                               _vm.$set(
                                                 detail,
-                                                "tax",
+                                                "tax_mount",
                                                 $event.target.value
                                               )
                                             }
@@ -63814,7 +63860,9 @@ var render = function() {
                                       _c("td", [
                                         _vm._v(
                                           "\n                                            " +
-                                            _vm._s(detail.totals * detail.tax) +
+                                            _vm._s(
+                                              detail.tax_mount * _vm.retention
+                                            ) +
                                             "\n                                        "
                                         )
                                       ])
@@ -64412,7 +64460,9 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Impuesto")]),
         _vm._v(" "),
-        _c("th", [_vm._v("subTotal")])
+        _c("th", [_vm._v("Monto de Impuesto")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Monto Retenido")])
       ])
     ])
   },

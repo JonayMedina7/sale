@@ -52,7 +52,7 @@ class RetentionController extends Controller
         $retention = Retention::join('sales', 'retentions.id', '=', 'sales.ret_id')
             ->join('users', 'sales.user_id', '=', 'users.id')
             ->join('clients', 'sales.client_id', '=', 'clients.id')
-            ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.status', 'sales.user_id', 'sales.client_id', 'users.user', 'clients.name', 'clients.type', 'clients.rif')
+            ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.status', 'sales.user_id', 'sales.client_id', 'users.user', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.retention')
             ->where('retentions.id','=',$id)
             ->orderBy('retentions.id', 'desc')->take(1)->get();
         

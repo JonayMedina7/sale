@@ -175,7 +175,7 @@
                                         <div class="form-inline">
                                             <input type="text" class="form-control" v-model="code" @keyup.enter="productSearch()" placeholder="Ingrese Producto" name="">
                                             <button @click="openModal()" class="btn btn-primary">...</button>
-                                            <input type="text" readonly class="form-control" v-model="product" name="">
+                                            <input type="text" readonly class="form-control" v-model="product" name="" placeholder="ENTER para buscar">
                                         </div>
                                     </div>
                                 </div>
