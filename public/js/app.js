@@ -5614,9 +5614,9 @@ __webpack_require__.r(__webpack_exports__);
 
       for (var i = 0; i < this.arrayDetail.length; i++) {
         result = result + this.arrayDetail[i].price * this.arrayDetail[i].quantity;
-      }
+      } // console.log(result);
 
-      console.log(result);
+
       return result;
     },
     calculateTotal: function calculateTotal() {
@@ -5679,7 +5679,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     getClientInfo: function getClientInfo(val1) {
-      console.log(val1);
+      // console.log(val1);
       var me = this;
       me.loading = true;
       me.client_id = val1.id;
@@ -5692,8 +5692,8 @@ __webpack_require__.r(__webpack_exports__);
       var me = this;
       var url = 'sale/saleId';
       axios.get(url).then(function (response) {
-        var response = response.data;
-        console.log(response);
+        var response = response.data; // console.log(response);
+
         me.arrayId = response.saleid;
         /*me.voucher_num = me.arrayId[0]['id'];
         console.log(me.voucher_num);*/

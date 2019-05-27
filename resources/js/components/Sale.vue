@@ -540,7 +540,7 @@
                 for (var i = 0; i <this.arrayDetail.length; i++) {
                     result = result +(this.arrayDetail[i].price*this.arrayDetail[i].quantity)
                 }
-                console.log(result);
+                // console.log(result);
                 return result;
             },
             calculateTotal: function (){
@@ -618,7 +618,7 @@
                 });
             },
             getClientInfo(val1){
-                console.log(val1);
+                // console.log(val1);
                 let me=this;
                 me.loading = true;
                 me.client_id = val1.id;
@@ -635,7 +635,7 @@
                 var url= 'sale/saleId';
                 axios.get(url).then(function(response) {
                     var response = response.data; 
-                    console.log(response);
+                    // console.log(response);
 
                     me.arrayId = response.saleid;
                     /*me.voucher_num = me.arrayId[0]['id'];
