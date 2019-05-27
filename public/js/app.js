@@ -5070,8 +5070,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_select__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_select__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-select/dist/vue-select.css */ "./node_modules/vue-select/dist/vue-select.css");
 /* harmony import */ var vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1__);
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 //
 //
 //
@@ -5522,9 +5520,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
-    var _ref;
-
-    return _ref = {
+    return {
       sale_id: 0,
       product_id: 0,
       user_id: 0,
@@ -5540,11 +5536,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       voucher_serie: '',
       date: '',
       tax: 0.16,
+      tax_mount: 0.0,
       arraySale: [],
       arrayId: [],
       arrayDetail: [],
       arrayClient: [],
-      total: 0.0,
       list: 1,
       arrayProduct: [],
       stock: 0,
@@ -5552,15 +5548,32 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       product: '',
       price: 0,
       quantity: 0,
-      dispo: ''
-    }, _defineProperty(_ref, "total", 0.0), _defineProperty(_ref, "totalTax", 0.0), _defineProperty(_ref, "totalPartial", 0.0), _defineProperty(_ref, "modal1", 0), _defineProperty(_ref, "modal", 0), _defineProperty(_ref, "envId", 0), _defineProperty(_ref, "titleModal", ''), _defineProperty(_ref, "actionType", 0), _defineProperty(_ref, "errorSmsS", 0), _defineProperty(_ref, "errorSmsListS", []), _defineProperty(_ref, "pagination", {
-      'total': 0,
-      'current_page': 0,
-      'per_page': 0,
-      'last_page': 0,
-      'from': 0,
-      'to': 0
-    }), _defineProperty(_ref, "offset", 3), _defineProperty(_ref, "criterion", 'voucher_num'), _defineProperty(_ref, "search", ''), _defineProperty(_ref, "criteryS", 'name'), _defineProperty(_ref, "searchS", ''), _defineProperty(_ref, "saleid", 0), _ref;
+      dispo: '',
+      total: 0.0,
+      totalTax: 0.0,
+      totalPartial: 0.0,
+      modal1: 0,
+      modal: 0,
+      envId: 0,
+      titleModal: '',
+      actionType: 0,
+      errorSmsS: 0,
+      errorSmsListS: [],
+      pagination: {
+        'total': 0,
+        'current_page': 0,
+        'per_page': 0,
+        'last_page': 0,
+        'from': 0,
+        'to': 0
+      },
+      offset: 3,
+      criterion: 'voucher_num',
+      search: '',
+      criteryS: 'name',
+      searchS: '',
+      saleid: 0
+    };
   },
   components: {
     vSelect: vue_select__WEBPACK_IMPORTED_MODULE_0___default.a
@@ -5596,14 +5609,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       return pagesArray;
     },
-    calculateTotal: function calculateTotal() {
+    calculateTotalPartial: function calculateTotalPartial() {
       var result = 0.0;
 
       for (var i = 0; i < this.arrayDetail.length; i++) {
         result = result + this.arrayDetail[i].price * this.arrayDetail[i].quantity;
       }
 
+      console.log(result);
       return result;
+    },
+    calculateTotal: function calculateTotal() {
+      return parseInt(this.totalTax) + parseInt(this.totalPartial);
     }
   },
   methods: {
@@ -5633,6 +5650,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         me.voucher_serie = me.arraySaleTemp[0]['voucher_serie'];
         me.voucher_num = me.arraySaleTemp[0]['voucher_num'];
         me.tax = me.arraySaleTemp[0]['tax'];
+        me.tax_mount = me.arraySaleTemp[0]['tax_mount'];
         me.total = me.arraySaleTemp[0]['total'];
       })["catch"](function (error) {
         console.log(error);
@@ -5661,7 +5679,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     },
     getClientInfo: function getClientInfo(val1) {
-      // console.log(val1);
+      console.log(val1);
       var me = this;
       me.loading = true;
       me.client_id = val1.id;
@@ -5798,48 +5816,63 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     registerSale: function registerSale() {
       if (this.validateSale()) {
-        return;
+        Swal.fire({
+          confirmButtonText: 'Aceptar!',
+          confirmButtonClass: 'btn btn-danger',
+          confirmButtonColor: '#3085d6',
+          html: "".concat(this.errorSmsListS.map(function (er) {
+            return "<br><br>".concat(er);
+          })),
+          showCancelButton: false
+        });
+      } else {
+        var me = this;
+        axios.post('sale/register', {
+          'client_id': this.client_id,
+          'user_id': this.user_id,
+          'product_id': this.product_id,
+          'voucher': this.voucher,
+          'voucher_num': this.voucher_num,
+          'voucher_serie': this.voucher_serie,
+          'tax': this.tax,
+          'tax_mount': this.totalTax,
+          'total': this.total,
+          'data': this.arrayDetail
+        }).then(function (response) {
+          me.list = 1;
+          me.listSale(1, '', 'voucher_num');
+          me.arrayId = [];
+          me.saleid = 0;
+          me.saleId(); // val1=[];
+
+          me.client_id = 0;
+          me.type = '';
+          me.rif = '';
+          me.address = '';
+          me.name = '';
+          me.vouche = "bill";
+          me.user_id = 0;
+          me.product_id = 0;
+          me.voucher_num = '';
+          me.voucher_serie = '';
+          me.tax = 0.16;
+          me.tax_mount = 0.0;
+          me.total = 0.0;
+          me.product = '';
+          me.quantity = 0;
+          me.price = 0;
+          me.stock = 0;
+          me.code = '';
+          me.arrayDetail = [];
+          /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
+
+          window.open('http://localhost/sale/public/sale/pdf/' + response.data.id + ',' + '_blank');
+        })["catch"](function (error) {
+          console.log(error);
+        });
       }
 
       ;
-      var me = this;
-      console.log(this.saleid);
-      axios.post('sale/register', {
-        'client_id': this.client_id,
-        'user_id': this.user_id,
-        'product_id': this.product_id,
-        'voucher': this.voucher,
-        'voucher_num': this.voucher_num,
-        'voucher_serie': this.voucher_serie,
-        'tax': this.tax,
-        'total': this.total,
-        'data': this.arrayDetail
-      }).then(function (response) {
-        me.list = 1;
-        me.listSale(1, '', 'voucher_num');
-        me.arrayId = [];
-        me.saleid = 0;
-        me.saleId();
-        me.client_id = 0;
-        me.vouche = "bill";
-        me.user_id = 0;
-        me.product_id = 0;
-        me.voucher_num = '';
-        me.voucher_serie = '';
-        me.tax = 0.16;
-        me.total = 0.0;
-        me.product = '';
-        me.quantity = 0;
-        me.price = 0;
-        me.stock = 0;
-        me.code = '';
-        me.arrayDetail = [];
-        /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
-
-        window.open('http://localhost/sale/public/sale/pdf/' + response.data.id + ',' + '_blank');
-      })["catch"](function (error) {
-        console.log(error);
-      });
     },
     validateSale: function validateSale() {
       var me = this;
@@ -5856,28 +5889,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (me.arrayDetail.length <= 0) me.errorSmsListS.push("Por favor ingrese productos a la compra");
       if (!me.tax) me.errorSmsListS.push("ingrese un impuesto valido");
       if (me.arrayDetail.length <= 0) me.errorSmsListS.push("Ingrese productos");
-      if (me.errorSmsListS.length) me.errorSmsS = 1;
-      Swal.fire({
-        confirmButtonText: 'Aceptar!',
-        confirmButtonClass: 'btn btn-danger',
-        confirmButtonColor: '#3085d6',
-        html: "".concat(this.errorSmsListS.map(function (er) {
-          return "<br><br>".concat(er);
-        })),
-        showCancelButton: false
-      });
-      return this.errorSms;
+
+      if (me.errorSmsListS.length > 0) {
+        me.errorSmsS = 1;
+        return me.errorSmsS;
+      }
     },
     showDetail: function showDetail() {
       var me = this;
       me.list = 0;
-      me.client_id = 0;
       me.voucher = "bill";
       me.user_id = 0;
       me.product_id = 0;
       me.voucher_num = '';
       me.voucher_serie = '';
       me.tax = 0.16;
+      me.tax_mount = 0.0;
       me.total = 0.0;
       me.product = '';
       me.quantity = 0;
@@ -6463,8 +6490,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_select__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_select__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-select/dist/vue-select.css */ "./node_modules/vue-select/dist/vue-select.css");
 /* harmony import */ var vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1__);
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+//
+//
+//
+//
 //
 //
 //
@@ -6895,29 +6924,53 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
-    var _ref;
-
-    return _ref = {
+    return {
       user_id: 0,
       client_id: 0,
+      sale_id: 0,
       id: 0,
+      ret_id: 0,
       client: '',
       voucher_num: '',
+      voucher: '',
       date: '',
       dates: '',
       tax: 0.16,
       total: 0.0,
       status: '',
       sale_num: '',
-      totals: ''
-    }, _defineProperty(_ref, "user_id", 0), _defineProperty(_ref, "client_id", 0), _defineProperty(_ref, "user", ''), _defineProperty(_ref, "name", ''), _defineProperty(_ref, "type", ''), _defineProperty(_ref, "rif", 0), _defineProperty(_ref, "arrayRet", []), _defineProperty(_ref, "arrayDetailr", []), _defineProperty(_ref, "arrayClient", []), _defineProperty(_ref, "arraySale", []), _defineProperty(_ref, "list", 1), _defineProperty(_ref, "totalTax", 0.0), _defineProperty(_ref, "totalPartial", 0.0), _defineProperty(_ref, "modal1", 0), _defineProperty(_ref, "modal", 0), _defineProperty(_ref, "titleModal", ''), _defineProperty(_ref, "actionType", 0), _defineProperty(_ref, "errorSmsR", 0), _defineProperty(_ref, "errorSmsListR", []), _defineProperty(_ref, "pagination", {
-      'total': 0,
-      'current_page': 0,
-      'per_page': 0,
-      'last_page': 0,
-      'from': 0,
-      'to': 0
-    }), _defineProperty(_ref, "offset", 3), _defineProperty(_ref, "criterion", 'voucher_num'), _defineProperty(_ref, "search", ''), _defineProperty(_ref, "criteryR", 'name'), _defineProperty(_ref, "searchR", ''), _ref;
+      totals: '',
+      user: '',
+      name: '',
+      type: '',
+      rif: 0,
+      arrayRet: [],
+      arrayDetailr: [],
+      arrayClient: [],
+      arraySale: [],
+      list: 1,
+      totalTax: 0.0,
+      totalPartial: 0.0,
+      modal1: 0,
+      modal: 0,
+      titleModal: '',
+      actionType: 0,
+      errorSmsR: 0,
+      errorSmsListR: [],
+      pagination: {
+        'total': 0,
+        'current_page': 0,
+        'per_page': 0,
+        'last_page': 0,
+        'from': 0,
+        'to': 0
+      },
+      offset: 3,
+      criterion: 'voucher_num',
+      search: '',
+      criteryR: 'name',
+      searchR: ''
+    };
   },
   components: {
     vSelect: vue_select__WEBPACK_IMPORTED_MODULE_0___default.a
@@ -6957,7 +7010,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var result = 0.0;
 
       for (var i = 0; i < this.arrayDetailr.length; i++) {
-        result = result + this.arrayDetailr[i].price * this.arrayDetailr[i].quantity;
+        result = result + this.arrayDetailr[i].totals;
       }
 
       return result;
@@ -6966,7 +7019,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   methods: {
     listRetention: function listRetention(page, search, criterion) {
       var me = this;
-      var url = 'retencion?page=' + page + '&search=' + search + '&criterion=' + criterion;
+      var url = 'retention?page=' + page + '&search=' + search + '&criterion=' + criterion;
       axios.get(url).then(function (response) {
         var response = response.data;
         me.arrayRet = response.retentions.data;
@@ -7054,9 +7107,55 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         var response = response.data;
         me.arraySale = response.sales;
         console.log(me.arraySale);
+
+        if (me.arraySale.length > 0) {
+          me.sale_id = me.arraySale[0]['id'];
+          me.sale_num = me.arraySale[0]['sale_num'];
+          me.voucher = me.arraySale[0]['voucher'];
+          me.totals = me.arraySale[0]['totals'];
+          me.tax = me.arraySale[0]['tax'];
+        } else {
+          me.sale_num = 'El nro. factura no existe o no pertenece al cliente';
+          me.sale_id = 0;
+        }
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    addDetail: function addDetail() {
+      var me = this;
+
+      if (me.find(me.sale_id)) {
+        Swal.fire({
+          type: 'error',
+          title: 'Error...',
+          text: 'El Artículo ya se encuentra agregado!'
+        });
+      } else {
+        me.arrayDetailr.push({
+          sale_id: me.sale_id,
+          sale_num: me.sale_num,
+          voucher: me.voucher,
+          totals: me.totals,
+          tax: me.tax
+        });
+        me.sale_id = 0;
+        me.sale_num = '';
+        me.voucher = '';
+        me.totals = 0;
+        me.tax = 0.0;
+      }
+    },
+    find: function find(id) {
+      var sw = 0;
+
+      for (var i = 0; i < this.arrayDetailr.length; i++) {
+        if (this.arrayDetailr[i].sale_id == id) {
+          sw = true;
+        }
+      }
+
+      return sw;
     },
     hideRet: function hideRet() {
       this.list = 1;
@@ -7083,8 +7182,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           me.errorSmsListR.push(prod);
         }
       });
-      if (me.client_id == 0) me.errorSmsListR.push("Por favor Selecione un cliente");
-      if (me.voucher_num == 0) me.errorSmsListR.push("Ingrese un numero de Factura o nota de credito");
+      if (me.client_id == 0) me.errorSmsListR.push("Por favor Seleccione un cliente");
+      if (me.voucher_num == 0) me.errorSmsListR.push("Ingrese un numero de Factura o nota de crédito");
       if (me.arrayDetailr.length <= 0) me.errorSmsListR.push("Por favor ingrese productos a la compra");
       if (!me.tax) me.errorSmsListR.push("ingrese un impuesto valido");
       if (me.arrayDetailr.length <= 0) me.errorSmsListR.push("Ingrese productos");
@@ -7130,7 +7229,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             'id': id
           }).then(function (response) {
             me.listRetention(1, '', 'voucher_num');
-            Swal.fire('Anulado!', 'La venta ha sido anulada con éxito.', 'success');
+            Swal.fire('Anulado!', 'La venta ha sido anulada con éxito.', 'Aceptar');
           })["catch"](function (error) {
             console.log(error);
           });
@@ -61111,9 +61210,7 @@ var render = function() {
                                           [
                                             _vm._v(
                                               _vm._s(
-                                                (_vm.dispo =
-                                                  detail.stock -
-                                                  detail.quantity)
+                                                detail.stock - detail.quantity
                                               )
                                             )
                                           ]
@@ -61146,9 +61243,9 @@ var render = function() {
                                         _vm._v(
                                           "$ " +
                                             _vm._s(
-                                              (_vm.totalPartial = (
-                                                _vm.total - _vm.totalTax
-                                              ).toFixed(2))
+                                              (_vm.totalPartial = _vm.calculateTotalPartial.toFixed(
+                                                2
+                                              ))
                                             )
                                         )
                                       ])
@@ -61170,8 +61267,7 @@ var render = function() {
                                           "$ " +
                                             _vm._s(
                                               (_vm.totalTax = (
-                                                (_vm.total * _vm.tax) /
-                                                (1 + _vm.tax)
+                                                _vm.totalPartial * _vm.tax
                                               ).toFixed(2))
                                             )
                                         )
@@ -61347,7 +61443,7 @@ var render = function() {
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
-                                          "\n                                            " +
+                                          "\n                                            $ " +
                                             _vm._s(
                                               detail.price * detail.quantity
                                             ) +
@@ -61371,9 +61467,9 @@ var render = function() {
                                         _vm._v(
                                           "$ " +
                                             _vm._s(
-                                              (_vm.totalPartial = (
-                                                _vm.total - _vm.totalTax
-                                              ).toFixed(2))
+                                              (_vm.totalPartial = _vm.calculateTotalPartial.toFixed(
+                                                2
+                                              ))
                                             )
                                         )
                                       ])
@@ -61390,16 +61486,13 @@ var render = function() {
                                     [
                                       _vm._m(8),
                                       _vm._v(" "),
-                                      _c("td", [
-                                        _vm._v(
-                                          "$ " +
-                                            _vm._s(
-                                              (_vm.totalTax = (
-                                                _vm.total * _vm.tax
-                                              ).toFixed(2))
-                                            )
-                                        )
-                                      ])
+                                      _c("td", {
+                                        domProps: {
+                                          textContent: _vm._s(
+                                            "$ " + _vm.tax_mount
+                                          )
+                                        }
+                                      })
                                     ]
                                   ),
                                   _vm._v(" "),
@@ -63173,7 +63266,7 @@ var render = function() {
                                 : ret.voucher == "note"
                                 ? _c("td", [_vm._v("Vale")])
                                 : ret.voucher == "credit"
-                                ? _c("td", [_vm._v("Nota de Credito")])
+                                ? _c("td", [_vm._v("Nota de Crédito")])
                                 : _vm._e(),
                               _vm._v(" "),
                               _c("td", {
@@ -63230,7 +63323,7 @@ var render = function() {
                                     }
                                   }
                                 },
-                                [_vm._v("Ant")]
+                                [_vm._v("Ant.")]
                               )
                             ])
                           : _vm._e(),
@@ -63281,7 +63374,7 @@ var render = function() {
                                     }
                                   }
                                 },
-                                [_vm._v("Sig")]
+                                [_vm._v("Sig.")]
                               )
                             ])
                           : _vm._e()
@@ -63404,8 +63497,8 @@ var render = function() {
                                 {
                                   name: "show",
                                   rawName: "v-show",
-                                  value: _vm.product_id == 0,
-                                  expression: "product_id==0"
+                                  value: _vm.sale_id == 0,
+                                  expression: "sale_id==0"
                                 }
                               ],
                               staticStyle: { color: "red" }
@@ -63474,19 +63567,19 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.sale,
-                                expression: "sale"
+                                value: _vm.sale_num,
+                                expression: "sale_num"
                               }
                             ],
                             staticClass: "form-control",
                             attrs: { type: "text", readonly: "", name: "" },
-                            domProps: { value: _vm.sale },
+                            domProps: { value: _vm.sale_num },
                             on: {
                               input: function($event) {
                                 if ($event.target.composing) {
                                   return
                                 }
-                                _vm.sale = $event.target.value
+                                _vm.sale_num = $event.target.value
                               }
                             }
                           })
@@ -63496,7 +63589,27 @@ var render = function() {
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-2" }, [
                       _c("div", { staticClass: "form-group" }, [
-                        _c("label", [_vm._v("Numero de Documento")]),
+                        _c("label", [_vm._v("Tipo de Documento")]),
+                        _vm._v(" "),
+                        _vm.voucher == "bill"
+                          ? _c("span", { staticClass: "form-control" }, [
+                              _vm._v("Factura")
+                            ])
+                          : _vm.voucher == "note"
+                          ? _c("span", { staticClass: "form-control" }, [
+                              _vm._v("Vale")
+                            ])
+                          : _vm.voucher == "credit"
+                          ? _c("span", { staticClass: "form-control" }, [
+                              _vm._v("Nota de Crédito")
+                            ])
+                          : _vm._e()
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-2" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", [_vm._v("Total de factura")]),
                         _vm._v(" "),
                         _c("input", {
                           directives: [
@@ -63508,7 +63621,12 @@ var render = function() {
                             }
                           ],
                           staticClass: "form-control",
-                          attrs: { type: "number", step: "any", name: "" },
+                          attrs: {
+                            type: "number",
+                            readonly: "",
+                            step: "any",
+                            name: ""
+                          },
                           domProps: { value: _vm.totals },
                           on: {
                             input: function($event) {
@@ -63524,54 +63642,26 @@ var render = function() {
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-2" }, [
                       _c("div", { staticClass: "form-group" }, [
-                        _c("label", [_vm._v("Disponible")]),
-                        _vm._v(" "),
-                        _c("span", {
-                          staticClass: "form-control",
-                          domProps: { textContent: _vm._s(_vm.stock) }
-                        })
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-md-2" }, [
-                      _c("div", { staticClass: "form-group" }, [
-                        _c("label", [
-                          _vm._v("Cantidad "),
-                          _c(
-                            "span",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: _vm.quantity == 0,
-                                  expression: "quantity==0"
-                                }
-                              ],
-                              staticStyle: { color: "red" }
-                            },
-                            [_vm._v("(*Ingrese cantidad)")]
-                          )
-                        ]),
+                        _c("label", [_vm._v("Base Imponible")]),
                         _vm._v(" "),
                         _c("input", {
                           directives: [
                             {
                               name: "model",
                               rawName: "v-model",
-                              value: _vm.quantity,
-                              expression: "quantity"
+                              value: _vm.tax,
+                              expression: "tax"
                             }
                           ],
                           staticClass: "form-control",
-                          attrs: { type: "number", name: "" },
-                          domProps: { value: _vm.quantity },
+                          attrs: { type: "number", readonly: "", name: "" },
+                          domProps: { value: _vm.tax },
                           on: {
                             input: function($event) {
                               if ($event.target.composing) {
                                 return
                               }
-                              _vm.quantity = $event.target.value
+                              _vm.tax = $event.target.value
                             }
                           }
                         })
@@ -63615,7 +63705,7 @@ var render = function() {
                                     detail,
                                     index
                                   ) {
-                                    return _c("tr", { key: detail.id }, [
+                                    return _c("tr", { key: detail.sale_id }, [
                                       _c("td", [
                                         _c(
                                           "button",
@@ -63639,23 +63729,45 @@ var render = function() {
                                       _vm._v(" "),
                                       _c("td", {
                                         domProps: {
-                                          textContent: _vm._s(detail.sale)
+                                          textContent: _vm._s(detail.sale_num)
                                         }
                                       }),
                                       _vm._v(" "),
                                       _c("td", [
+                                        _vm.voucher == "bill"
+                                          ? _c(
+                                              "span",
+                                              { staticClass: "form-control" },
+                                              [_vm._v("Factura")]
+                                            )
+                                          : _vm.voucher == "note"
+                                          ? _c(
+                                              "span",
+                                              { staticClass: "form-control" },
+                                              [_vm._v("Vale")]
+                                            )
+                                          : _vm.voucher == "credit"
+                                          ? _c(
+                                              "span",
+                                              { staticClass: "form-control" },
+                                              [_vm._v("Nota de Crédito")]
+                                            )
+                                          : _vm._e()
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("td", [
                                         _c("input", {
                                           directives: [
                                             {
                                               name: "model",
                                               rawName: "v-model",
-                                              value: detail.price,
-                                              expression: "detail.price"
+                                              value: detail.totals,
+                                              expression: "detail.totals"
                                             }
                                           ],
                                           staticClass: "form-control",
                                           attrs: { type: "number", name: "" },
-                                          domProps: { value: detail.price },
+                                          domProps: { value: detail.totals },
                                           on: {
                                             input: function($event) {
                                               if ($event.target.composing) {
@@ -63663,7 +63775,7 @@ var render = function() {
                                               }
                                               _vm.$set(
                                                 detail,
-                                                "price",
+                                                "totals",
                                                 $event.target.value
                                               )
                                             }
@@ -63672,42 +63784,18 @@ var render = function() {
                                       ]),
                                       _vm._v(" "),
                                       _c("td", [
-                                        _c(
-                                          "span",
-                                          {
-                                            directives: [
-                                              {
-                                                name: "show",
-                                                rawName: "v-show",
-                                                value:
-                                                  detail.quantity >
-                                                  detail.stock,
-                                                expression:
-                                                  "detail.quantity>detail.stock"
-                                              }
-                                            ],
-                                            staticStyle: { color: "red" }
-                                          },
-                                          [
-                                            _vm._v(
-                                              "Disponible: " +
-                                                _vm._s(detail.stock)
-                                            )
-                                          ]
-                                        ),
-                                        _vm._v(" "),
                                         _c("input", {
                                           directives: [
                                             {
                                               name: "model",
                                               rawName: "v-model",
-                                              value: detail.quantity,
-                                              expression: "detail.quantity"
+                                              value: detail.tax,
+                                              expression: "detail.tax"
                                             }
                                           ],
                                           staticClass: "form-control",
                                           attrs: { type: "number", name: "" },
-                                          domProps: { value: detail.quantity },
+                                          domProps: { value: detail.tax },
                                           on: {
                                             input: function($event) {
                                               if ($event.target.composing) {
@@ -63715,36 +63803,18 @@ var render = function() {
                                               }
                                               _vm.$set(
                                                 detail,
-                                                "quantity",
+                                                "tax",
                                                 $event.target.value
                                               )
                                             }
                                           }
                                         })
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("td", [
-                                        _c(
-                                          "span",
-                                          { staticClass: "form-control" },
-                                          [
-                                            _vm._v(
-                                              _vm._s(
-                                                (_vm.dispo =
-                                                  detail.stock -
-                                                  detail.quantity)
-                                              )
-                                            )
-                                          ]
-                                        )
                                       ]),
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
                                           "\n                                            " +
-                                            _vm._s(
-                                              detail.price * detail.quantity
-                                            ) +
+                                            _vm._s(detail.totals * detail.tax) +
                                             "\n                                        "
                                         )
                                       ])
@@ -63854,7 +63924,7 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v("Registrar Venta")]
+                        [_vm._v("Registrar Retención")]
                       )
                     ])
                   ])
@@ -64334,13 +64404,13 @@ var staticRenderFns = [
       _c("tr", [
         _c("th", [_vm._v("Opciones")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Artículo")]),
+        _c("th", [_vm._v("Numero de documento")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Precio")]),
+        _c("th", [_vm._v("Documento")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Cantidad")]),
+        _c("th", [_vm._v("Monto Factura")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Disponibilidad")]),
+        _c("th", [_vm._v("Impuesto")]),
         _vm._v(" "),
         _c("th", [_vm._v("subTotal")])
       ])

@@ -144,18 +144,12 @@
                             <div class="form-group row border">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Facturas <span style="color:red;" v-show="product_id==0">(*Seleccione)</span></label>
+                                        <label>Facturas <span style="color:red;" v-show="sale_id==0">(*Seleccione)</span></label>
                                         <div class="form-inline">
                                             <input type="text" class="form-control" v-model="sale_num" @keyup.enter="saleSearch()" placeholder="Ingrese numero de Venta" name="">
                                             <button @click="openModalr()" class="btn btn-primary">...</button>
                                             <input type="text" readonly class="form-control" v-model="sale_num" name="">
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label>Numero de Documento</label>
-                                        <input type="number" readonly step="any" class="form-control" v-model="sale_num" name="">
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -167,7 +161,12 @@
                                         
                                     </div>
                                 </div>
-
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Total de factura</label>
+                                        <input type="number" readonly step="any" class="form-control" v-model="totals" name="">
+                                    </div>
+                                </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
                                         <label>Base Imponible</label>
@@ -186,32 +185,34 @@
                                         <thead>
                                             <tr>
                                                 <th>Opciones</th>
-                                                <th>Artículo</th>
-                                                <th>Precio</th>
-                                                <th>Cantidad</th>
-                                                <th>Disponibilidad</th>
+                                                <th>Numero de documento</th>
+                                                <th>Documento</th>
+                                                <th>Monto Factura</th>
+                                                <th>Impuesto</th>
                                                 <th>subTotal</th> 
                                             </tr>
                                         </thead>
                                         <tbody v-if="arrayDetailr.length">
-                                            <tr v-for="(detail, index) in arrayDetailr" :key="detail.id">
+                                            <tr v-for="(detail, index) in arrayDetailr" :key="detail.sale_id">
                                                 <td>
                                                     <button @click="deleteDetail(index)" type="button" class="btn btn-danger btn-sm"><i class="icon-close"></i>
                                                     </button>
                                                 </td>
-                                                <td v-text="detail.sale"></td>
+                                                <td v-text="detail.sale_num"></td>
                                                 <td>
-                                                    <input v-model="detail.price" type="number" class="form-control" name="">
+                                                    <span class="form-control" v-if="voucher=='bill'">Factura</span>
+                                                    <span class="form-control" v-else-if="voucher=='note'">Vale</span>
+                                                    <span class="form-control" v-else-if="voucher=='credit'">Nota de Crédito</span>
                                                 </td>
                                                 <td>
-                                                    <span style="color:red;" v-show="detail.quantity>detail.stock">Disponible: {{ detail.stock }}</span>
-                                                    <input v-model="detail.quantity" type="number"  class="form-control" name="">
+                                                    
+                                                    <input v-model="detail.totals" type="number"  class="form-control" name="">
                                                 </td>
                                                 <td>
-                                                    <span class="form-control" >{{ dispo = detail.stock-detail.quantity }}</span>
+                                                    <input v-model="detail.tax" type="number"  class="form-control" name="">
                                                 </td>
                                                 <td>
-                                                    {{ detail.price*detail.quantity }}
+                                                    {{ detail.totals*detail.tax }}
                                                 </td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
@@ -441,6 +442,7 @@
                 ret_id: 0,
                 client: '',
                 voucher_num : '',
+                voucher: '',
                 date : '',
                 dates: '',
                 tax : 0.16,
@@ -513,7 +515,7 @@
             calculateTotal: function(){
                 var result=0.0;
                 for (var i = 0; i <this.arrayDetailr.length; i++) {
-                    result = result +(this.arrayDetailr[i].price*this.arrayDetailr[i].quantity)
+                    result = result +(this.arrayDetailr[i].totals)
                 }
                 return result;
             }
@@ -674,7 +676,7 @@
                     }
                 }
                 return sw;
-            }
+            },
             hideRet(){
                 this.list=1;
             },

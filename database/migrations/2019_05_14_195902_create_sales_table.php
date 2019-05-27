@@ -25,6 +25,7 @@ class CreateSalesTable extends Migration
             $table->foreign('ret_id')->references('id')->on('retentions');
             $table->dateTime('date');
             $table->decimal('tax', 4, 2);
+            $table->decimal('tax_mount', 4, 2);
             $table->decimal('total', 15, 2);
             $table->string('status', 20);
             $table->timestamps();

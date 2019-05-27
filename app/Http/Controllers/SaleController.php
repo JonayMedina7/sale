@@ -19,12 +19,12 @@ class SaleController extends Controller
         if ($search=='') {
             $sales = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
             ->join('users', 'sales.user_id', '=', 'users.id')
-            ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.total', 'sales.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
+            ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
             ->orderBy('sales.id', 'desc')->paginate(10);
         } else {
             $sales = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
             ->join('users', 'sales.user_id', '=', 'users.id')
-            ->select('sales.id', 'sales.voucher', 'sales.voucher_serial', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.total', 'sales.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
+            ->select('sales.id', 'sales.voucher', 'sales.voucher_serial', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
             ->where('sales.'.$criterion, 'like', '%'. $search . '%')->orderBy('sales.id', 'desc')->paginate(4);
         }
 
@@ -59,7 +59,7 @@ class SaleController extends Controller
         $filter = $request->filter;
         $id = $request->id;
         $sales = Sale::where('voucher_num','=', $filter)
-        ->select('id','voucher', 'voucher_num as sale_num', 'total as totals', 'tax')
+        ->select('id','voucher', 'voucher_num as sale_num', 'total as totals', 'tax', 'tax_mount',)
         ->where('ret_id','=', '0' )
         ->where('client_id', '=', $id)
         ->orderBy('id', 'desc')->take(1)->get();
@@ -74,7 +74,7 @@ class SaleController extends Controller
         
         $sale = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
         ->join('users', 'sales.user_id', '=', 'users.id')
-        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.total', 'sales.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
+        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
         ->where('sales.id','=',$id)
         ->orderBy('sales.id', 'desc')->take(1)->get();
         
@@ -98,7 +98,7 @@ class SaleController extends Controller
     {
         $sale = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
         ->join('users', 'sales.user_id', '=', 'users.id')
-        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.total', 'sales.status', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
+        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
         ->where('sales.id','=',$id)->take(1)->get();
 
          $details = Detailsale::join('products', 'detailsales.product_id', '=', 'products.id')
@@ -118,7 +118,7 @@ class SaleController extends Controller
     {
         $sale = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
         ->join('users', 'sales.user_id', '=', 'users.id')
-        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.total', 'sales.status', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
+        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
         ->where('sales.id','=',$id)->take(1)->get();
 
          $details = Detailsale::join('products', 'detailsales.product_id', '=', 'products.id')
@@ -158,8 +158,10 @@ class SaleController extends Controller
         $sale->date = $mytime->toDateString();
         
         $sale->tax = $request->tax;
+        $sale->tax_mount = $request->tax_mount;
         $sale->total = $request->total;
         $sale->status = 'Registrado';
+        $sale->ret_id = 0;
         $sale->save();
         
 

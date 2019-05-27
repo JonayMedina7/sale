@@ -307,8 +307,8 @@
             <div id="footer" >
 
                     @foreach ($sale as $s)
-                    <p>SUBTOTAL Bs:&nbsp;&nbsp;{{ round($s->total-($s->total*$s->tax),2) }}</p>
-                    <p>IVA Bs:&nbsp;&nbsp;{{ round($s->total*$s->tax,2) }}</p>
+                    <p>SUBTOTAL Bs:&nbsp;&nbsp;{{ round($s->total-($s->tax_mount),2) }}</p>
+                    <p>IVA Bs:&nbsp;&nbsp;{{ $s->tax_mount }}</p>
                     <p id="total">TOTAL Bs:&nbsp;&nbsp; {{ $s->total }}</p>
                     @endforeach
             </div>

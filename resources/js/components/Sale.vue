@@ -227,7 +227,7 @@
                                                     <input v-model="detail.quantity" type="number"  class="form-control" name="">
                                                 </td>
                                                 <td>
-                                                    <span class="form-control" >{{ dispo = detail.stock-detail.quantity }}</span>
+                                                    <span class="form-control" >{{  detail.stock-detail.quantity }}</span>
                                                 </td>
                                                 <td>
                                                     {{ detail.price*detail.quantity }}
@@ -235,15 +235,15 @@
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="5" align="right"><strong>Total Parcial: </strong></td>
-                                                <td>$ {{ totalPartial=(total-totalTax).toFixed(2) }}</td>
+                                                <td>$ {{ totalPartial=(calculateTotalPartial).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="5" align="right"><strong>Total Impuesto: </strong></td>
-                                                <td>$ {{ totalTax=((total*tax)/(1+tax)).toFixed(2) }}</td>
+                                                <td>$ {{ totalTax=(((totalPartial)*tax)).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="5" align="right"><strong>Total a Pagar: </strong></td>
-                                                <td>$ {{ total=calculateTotal }}</td>
+                                                <td>$ {{ total=(calculateTotal) }}</td>
                                             </tr>
                                         </tbody>
                                         <tbody v-else>
@@ -328,16 +328,16 @@
                                                 <td v-text="detail.price" ></td>
                                                 <td v-text="detail.quantity" ></td>
                                                 <td>
-                                                    {{ detail.price*detail.quantity }}
+                                                    $ {{ detail.price*detail.quantity }}
                                                 </td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="3" align="right"><strong>Total Parcial: </strong></td>
-                                                <td>$ {{ totalPartial=(total-totalTax).toFixed(2) }}</td>
+                                                <td>$ {{ totalPartial=(calculateTotalPartial).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="3" align="right"><strong>Total Impuesto: </strong></td>
-                                                <td>$ {{ totalTax=((total*tax)).toFixed(2) }}</td>
+                                                <td v-text="'$ ' + tax_mount"> <!-- {{ totalTax=(detail.tax_mount).toFixed(2) }} --></td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="3" align="right"><strong>Total a Pagar: </strong></td>
@@ -466,11 +466,11 @@
                 voucher_serie : '',
                 date : '',
                 tax : 0.16,
+                tax_mount: 0.0,
                 arraySale : [],
                 arrayId : [],
                 arrayDetail : [],
                 arrayClient : [],
-                total : 0.0,
                 list : 1,
                 arrayProduct : [],
                 stock: 0,
@@ -535,12 +535,16 @@
                 }
                 return pagesArray;
             },
-            calculateTotal: function(){
+            calculateTotalPartial: function(){
                 var result=0.0;
                 for (var i = 0; i <this.arrayDetail.length; i++) {
                     result = result +(this.arrayDetail[i].price*this.arrayDetail[i].quantity)
                 }
+                console.log(result);
                 return result;
+            },
+            calculateTotal: function (){
+                return parseInt(this.totalTax) + parseInt(this.totalPartial);
             }
 
         },
@@ -577,6 +581,7 @@
                     me.voucher_serie = me.arraySaleTemp[0]['voucher_serie'];
                     me.voucher_num = me.arraySaleTemp[0]['voucher_num'];
                     me.tax = me.arraySaleTemp[0]['tax'];
+                    me.tax_mount = me.arraySaleTemp[0]['tax_mount'];
                     me.total = me.arraySaleTemp[0]['total'];
 
                 })
@@ -613,7 +618,7 @@
                 });
             },
             getClientInfo(val1){
-                // console.log(val1);
+                console.log(val1);
                 let me=this;
                 me.loading = true;
                 me.client_id = val1.id;
@@ -621,7 +626,7 @@
                 me.rif = val1.rif;
                 me.address = val1.address;
                 me.name = val1.name;
-
+                
             },
             saleId(){
                 let me=this;
@@ -721,7 +726,6 @@
                     }
                 } 
             },
-
             addDetailModal(data =[]){
                 let me = this;
 
@@ -757,10 +761,16 @@
             },
             registerSale (){
                 if (this.validateSale()) {
-                    return;
-                };
+                    Swal.fire({
+                    confirmButtonText: 'Aceptar!',
+                    confirmButtonClass: 'btn btn-danger',
+                    confirmButtonColor: '#3085d6',
+                    html: `${this.errorSmsListS.map( er =>`<br><br>${er}`)}`,
+                    showCancelButton: false
+                });
+                }else {
                 let me=this;
-                console.log(this.saleid)
+                
                 axios.post('sale/register', {
 
                     
@@ -771,8 +781,9 @@
                     'voucher_num': this.voucher_num,
                     'voucher_serie': this.voucher_serie,
                     'tax': this.tax,
+                    'tax_mount': this.totalTax,
                     'total': this.total,
-                    'data': this.arrayDetail,
+                    'data': this.arrayDetail
                     
                     
                 }).then(function(response) {
@@ -782,13 +793,19 @@
                     me.arrayId=[];
                     me.saleid=0;
                     me.saleId();
+                    // val1=[];
                     me.client_id=0;
+                    me.type='';
+                    me.rif='';
+                    me.address='';
+                    me.name='';
                     me.vouche="bill";
                     me.user_id=0;
                     me.product_id=0;
                     me.voucher_num='';
                     me.voucher_serie='';
                     me.tax=0.16;
+                    me.tax_mount=0.0;
                     me.total=0.0;
                     me.product='';
                     me.quantity=0;
@@ -804,6 +821,7 @@
                 .catch(function (error) {
                     console.log(error);
                 });
+                };
             },
             validateSale(){
                 let me=this;
@@ -811,7 +829,7 @@
                 me.errorSmsListS =[];
 
                 var prod;
-
+                
                 me.arrayDetail.map(function(x){
                     if (x.quantity>x.stock) {
                         prod=x.product + " con Stock insuficiente";
@@ -829,28 +847,23 @@
 
 
 
-                if (me.errorSmsListS.length) me.errorSmsS = 1;
-                Swal.fire({
-                    confirmButtonText: 'Aceptar!',
-                    confirmButtonClass: 'btn btn-danger',
-                    confirmButtonColor: '#3085d6',
-                    html: `${this.errorSmsListS.map( er =>`<br><br>${er}`)}`,
-                    showCancelButton: false
-                });
-                return this.errorSms;
+                if (me.errorSmsListS.length>0) {
+                  me.errorSmsS = 1;
+                
+                return me.errorSmsS;  
+                }
             },
            
             showDetail(){
                 let me=this;
                 me.list=0;
-
-                me.client_id=0;
                 me.voucher="bill";
                 me.user_id=0;
                 me.product_id=0;
                 me.voucher_num='';
                 me.voucher_serie='';
                 me.tax=0.16;
+                me.tax_mount=0.0;
                 me.total=0.0;
                 me.product='';
                 me.quantity=0;
