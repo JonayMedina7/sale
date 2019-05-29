@@ -318,8 +318,8 @@
             	
                 if (this.validateClient()) {
                     return;
-                };
-                let me=this;
+                } else {
+                    let me=this;
                 console.log(this.name);
                 axios.post('provider/register', {
                     'type':this.type,
@@ -338,7 +338,9 @@
                 })
                 .catch(function (error) {
                     console.log(error);
-                });
+                });    
+                };
+                
             },
             updateClient() {
                 if (this.validateClient()) {
@@ -371,20 +373,22 @@
 
                 
 
-                if (!this.name) this.errorSmsList.push("el name del producto no puede estar vacio");
+                if (!this.name) this.errorSmsList.push("El Nombre del proveedor no puede estar vacio");
 
-                if (!this.type) this.errorSmsList.push("Seleccione el tipo de Cliente: J, G, V, Cedula")
+                if (!this.type) this.errorSmsList.push("Seleccione el tipo de documento del Proveedor: J, G, V, Cedula")
 
-                if (!this.rif) this.errorSmsList.push("El Rif del cliente debe ser nuemro y no puede estar vacio");
+                if (!this.rif) this.errorSmsList.push("El Rif del Proveedor debe ser nuemro y no puede estar vacio");
 
                 if (this.errorSmsList.length) this.errorSms = 1;
-                Swal.fire({
+                    if (this.errorSmsList.length >= 1) {
+                        Swal.fire({
                     confirmButtonText: 'Aceptar!',
                     confirmButtonClass: 'btn btn-danger',
                     confirmButtonColor: '#3085d6',
-                    html: `${this.errorSmsListP.map( er =>`<br><br>${er}`)}`,
+                    html: `${this.errorSmsList.map( er =>`<br><br>${er}`)}`,
                     showCancelButton: false
-                });
+                    });
+                };
                 return this.errorSms;
             },
             desactiveClient(){

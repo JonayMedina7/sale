@@ -721,14 +721,16 @@
                 if (this.errorSmsListP.length) this.errorSmsP = 1;
                 /*console.log(this.errorSmsListP);*/
                 
-                Swal.fire({
+                if (this.errorSmsListP.length >= 1) {
+                        Swal.fire({
                     confirmButtonText: 'Aceptar!',
                     confirmButtonClass: 'btn btn-danger',
                     confirmButtonColor: '#3085d6',
                     html: `${this.errorSmsListP.map( er =>`<br><br>${er}`)}`,
                     showCancelButton: false
-                });
-                return this.errorSms;
+                    });
+                };
+                return this.errorSmsP;
 
             },
            

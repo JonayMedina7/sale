@@ -111,7 +111,7 @@
                                     <div class="col-md-2">
                                         <select class="form-control" v-model="type">
 
-											<option value="j" default>J</option>
+											<option value="j">J</option>
 											<option value="g" >G</option>
 											<option value="v" >V</option>
 											<option value="c" >Cedula</option>
@@ -154,7 +154,7 @@
                                     <label class="col-md-3 form-control-label" for="retention">Es Agente de Retención?</label>
                                     <div class="col-md-5">
                                         <select class="form-control" v-model="retention" required>
-											<option value="0" >No</option>
+											<option value="no" >No</option>
 											<option value="75" >75%</option>
 											<option value="100" >100%</option>
                                         </select>
@@ -226,7 +226,7 @@
                 name : '',
                 phone : '',
                 email: '',
-                retention : 0,
+                retention : 'no',
                 address : '',
                 condition : '',
                 type: '',
@@ -307,26 +307,26 @@
 
                 if (this.validateClient()) {
                     return;
+                } else {
+                        let me=this;
+                    
+                    axios.post('client/register', {
+                        'type':this.type,
+                        'rif':this.rif,
+                        'name': this.name,
+                        'phone': this.phone,
+                        'email': this.email,
+                        'retention': this.retention,
+                        'address': this.address
+                    }).then(function(response) {
+                        me.closeModal();
+                        me.listClient(1,'','name');
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
                 };
-                let me=this;
-                console.log(this.name);
-                axios.post('client/register', {
-                    'type':this.type,
-                    'rif':this.rif,
-                    'name': this.name,
-                    'phone': this.stock,
-                    'email': this.email,
-                    'retention': this.retention,
-                    'address': this.address
-                    
-                    
-                }).then(function(response) {
-                    me.closeModal();
-                    me.listClient(1,'','name');
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+                
             },
             updateClient() {
                 if (this.validateClient()) {
@@ -366,13 +366,15 @@
                 if (!this.rif) this.errorSmsList.push("El Rif del cliente debe ser nuemro y no puede estar vacio");
 
                 if (this.errorSmsList.length) this.errorSms = 1;
-                Swal.fire({
+                    if (this.errorSmsList.length >= 1) {
+                        Swal.fire({
                     confirmButtonText: 'Aceptar!',
                     confirmButtonClass: 'btn btn-danger',
                     confirmButtonColor: '#3085d6',
                     html: `${this.errorSmsList.map( er =>`<br><br>${er}`)}`,
                     showCancelButton: false
-                });
+                    });
+                };
                 return this.errorSms;
             },
             desactiveClient(){
@@ -410,7 +412,7 @@
                 this.client_id= 0;
                 this.name='';
                 this.address='';
-                this.retention=0;
+                this.retention='no';
                 this.rif=0;
                 this.phone='';
                 this.email='';
@@ -429,7 +431,7 @@
 
                                 this.name='';
 				                this.address='';
-				                this.retention=0;
+				                this.retention='no';
 				                this.rif=0;
 				                this.phone='';
 				                this.email='';

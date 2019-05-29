@@ -368,13 +368,15 @@
                 if (!this.price_buy) this.errorSmsProduct.push("Precio de Compra del producto debe ser un Numero y no puede estar vacio");
 
                 if (this.errorSmsProduct.length) this.errorProduct = 1;
-                Swal.fire({
-                    confirmButtonText: 'Aceptar!',
-                    confirmButtonClass: 'btn btn-danger',
-                    confirmButtonColor: '#3085d6',
-                    html: `${this.errorSmsProduct.map( er =>`<br><br>${er}`)}`,
-                    showCancelButton: false
-                });
+                    if (this.errorSmsProduct.length >= 1) {
+                        Swal.fire({
+                            confirmButtonText: 'Aceptar!',
+                            confirmButtonClass: 'btn btn-danger',
+                            confirmButtonColor: '#3085d6',
+                            html: `${this.errorSmsProduct.map( er =>`<br><br>${er}`)}`,
+                            showCancelButton: false
+                            });
+                        };
                 return this.errorProduct;
             },
             desactiveProduct(){

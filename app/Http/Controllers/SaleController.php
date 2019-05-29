@@ -60,8 +60,6 @@ class SaleController extends Controller
         $id = $request->id;
         $sales = Sale::where('voucher_num','=', $filter)
         ->select('id','voucher', 'voucher_num as sale_num', 'total as totals', 'tax', 'tax_mount',)
-        ->where('ret_id','=', '0' )
-        ->where('client_id', '=', $id)
         ->orderBy('id', 'desc')->take(1)->get();
 
         return ['sales' => $sales];
@@ -111,7 +109,7 @@ class SaleController extends Controller
         $details=strtoupper($details);*/
 
         $pdf = \PDF::loadView('pdf.sale',['sale'=>$sale,'details'=>$details]);
-        return $pdf->download('Factura-'.$numsale[0]->voucher_num.'.pdf');
+        return $pdf->stream('Factura-'.$numsale[0]->voucher_num.'.pdf');
     }
 
     public function pdfw(Request $request, $id)
@@ -161,7 +159,6 @@ class SaleController extends Controller
         $sale->tax_mount = $request->tax_mount;
         $sale->total = $request->total;
         $sale->status = 'Registrado';
-        $sale->ret_id = 0;
         $sale->save();
         
 

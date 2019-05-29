@@ -31,12 +31,12 @@ Route::group(['middleware' =>['auth']], function()
 	{
 		Route::get('/home', 'HomeController@index')->name('home');
 
-		route::get('/categoria', 'CategoryController@index');
-		route::post('/categoria/registrar', 'CategoryController@store');
-		route::put('/categoria/actualizar', 'CategoryController@update');
-		route::put('/categoria/desactivar', 'CategoryController@desactive');
-		route::put('/categoria/activar', 'CategoryController@active');
-		route::get('/categoria/categorySelect', 'CategoryController@categorySelect');
+		route::get('/category', 'CategoryController@index');
+		route::post('/category/register', 'CategoryController@store');
+		route::put('/category/update', 'CategoryController@update');
+		route::put('/category/desactive', 'CategoryController@desactive');
+		route::put('/category/active', 'CategoryController@active');
+		route::get('/category/categorySelect', 'CategoryController@categorySelect');
 
 		route::get('/product', 'ProductController@index');
 		route::post('/product/register', 'ProductController@store');
@@ -93,11 +93,11 @@ Route::group(['middleware' =>['auth']], function()
 	{
 		Route::get('/home', 'HomeController@index')->name('home');
 
-		route::get('/categoria', 'CategoryController@index');
-		route::post('/categoria/registrar', 'CategoryController@store');
-		route::put('/categoria/actualizar', 'CategoryController@update');
-		route::put('/categoria/desactivar', 'CategoryController@desactive');
-		route::put('/categoria/activar', 'CategoryController@active');
+		route::get('/category', 'CategoryController@index');
+		route::post('/category/register', 'CategoryController@store');
+		route::put('/category/update', 'CategoryController@update');
+		route::put('/category/desactive', 'CategoryController@desactive');
+		route::put('/category/active', 'CategoryController@active');
 		route::get('/categoria/categorySelect', 'CategoryController@categorySelect');
 
 		route::get('/product', 'ProductController@index');
@@ -145,6 +145,7 @@ Route::group(['middleware' =>['auth']], function()
 		route::put('/purchase/desactive', 'PurchaseController@desactive');
 		route::get('/purchase/getHeader', 'PurchaseController@getHeader');
 		route::get('/purchase/getDetail', 'PurchaseController@getDetail'); 
+		route::get('/purchase/purchaseRet', 'PurchaseController@purchaseRet');
 
 		route::get('/sale', 'SaleController@index');
 		route::post('/sale/register', 'SaleController@store');

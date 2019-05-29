@@ -113,7 +113,6 @@ class PurchaseController extends Controller
         DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-
         }
 
     }
@@ -134,7 +133,20 @@ class PurchaseController extends Controller
         $purchase->save();
     }
 
-    
+    public function purchaseRet(Request $request)
+    {
+        // if (!$request->ajax()) return redirect('/');
+
+        $filter = $request->filter;
+        $id = $request->id;
+        $purchases = Purchase::where('voucher_num','=', $filter)
+        ->select('id','voucher', 'voucher_num as purchase_num', 'total as totalp', 'tax', 'tax_mount',)
+        ->where('ret_id','=', '0' )
+        ->where('provider_id', '=', $id)
+        ->orderBy('id', 'desc')->take(1)->get();
+
+        return ['purchases' => $purchases];
+    }
 
     public function destroy(Purchase $purchase)
     {

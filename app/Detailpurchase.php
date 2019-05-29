@@ -24,4 +24,3 @@ class Detailpurchase extends Model
 
     public $timestamps = false;
 }
- 

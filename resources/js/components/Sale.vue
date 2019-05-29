@@ -725,7 +725,7 @@
                         }
                     }
                 } 
-            },
+            }, 
             addDetailModal(data =[]){
                 let me = this;
 
@@ -761,13 +761,7 @@
             },
             registerSale (){
                 if (this.validateSale()) {
-                    Swal.fire({
-                    confirmButtonText: 'Aceptar!',
-                    confirmButtonClass: 'btn btn-danger',
-                    confirmButtonColor: '#3085d6',
-                    html: `${this.errorSmsListS.map( er =>`<br><br>${er}`)}`,
-                    showCancelButton: false
-                });
+                    return;
                 }else {
                 let me=this;
                 
@@ -845,13 +839,18 @@
 
                 if (me.arrayDetail.length<=0) me.errorSmsListS.push("Ingrese productos");
 
-
-
-                if (me.errorSmsListS.length>0) {
-                  me.errorSmsS = 1;
-                
+                if (me.errorSmsListS.length) me.errorSmsS = 1;
+                    if (me.errorSmsListS.length >= 1) {
+                        Swal.fire({
+                    confirmButtonText: 'Aceptar!',
+                    confirmButtonClass: 'btn btn-danger',
+                    confirmButtonColor: '#3085d6',
+                    html: `${me.errorSmsListS.map( er =>`<br><br>${er}`)}`,
+                    showCancelButton: false
+                    });
+                };
                 return me.errorSmsS;  
-                }
+                
             },
            
             showDetail(){

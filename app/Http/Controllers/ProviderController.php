@@ -45,7 +45,7 @@ class ProviderController extends Controller
         $providers = Provider::join('clients','providers.id','=','clients.id')
         ->where('clients.name', 'like', '%'. $filter . '%')
         ->orWhere('clients.rif', 'like', '%'. $filter . '%')
-        ->select('clients.id','clients.name','clients.type','clients.rif')
+        ->select('clients.id','clients.name','clients.type','clients.rif', 'clients.address', 'clients.retention')
         ->orderBy('clients.name', 'asc')->get();
 
         return ['providers' => $providers];
