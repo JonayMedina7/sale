@@ -92,12 +92,14 @@ class ProductController extends Controller
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
             ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition')
             ->where('products.stock','>','0')
+            ->where('products.condition', '>','0')
             ->orderBy('products.id', 'desc')->paginate(10);
         } else {
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
             ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition')
             ->where('products.'.$critery, 'like', '%'. $search . '%')
             ->where('products.stock','>','0')
+            ->where('products.condition', '>','0')
             ->orderBy('products.id', 'desc')->paginate(10);
             
         }

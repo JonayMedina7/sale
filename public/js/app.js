@@ -4935,6 +4935,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -7615,7 +7619,21 @@ __webpack_require__.r(__webpack_exports__);
 
       me.listSale(page, search, criterion);
     },
-    validateSale: function validateSale() {
+    registerRet: function registerRet() {
+      if (this.validateRet()) {
+        return;
+      }
+
+      var me = this;
+      axios.post('retention/register', {
+        'voucher_num': this.voucher_num,
+        'tax': this.tax,
+        'total': this.total
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    validateRet: function validateRet() {
       var me = this;
       me.errorSmsR = 0;
       me.errorSmsListR = [];
@@ -59356,11 +59374,13 @@ var render = function() {
                                 domProps: { textContent: _vm._s(purchase.name) }
                               }),
                               _vm._v(" "),
-                              _c("td", {
-                                domProps: {
-                                  textContent: _vm._s(purchase.voucher)
-                                }
-                              }),
+                              purchase.voucher == "bill"
+                                ? _c("td", [_vm._v("Factura")])
+                                : purchase.voucher == "note"
+                                ? _c("td", [_vm._v("Vale")])
+                                : purchase.voucher == "credit"
+                                ? _c("td", [_vm._v("Nota de Credito")])
+                                : _vm._e(),
                               _vm._v(" "),
                               _c("td", {
                                 domProps: {
@@ -60120,9 +60140,13 @@ var render = function() {
                       _c("div", { staticClass: "form-group" }, [
                         _c("label", [_vm._v("Tipo comprobante")]),
                         _vm._v(" "),
-                        _c("p", {
-                          domProps: { textContent: _vm._s(_vm.voucher) }
-                        })
+                        _vm.voucher == "bill"
+                          ? _c("p", [_vm._v("Factura")])
+                          : _vm.voucher == "note"
+                          ? _c("p", [_vm._v("Vale")])
+                          : _vm.voucher == "credit"
+                          ? _c("p", [_vm._v("Nota de credito")])
+                          : _vm._e()
                       ])
                     ]),
                     _vm._v(" "),

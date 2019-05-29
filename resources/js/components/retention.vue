@@ -721,7 +721,21 @@
                 // envia la peticion para visualizar la data de esa pagina
                 me.listSale(page, search, criterion);
             },
-            validateSale(){
+            registerRet(){
+                if (this.validateRet()){
+                    return;
+                }
+                let me = this;
+                axios.post('retention/register', {
+                    'voucher_num':this.voucher_num,
+                    'tax':this.tax,
+                    'total': this.total
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
+            validateRet(){
                 let me=this;
                 me.errorSmsR=0;
                 me.errorSmsListR =[];

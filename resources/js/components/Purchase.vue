@@ -63,7 +63,9 @@
                                             </td>
                                             <td v-text="purchase.user"></td>
                                             <td v-text="purchase.name"></td>
-                                            <td v-text="purchase.voucher"></td>
+                                            <td v-if="purchase.voucher=='bill'">Factura</td>
+                                            <td v-else-if="purchase.voucher=='note'">Vale</td>
+                                            <td v-else-if="purchase.voucher=='credit'">Nota de Credito</td>
                                             <td v-text="purchase.voucher_serie"></td>
                                             <td v-text="purchase.voucher_num"></td>
                                             <td v-text="purchase.date"></td>
@@ -246,7 +248,9 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Tipo comprobante</label>
-                                        <p v-text="voucher"></p>
+                                        <p v-if="voucher=='bill'">Factura</p>
+                                        <p v-else-if="voucher=='note'">Vale</p>
+                                        <p v-else-if="voucher=='credit'">Nota de credito</p>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
