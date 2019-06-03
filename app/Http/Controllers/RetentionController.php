@@ -16,7 +16,8 @@ class RetentionController extends Controller
         // if (!$request->ajax()) return redirect('/');
         $search = $request->search;
         $criterion = $request->criterion;
-        
+        $mytime = Carbon::now('America/Caracas');
+        $mytime = $mytime->format('Ym');
         if ($search=='') {
             $retentions = Retention::join('purchases', 'retentions.id', '=', 'purchases.ret_id')
             ->join('users', 'purchases.user_id', '=', 'users.id')
@@ -41,8 +42,21 @@ class RetentionController extends Controller
                 'from'          => $retentions->firstItem(),
                 'to'            => $retentions->lastItem(),
                 ],
-            'retentions' => $retentions
+            'retentions' => $retentions, 'mytime'=>$mytime 
         ];
+    }
+
+    public function retId()
+    {
+        $mytime = Carbon::now('America/Caracas');
+        $mytime = $mytime->format('Ym');
+        $retid = Retention::select('retentions.id')->orderBy('retentions.id','desc')->take(1)->get();
+        $num = 1;
+        $retid = $retid[0]->id + $num;
+        $retid = $mytime.(str_pad($retid,8,"0",STR_PAD_LEFT ));
+        
+        return ['retid' => $retid];
+        
     }
 
     public function getHeader(Request $request)
@@ -57,7 +71,7 @@ class RetentionController extends Controller
             ->where('retentions.id','=',$id)
             ->orderBy('retentions.id', 'desc')->take(1)->get();
         
-        return ['retention' => $retention];
+        return [ 'retention' => $retention];
     }
 
     public function getDetail(Request $request)
@@ -126,14 +140,11 @@ class RetentionController extends Controller
             $mytime = Carbon::now('America/Caracas');
 
         DB::beginTransaction();
-        $retention = new retention();
-        $retention->provider_id = $request->provider_id;
-        $retention->user_id = \Auth::user()->id;
-        $retention->voucher = $request->voucher;
-        $retention->voucher_serie = $request->voucher_serie;
+        $retention = new Retention();
         $retention->voucher_num = $request->voucher_num;
         $retention->date = $mytime->toDateString();
-        
+        $retention->year = $mytime->format('Y');
+        $retention->month = $mytime->format('m');
         $retention->tax = $request->tax;
         $retention->total = $request->total;
         $retention->status = 'Registrado';
@@ -143,12 +154,10 @@ class RetentionController extends Controller
         $details = $request->data; // Array de detalles de venta
         // recorrido del array
         foreach ($details as $retentions => $det) {
-            $detailretention = new Detailretention();
-            $detailretention->retention_id = $retention->id;
-            $detailretention->product_id = $det['product_id'];
-            $detailretention->quantity = $det['quantity'];
-            $detailretention->price = $det['price'];
-            $detailretention->save();
+            $purchase = Purchase::findOrFail($det['purchase_id']);
+            $purchase->ret_id = $retention->id;
+            $purchase->ret_num = $retention->voucher_num;
+            $purchase->save();
         }
 
         DB::commit();

@@ -25,6 +25,7 @@ class CreatePurchasesTable extends Migration
             $table->dateTime('date');
             $table->decimal('tax', 4, 2);
             $table->bigInteger('ret_id')->unsigned();
+            $table->integer('ret_num', 20)->nullable();
             $table->foreing('ret_id')->references('id')->on('retentions');
             $table->decimal('tax_mount', 15,2);
             $table->decimal('total', 11, 2);

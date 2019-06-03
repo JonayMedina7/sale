@@ -15,7 +15,7 @@ class PurchaseController extends Controller
         if (!$request->ajax()) return redirect('/');
         $search = $request->search;
         $criterion = $request->criterion;
-        
+
         if ($search=='') {
             $purchases = Purchase::join('clients', 'purchases.provider_id', '=', 'clients.id')
             ->join('users', 'purchases.user_id', '=', 'users.id')
@@ -96,6 +96,8 @@ class PurchaseController extends Controller
         $purchase->tax = $request->tax;
         $purchase->total = $request->total;
         $purchase->status = 'Registrado';
+        $purchase->ret_id = 0;
+        $purchase->ret_num = 0;
         $purchase->save();            
 
         $details = $request->data; // Array de detalles de compra
@@ -133,6 +135,7 @@ class PurchaseController extends Controller
         $purchase->save();
     }
 
+
     public function purchaseRet(Request $request)
     {
         // if (!$request->ajax()) return redirect('/');
@@ -143,9 +146,33 @@ class PurchaseController extends Controller
         ->select('id','voucher', 'voucher_num as purchase_num', 'total as totalp', 'tax', 'tax_mount',)
         ->where('ret_id','=', '0' )
         ->where('provider_id', '=', $id)
+        
         ->orderBy('id', 'desc')->take(1)->get();
 
         return ['purchases' => $purchases];
+    }
+
+    public function listPurchaseRet(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+
+        $search = $request->search;
+        $id = $request->id;
+        if ($search=='') {
+            $purchases = Purchase::select('id','voucher', 'voucher_num as purchase_num', 'total as totalp', 'tax', 'tax_mount', 'date as datep')
+            ->where('ret_id','=', '0' )
+            ->where('provider_id', '=', $id)
+            ->where('status', '=', 'Registrado')
+            ->orderBy('id', 'desc')->paginate(5);
+        } else {
+            $purchases = Purchase::select('id','voucher', 'voucher_num as purchase_num', 'total as totalp', 'tax', 'tax_mount',)
+            ->where('voucher_num', 'like', '%'.$search. '%')
+            ->where('ret_id','=', '0' )
+            ->where('provider_id', '=', $id)
+            ->where('status', '=', 'Registrado')
+            ->orderBy('id', 'desc')->paginate(5);
+        }
+        return ['purchases' => $purchases ];
     }
 
     public function destroy(Purchase $purchase)
