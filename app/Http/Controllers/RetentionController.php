@@ -107,20 +107,15 @@ class RetentionController extends Controller
 
     public function pdfw(Request $request, $id)
     {
-        $retention = retention::join('clients', 'retentions.provider_id', '=', 'clients.id')
-        ->join('users', 'retentions.user_id', '=', 'users.id')
-        ->select('retentions.id', 'retentions.voucher', 'retentions.voucher_serie', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.status', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
+        $retention = retention::join('purchases', 'retentions.id', '=', 'purchases.ret_id')
+        ->join('users', 'purchases.user_id', '=', 'users.id')
+        ->join('clients', 'purchases.provider_id', '=', 'clients.id')
+        ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.year', 'retentions.month', 'retentions.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
         ->where('retentions.id','=',$id)->take(1)->get();
 
-         $details = Detailretention::join('products', 'detailretentions.product_id', '=', 'products.id')
-        ->select('detailretentions.quantity', 'detailretentions.price', 'products.name as product')
-        ->where('detailretentions.retention_id','=',$id)
-        ->orderBy('detailretentions.id', 'desc')->get();
-
-        $numretention = retention::select('voucher_num')->where('id',$id)->get();
-
+        $detaillret
         
-        return view('welcome', compact('retention', 'details', 'numretention'));
+        return ['retention'=> $retention];
     }
   
 

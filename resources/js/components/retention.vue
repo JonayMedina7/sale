@@ -144,10 +144,6 @@
                                     <input type="text" class="form-control" v-model="retention" name="" >
                                 </div>
                                 <div class="col-md-3">
-                                    <label for=""> % Retenido</label>
-                                    <input type="text" class="form-control" v-model="retention" name="" >
-                                </div>
-                                <div class="col-md-3">
                                     <label for="">N° Retención</label>
                                     <h5><span v-text="voucher_num"></span></h5>
                                 </div>
@@ -682,7 +678,7 @@
                 var url='purchase/purchaseRet?filter='+me.purchase_num + '&id='+me.provider_id;
                 axios.get(url).then(function(response){
                     var response = response.data;
-                    me.arrayPurchase = response.sales;
+                    me.arrayPurchase = response.purchases;
                     console.log(me.arrayPurchase);
 
                     if (me.arrayPurchase.length>0) {

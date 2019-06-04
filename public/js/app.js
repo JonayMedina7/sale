@@ -5856,7 +5856,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -5985,6 +5984,8 @@ __webpack_require__.r(__webpack_exports__);
       axios.get(url).then(function (response) {
         var response = response.data;
         me.arraySaleTemp = response.sale;
+        me.sale_id = id;
+        console.log(me.sale_id);
         me.client = me.arraySaleTemp[0]['name'];
         me.user = me.arraySaleTemp[0]['user'];
         me.voucher = me.arraySaleTemp[0]['voucher'];
@@ -5993,6 +5994,8 @@ __webpack_require__.r(__webpack_exports__);
         me.tax = me.arraySaleTemp[0]['tax'];
         me.tax_mount = me.arraySaleTemp[0]['tax_mount'];
         me.total = me.arraySaleTemp[0]['total'];
+        me.status = me.arraySaleTemp[0]['status'];
+        console.log(me.status);
       })["catch"](function (error) {
         console.log(error);
       }); // obtener los datos de los detalles de la compra
@@ -6266,7 +6269,7 @@ __webpack_require__.r(__webpack_exports__);
       this.titleModal = 'Seleccione uno o mas Productos';
       this.modal = 1;
     },
-    desactiveSale: function desactiveSale(id) {
+    desactiveSale: function desactiveSale(sale_id) {
       var _this = this;
 
       Swal.fire({
@@ -6285,8 +6288,9 @@ __webpack_require__.r(__webpack_exports__);
         if (result.value) {
           var me = _this;
           axios.put('sale/desactive', {
-            'id': id
+            'id': sale_id
           }).then(function (response) {
+            me.list = 1;
             me.listSale(1, '', 'voucher_num');
             Swal.fire('Anulado!', 'La venta ha sido anulada con éxito.', 'success');
           })["catch"](function (error) {
@@ -7275,10 +7279,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -7507,7 +7507,7 @@ __webpack_require__.r(__webpack_exports__);
       var url = 'purchase/purchaseRet?filter=' + me.purchase_num + '&id=' + me.provider_id;
       axios.get(url).then(function (response) {
         var response = response.data;
-        me.arrayPurchase = response.sales;
+        me.arrayPurchase = response.purchases;
         console.log(me.arrayPurchase);
 
         if (me.arrayPurchase.length > 0) {
@@ -61210,68 +61210,28 @@ var render = function() {
                           "tbody",
                           _vm._l(_vm.arraySale, function(sale) {
                             return _c("tr", { key: sale.id }, [
-                              _c(
-                                "td",
-                                [
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass: "btn btn-success btn-sm",
-                                      attrs: { type: "button" },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.showSale(sale.id)
-                                        }
+                              _c("td", [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-success btn-sm",
+                                    attrs: { type: "button" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.showSale(sale.id)
                                       }
-                                    },
-                                    [_c("i", { staticClass: "icon-eye" })]
-                                  ),
-                                  _vm._v(
-                                    "  \n                                        "
-                                  ),
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass: "btn btn-info btn-sm",
-                                      attrs: { type: "button" },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.pdfSale(sale.id)
-                                        }
-                                      }
-                                    },
-                                    [_c("i", { staticClass: "icon-doc" })]
-                                  ),
-                                  _vm._v(
-                                    "  \n\n                                        "
-                                  ),
-                                  sale.status == "Registrado"
-                                    ? [
-                                        _c(
-                                          "button",
-                                          {
-                                            staticClass:
-                                              "btn btn-danger btn-sm",
-                                            attrs: { type: "button" },
-                                            on: {
-                                              click: function($event) {
-                                                return _vm.desactiveSale(
-                                                  sale.id
-                                                )
-                                              }
-                                            }
-                                          },
-                                          [
-                                            _c("i", {
-                                              staticClass: "icon-trash"
-                                            })
-                                          ]
-                                        )
-                                      ]
-                                    : _vm._e()
-                                ],
-                                2
-                              ),
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                          Detalles"
+                                    )
+                                  ]
+                                ),
+                                _vm._v(
+                                  "  \n                                      \n                                        \n                                    "
+                                )
+                              ]),
                               _vm._v(" "),
                               _c("td", {
                                 domProps: { textContent: _vm._s(sale.name) }
@@ -61284,12 +61244,6 @@ var render = function() {
                                 : sale.voucher == "credit"
                                 ? _c("td", [_vm._v("Nota de Credito")])
                                 : _vm._e(),
-                              _vm._v(" "),
-                              _c("td", {
-                                domProps: {
-                                  textContent: _vm._s(sale.voucher_serie)
-                                }
-                              }),
                               _vm._v(" "),
                               _c("td", {
                                 domProps: {
@@ -62271,21 +62225,68 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group row" }, [
-                    _c("div", { staticClass: "col-md-12" }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-secondary",
-                          attrs: { type: "button" },
-                          on: {
-                            click: function($event) {
-                              return _vm.hideDetail()
+                    _c(
+                      "div",
+                      { staticClass: "col-md-12" },
+                      [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-secondary",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                return _vm.hideDetail()
+                              }
                             }
-                          }
-                        },
-                        [_vm._v("Cerrar")]
-                      )
-                    ])
+                          },
+                          [_vm._v("Cerrar")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-info ",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                return _vm.pdfSale(_vm.sale_id)
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                                          Reemprimir"
+                            )
+                          ]
+                        ),
+                        _vm._v(
+                          "  \n\n                                        "
+                        ),
+                        _vm.status == "Registrado"
+                          ? [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-danger",
+                                  attrs: { type: "button" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.desactiveSale(_vm.sale_id)
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                                             Anular\n                                            "
+                                  )
+                                ]
+                              )
+                            ]
+                          : _vm._e()
+                      ],
+                      2
+                    )
                   ])
                 ])
               ]
@@ -62596,8 +62597,6 @@ var staticRenderFns = [
         _c("th", [_vm._v("Cliente")]),
         _vm._v(" "),
         _c("th", [_vm._v("Tipo de comprobante")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Serie comprobante")]),
         _vm._v(" "),
         _c("th", [_vm._v("Número comprobante")]),
         _vm._v(" "),
@@ -64231,34 +64230,6 @@ var render = function() {
                               return
                             }
                             _vm.tax = $event.target.value
-                          }
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-md-3" }, [
-                      _c("label", { attrs: { for: "" } }, [
-                        _vm._v(" % Retenido")
-                      ]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.retention,
-                            expression: "retention"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { type: "text", name: "" },
-                        domProps: { value: _vm.retention },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.retention = $event.target.value
                           }
                         }
                       })

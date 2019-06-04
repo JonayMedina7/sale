@@ -42,7 +42,6 @@
                                             
                                             <th>Cliente</th>
                                             <th>Tipo de comprobante</th>
-                                            <th>Serie comprobante</th>
                                             <th>Número comprobante</th>
                                             <th>Fecha Hora</th>
                                             <th>Total</th>
@@ -54,17 +53,9 @@
                                         <tr v-for="sale in arraySale" :key="sale.id">
                                             <td>
                                                 <button type="button" class="btn btn-success btn-sm" @click="showSale(sale.id)">
-                                                  <i class="icon-eye"></i>
+                                                  Detalles</i>
                                                 </button> &nbsp;
-                                                <button type="button" class="btn btn-info btn-sm" @click="pdfSale(sale.id)">
-                                                  <i class="icon-doc"></i>
-                                                </button> &nbsp;
-
-                                                <template  v-if="sale.status=='Registrado'">
-                                                    <button type="button" @click="desactiveSale(sale.id)" class="btn btn-danger btn-sm" >
-                                                      <i class="icon-trash"></i>
-                                                    </button>
-                                                </template>
+                                              
                                                 
                                             </td>
                                            
@@ -72,7 +63,6 @@
                                             <td v-if="sale.voucher=='bill'">Factura</td>
                                             <td v-else-if="sale.voucher=='note'">Vale</td>
                                             <td v-else-if="sale.voucher=='credit'">Nota de Credito</td>
-                                            <td v-text="sale.voucher_serie"></td>
                                             <td v-text="sale.voucher_num"></td>
                                             <td v-text="sale.date"></td>
                                             <td v-text="sale.total"></td>
@@ -357,6 +347,15 @@
                             <div class="form-group row">
                                 <div class="col-md-12">
                                     <button type="button" class="btn btn-secondary" @click="hideDetail()">Cerrar</button>
+                                      <button type="button" class="btn btn-info " @click="pdfSale(sale_id)">
+                                                  Reemprimir</i>
+                                                </button> &nbsp;
+
+                                                <template  v-if="status=='Registrado'">
+                                                    <button type="button" @click="desactiveSale(sale_id)" class="btn btn-danger" >
+                                                     Anular
+                                                    </button>
+                                                </template>
                                 </div>
                             </div>
                         </div>
@@ -574,7 +573,8 @@
                 axios.get(url).then(function(response) {
                     var response = response.data; 
                     me.arraySaleTemp = response.sale;
-                    
+                    me.sale_id = id;
+                    console.log(me.sale_id);
                     me.client = me.arraySaleTemp[0]['name'];
                     me.user = me.arraySaleTemp[0]['user'];
                     me.voucher = me.arraySaleTemp[0]['voucher'];
@@ -583,6 +583,8 @@
                     me.tax = me.arraySaleTemp[0]['tax'];
                     me.tax_mount = me.arraySaleTemp[0]['tax_mount'];
                     me.total = me.arraySaleTemp[0]['total'];
+                    me.status = me.arraySaleTemp[0]['status'];
+                    console.log(me.status);
 
                 })
                 .catch(function (error) {
@@ -881,7 +883,7 @@
                 this.titleModal    = 'Seleccione uno o mas Productos';
                 this.modal         = 1;
             },
-            desactiveSale(id){
+            desactiveSale(sale_id){
                 Swal.fire({
                     title: 'Esta seguro de anular esta venta?',
                     type: 'warning',
@@ -899,8 +901,9 @@
                         let me=this;
 
                         axios.put('sale/desactive', {
-                            'id': id
+                            'id': sale_id
                         }).then(function (response){
+                            me.list=1;
                            me.listSale(1,'','voucher_num');
                             Swal.fire(
                                 'Anulado!',
