@@ -26,6 +26,9 @@ Route::group(['middleware' =>['auth']], function()
 
 	route::get('/dashboard', 'DashboardController');
 
+	route::get('welcomer', function (){
+		return view('welcomer');
+	});
 
 	Route::group(['middleware' =>['storer']], function()
 	{
@@ -164,7 +167,7 @@ Route::group(['middleware' =>['auth']], function()
 		route::get('/retention/getDetail', 'RetentionController@getDetail');
 		route::put('/retention/update', 'RetentionController@update');
 		route::put('/retention/desactive', 'RetentionController@desactive');
-		
+		route::get('/retention/pdfw/{id}', 'RetentionController@pdfw')->name('venta'); 
 		
 	});
 	

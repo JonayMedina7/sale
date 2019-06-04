@@ -7279,10 +7279,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -64234,34 +64230,6 @@ var render = function() {
                               return
                             }
                             _vm.tax = $event.target.value
-                          }
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-md-3" }, [
-                      _c("label", { attrs: { for: "" } }, [
-                        _vm._v(" % Retenido")
-                      ]),
-                      _vm._v(" "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.retention,
-                            expression: "retention"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { type: "text", name: "" },
-                        domProps: { value: _vm.retention },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.retention = $event.target.value
                           }
                         }
                       })

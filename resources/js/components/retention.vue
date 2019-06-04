@@ -144,10 +144,6 @@
                                     <input type="text" class="form-control" v-model="retention" name="" >
                                 </div>
                                 <div class="col-md-3">
-                                    <label for=""> % Retenido</label>
-                                    <input type="text" class="form-control" v-model="retention" name="" >
-                                </div>
-                                <div class="col-md-3">
                                     <label for="">N° Retención</label>
                                     <h5><span v-text="voucher_num"></span></h5>
                                 </div>
