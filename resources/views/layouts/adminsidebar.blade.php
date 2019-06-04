@@ -2,39 +2,39 @@
             <nav class="sidebar-nav">
                 <ul class="nav">
                     <li @click="menu=0" class="nav-item">
-                        <a class="nav-link " href="#"><i class="icon-speedometer"></i> Inicio</a>
+                        <a class="nav-link " href="#"><i class="icon-home"></i> Inicio</a>
                     </li>
                     <li class="nav-title">
                        
                     </li>
                    
                     <li class="nav-item nav-dropdown">
-                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-basket"></i> Ventas</a>
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-line-chart"></i> Ventas</a>
                         <ul class="nav-dropdown-items">
                             <li @click="menu=5" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-basket-loaded"></i> Ventas</a>
+                                <a class="nav-link" href="#"><i class="fa fa-file-pdf-o"></i> Facturas</a>
                             </li>
                             <li @click="menu=6" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-notebook"></i> Clientes</a>
+                                <a class="nav-link" href="#"><i class="fa fa-address-book-o"></i> Clientes</a>
                             </li>
                         </ul>
                     </li>
                     <li class="nav-item nav-dropdown">
-                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-wallet"></i> Compras</a>
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-cart-plus"></i> Compras</a>
                         <ul class="nav-dropdown-items">
                             <li @click="menu=3" class="nav-item">
-                                <a class="nav-link" href="i#"><i class="icon-wallet"></i> Ingresos</a>
+                                <a class="nav-link" href="i#"><i class="fa fa-folder-open"></i> Ingresos</a>
                             </li>
                             <li @click="menu=4" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-notebook"></i> Proveedores</a>
+                                <a class="nav-link" href="#"><i class="fa fa-address-book-o"></i> Proveedores</a>
                             </li>
                             <li @click="menu=11" class="nav-item">
-                            <a class="nav-link" href="#"><i class="icon-book-open"></i> Retenciones</a>
+                            <a class="nav-link" href="#"><i class="fa fa-file"></i> Retenciones</a>
                               </li>
                         </ul>
                     </li>
                      <li class="nav-item nav-dropdown">
-                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-bag"></i> Productos</a>
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-archive"></i> Productos</a>
                         <ul class="nav-dropdown-items">
                             <li @click="menu=1" class="nav-item">
                                 <a class="nav-link" href="#"><i class="icon-bag"></i> Categorías</a>
@@ -45,23 +45,14 @@
                         </ul>
                     </li>
                     
-                     
-                        
-                  
-                    <li @click="menu=12" class="nav-item">
-                        <a class="nav-link" href="#"><i class="icon-book-open"></i> Ayuda <span class="badge badge-danger">PDF</span></a>
-                    </li>
-                    <li @click="menu=13" class="nav-item">
-                        <a class="nav-link" href="#"><i class="icon-info"></i> Acerca de...<span class="badge badge-info">IT</span></a>
-                    </li>
-                    <li class="nav-item nav-dropdown">
-                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-people"></i> Acceso</a>
+                     <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-user-circle"></i> Acceso</a>
                         <ul class="nav-dropdown-items">
                             <li @click="menu=7" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-user"></i> Usuarios</a>
+                                <a class="nav-link" href="#"><i class="fa fa-users"></i> Usuarios</a>
                             </li>
                             <li @click="menu=8" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-user-following"></i> Roles</a>
+                                <a class="nav-link" href="#"><i class="fa fa-address-card-o"></i> Roles</a>
                             </li>
                         </ul>
                     </li>
@@ -76,6 +67,15 @@
                             </li>
                         </ul>
                     </li>
+                        
+                  
+                    <li @click="menu=12" class="nav-item">
+                        <a class="nav-link" href="#"><i class="fa fa-support"></i> Ayuda <span class="badge badge-danger">PDF</span></a>
+                    </li>
+                    <li @click="menu=13" class="nav-item">
+                        <a class="nav-link" href="#"><i class="icon-info"></i> Acerca de...<span class="badge badge-info">IT</span></a>
+                    </li>
+                    
                    
                 </ul>
             </nav>

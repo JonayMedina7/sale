@@ -10,9 +10,9 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Ventas&nbsp;&nbsp;
+                        
                         <button type="button" class="btn btn-success" @click="showDetail()">
-                            <i class="icon-plus"></i>&nbsp;Crear Factura
+                            <i class="fa fa-file"></i>&nbsp;&nbsp;Crear Factura
                         </button>
                     </div>
                     <!-- litado registros -->

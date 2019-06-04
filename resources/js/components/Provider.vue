@@ -10,9 +10,9 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Proveedor
-                        <button type="button" class="btn btn-secondary" @click="openModal('client','register')">
-                            <i class="icon-plus"></i>&nbsp;Nuevo
+                        
+                        <button type="button" class="btn btn-success" @click="openModal('client','register')">
+                            <i class="fa fa-address-book-o"></i>&nbsp;&nbsp;Agregar Nuevo
                         </button>
                     </div>
                     <div class="card-body">
@@ -24,10 +24,13 @@
                                       <option value="rif">Rif</option>
                                     </select>
                                     <input type="text" v-model="search" @keyup.enter="listClient(1,search,criterion)" class="form-control" placeholder="Texto a Buscar">
-                                    <button type="submit" @click="listClient(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
+                                    <button type="submit" @click="listClient(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
+                        <div class="box-header">
+                                    <center><h3 class="box-title">Listado de Proveedores</h3></center>
+                                </div>  <br><hr>  
                         <table class="table table-bordered table-striped table-sm">
                             <thead>
                                 <tr>
@@ -46,7 +49,7 @@
                                 <tr v-for="client in arrayClient" :key="client.id">
                                     <td>
                                         <button type="button" class="btn btn-warning btn-sm" @click="openModal('client','update', client)">
-                                          <i class="icon-pencil"></i>
+                                          <i class="icon-pencil"></i>&nbsp;&nbsp; Editar
                                         </button> &nbsp;
                                         
                                     </td>

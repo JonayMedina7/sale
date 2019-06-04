@@ -10,9 +10,9 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Usuarios
-                        <button type="button" class="btn btn-secondary" @click="openModal('client','register')">
-                            <i class="icon-plus"></i>&nbsp;Nuevo
+                        
+                        <button type="button" class="btn btn-success" @click="openModal('client','register')">
+                            <i class="fa fa-user"></i>&nbsp;Nuevo Usuario
                         </button>
                     </div>
                     <div class="card-body">
@@ -24,7 +24,7 @@
                                       <option value="rif">Rif</option>
                                     </select>
                                     <input type="text" v-model="search" @keyup.enter="listClient(1,search,criterion)" class="form-control" placeholder="Texto a Buscar">
-                                    <button type="submit" @click="listClient(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
+                                    <button type="submit" @click="listClient(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -32,12 +32,11 @@
                             <thead>
                                 <tr>
                                     <th>Opciones</th>
-                                    <th>Rif</th>
+                                    
                                     <th>Nombre y Apellido</th>
-                                    <th>Teléfono</th>
+                                    
                                     <th>Corre o Electrónico</th>
-                                    <th>Agente de retención</th>
-                                    <th>Dirección</th>
+                                   
                                     <th>Usuario</th>
                                     <th>Role</th>
                                     <th>Estado</th>
@@ -57,12 +56,11 @@
                                         </button>
                                         
                                     </td>
-                                    <td v-text="client.type + '-' + client.rif"></td>
+                                    
                                     <td v-text="client.name"></td>
-                                    <td v-text="client.phone"></td>
+                                    
                                     <td v-text="client.email"></td>
-									<td v-text="client.retention"></td>
-                                    <td v-text="client.address"></td>
+                                    
                                     <td v-text="client.user"></td>
                                     <td v-text="client.role_name"></td>
                                     <td>

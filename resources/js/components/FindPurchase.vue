@@ -10,7 +10,7 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Compras
+                        
                     </div>
                     <!-- litado registros -->
                     <template v-if="list==1">
