@@ -146,6 +146,7 @@ Route::group(['middleware' =>['auth']], function()
 		route::get('/purchase/getHeader', 'PurchaseController@getHeader');
 		route::get('/purchase/getDetail', 'PurchaseController@getDetail'); 
 		route::get('/purchase/purchaseRet', 'PurchaseController@purchaseRet');
+		route::get('/purchase/listPurchaseRet', 'PurchaseController@listPurchaseRet');
 
 		route::get('/sale', 'SaleController@index');
 		route::post('/sale/register', 'SaleController@store');
@@ -157,12 +158,14 @@ Route::group(['middleware' =>['auth']], function()
 		route::get('/sale/saleSearchRet', 'SaleController@saleSearchRet');
 
 		route::get('/retention', 'RetentionController@index');
-		route::post('/retention/register', 'RetentionControllerw@store');
+		route::get('retention/retId', 'RetentionController@retId');
+		route::post('/retention/register', 'RetentionController@store');
 		route::get('/retention/getHeader', 'RetentionController@getHeader');
 		route::get('/retention/getDetail', 'RetentionController@getDetail');
 		route::put('/retention/update', 'RetentionController@update');
 		route::put('/retention/desactive', 'RetentionController@desactive');
-
+		
+		
 	});
 	
 

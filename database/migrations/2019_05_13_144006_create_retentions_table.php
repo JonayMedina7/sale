@@ -17,6 +17,8 @@ class CreateRetentionsTable extends Migration
             $table->bigIncrements('id');
             $table->string('voucher_num', 20);
             $table->dateTime('date');
+            $table->string('year', 7);
+            $table->string('month', 11);
             $table->decimal('tax', 4, 2);
             $table->decimal('total', 15, 2);
             $table->string('status', 20);

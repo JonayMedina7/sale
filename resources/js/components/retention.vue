@@ -143,6 +143,14 @@
                                     <label for=""> % Retenido</label>
                                     <input type="text" class="form-control" v-model="retention" name="" >
                                 </div>
+                                <div class="col-md-3">
+                                    <label for=""> % Retenido</label>
+                                    <input type="text" class="form-control" v-model="retention" name="" >
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="">N° Retención</label>
+                                    <h5><span v-text="voucher_num"></span></h5>
+                                </div>
                                 
                             </div>
                             <div class="form-group row border">
@@ -200,10 +208,10 @@
                                         <tbody v-if="arrayDetailr.length">
                                             <tr v-for="(detail, index) in arrayDetailr" :key="detail.purchase_id">
                                                 <td>
-                                                    <button @click="deleteDetail(index)" type="button" class="btn btn-danger btn-sm"><i class="icon-close"></i>
+                                                    <button @click="deleteBill(index)" type="button" class="btn btn-danger btn-sm"><i class="icon-close"></i>
                                                     </button>
                                                 </td>
-                                                <td v-text="detail.purchase_num"></td>
+                                                <td class="form-control" v-text="detail.purchase_num"></td>
                                                 <td>
                                                     <span class="form-control" v-if="detail.voucher=='bill'">Factura</span>
                                                     <span class="form-control" v-else-if="detail.voucher=='note'">Vale</span>
@@ -211,8 +219,12 @@
                                                 </td>
                                                 <td>
                                                     
+                                                    <input v-model="detail.tax" type="number"  class="form-control" name="">
+                                                </td>
+                                                <td>
                                                     <input v-model="detail.totalp" type="number"  class="form-control" name="">
                                                 </td>
+
                                                 <td>
                                                     <input v-model="detail.tax_mount" type="number"  class="form-control" name="">
                                                 </td>
@@ -221,7 +233,7 @@
                                                 </td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
-                                                <td colspan="5" align="right"><strong>Total Retenido: </strong></td>
+                                                <td colspan="6" align="right"><strong>Total Retenido: </strong></td>
                                                 <td>$ {{ totalPartial=(calculateTotalPartial) }}</td>
                                             </tr>
                                             <!-- <tr style="background-color: #CEECFS;">
@@ -322,7 +334,7 @@
                                                 
                                                 <td v-text="detail.voucher" ></td>
                                                 <td v-text="detail.purchase_num" ></td>
-                                                <td v-text="detail.dates" ></td>
+                                                <td v-text="detail.datep" ></td>
                                                 <td v-text="detail.totalp"></td>
                                             </tr>
                                             <!-- <tr style="background-color: #CEECFS;">
@@ -360,7 +372,7 @@
                 </div>
                 <!-- Fin ejemplo de tabla Listado -->
             </div>
-            <!--Inicio del modal agregar/actualizar-->
+            <!--Inicio del modal agregar facturas-->
             <div class="modal fade" tabindex="-1" :class="{'show' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog modal-primary modal-lg" role="document">
                     <div class="modal-content">
@@ -374,12 +386,8 @@
                             <div class="form-group row">
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <select class="form-control col-md-3" v-model="criteryR">
-                                          <option value="name">Nombre</option>
-                                          <option value="code">Codigo</option>
-                                        </select>
-                                        <input type="text" v-model="search" @keyup.enter="listProductSale(searchR,criteryR)" class="form-control" placeholder="Ingrese datos a Buscar">
-                                        <button type="submit" @click="listProductSale(searchR,criteryR)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
+                                        <input type="text" v-model="searchR" @keyup.enter="listPurchaseRet(searchR,)" class="form-control" placeholder="Factura a Buscar">
+                                        <button type="submit" @click="listPurchaseRet(searchR)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
                                     </div>
                                 </div>
                             </div>
@@ -387,37 +395,28 @@
                                 <table class="table table-bordered table-striped table-sm">
                                     <thead>
                                         <tr>
-                                            <th>Opciones</th>
-                                            <th>Código</th>
-                                            <th>Nombre</th>
-                                            <th>Categoría</th>
-                                            <th>Precio Venta</th>
-                                            <th>Stock</th>
-                                            
-                                            <th>Estado</th>
+                                            <th>Agregar</th>
+                                            <th>Nro.</th>
+                                            <th>Tipo de Documento</th>
+                                            <th>Fecha Documento</th>
+                                            <th>Monto</th>
+                                            <th>Total I.v.a</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="sale in arrayPurchase" :key="sale.id">
+                                        <tr v-for="purchase in arrayPurchase" :key="purchase.id">
                                             <td>
-                                                <button type="button" class="btn btn-success btn-sm" @click="addDetailModal(sale)">
+                                                <button type="button" class="btn btn-success btn-sm" @click="addDetailModal(purchase)">
                                                   <i class="icon-check"></i>
                                                 </button>
                                             </td>
-                                            <td v-text="sale.code"></td>
-                                            <td v-text="sale.name"></td>
-                                            <td v-text="sale.category_name"></td>
-                                            <td v-text="sale.price_sell"></td>
-                                            <td v-text="sale.stock"></td>
-                                            <td>
-                                                <div v-if="sale.condition">
-                                                    <span class="badge badge-success">Activo</span>
-                                                </div>
-
-                                                <div v-else>
-                                                    <span class="badge badge-secondary">Inactivo</span>
-                                                </div>
-                                            </td>
+                                            <td v-text="purchase.purchase_num"></td>
+                                            <td v-if="purchase.voucher=='bill'">Factura</td>
+                                            <td v-else-if="purchase.voucher=='note'">Vale</td>
+                                            <td v-else-if="purchase.voucher=='credit'">Nota de Credito</td>
+                                            <td v-text="purchase.datep"></td>
+                                            <td v-text="purchase.totalp"></td>
+                                            <td v-text="purchase.tax_mount"></td>
                                         </tr>
                                         
                                     </tbody>
@@ -450,12 +449,13 @@
                 provider_id : 0,
                 purchase_id: 0,
                 id: 0,
+                
                 ret_id: 0,
                 client: '',
                 voucher_num : '',
                 voucher: '',
                 date : '',
-                dates: '',
+                datep: '',
                 tax : 0.16,
                 tax_mount: 0.0,
                 total : 0.0,
@@ -472,6 +472,7 @@
                 arrayDetailr: [],
                 arrayProvider : [],
                 arrayPurchase: [],
+                mytime: '',
                 list : 1,
                 totalTax: 0.0,
                 totalPartial: 0.0,
@@ -548,6 +549,27 @@
                     var response = response.data; 
                      me.arrayRet = response.retentions.data;
                      me.pagination = response.pagination;
+                     me.mytime = response.mytime;
+                     console.log(me.mytime);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
+            retId(){
+                let me=this;
+                
+                var arrayRetidTemp = [];
+                var url= 'retention/retId';
+                axios.get(url).then(function(response) {
+                    var response = response.data;
+                    console.log(response);
+
+                    me.voucher_num = response.retid;
+                    
+                    // me.arrayId = response.saleid;
+                    /*me.voucher_num = me.arrayId[0]['id'];
+                    console.log(me.voucher_num);*/
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -597,10 +619,14 @@
                 });
             },
             showInsert(){
+
                 let me=this;
+                me.voucher_num=0;
                 me.list=0;
 
+                me.retId();
                 me.date='';
+                me.datep='';
                 me.total=0;
                 me.totalp=0;
                 me.tax='';
@@ -612,7 +638,7 @@
                 me.type='';
                 me.rif='';
                 me.address='';
-                me.voucher_num=0;
+                
                 me.voucher='bill';
                 me.purchase_num='';
                 me.arrayDetailr=[];
@@ -649,6 +675,9 @@
 
             },
             purchaseRet(){
+                if (this.validateSearchProvider()) {
+                    return;
+                }
                 let me=this;
                 var url='purchase/purchaseRet?filter='+me.purchase_num + '&id='+me.provider_id;
                 axios.get(url).then(function(response){
@@ -663,10 +692,27 @@
                         me.totalp = me.arrayPurchase[0]['totalp'];
                         me.tax = me.arrayPurchase[0]['tax'];
                         me.tax_mount = me.arrayPurchase[0]['tax_mount'];
+                        me.datep = me.arrayPurchase[0]['datep'];
                     } else {
                         me.purchase_num = '';
                         me.purchase_id = 0;
                     }
+                })
+                .catch(function (error) {
+                        console.log(error);
+                });
+            },
+            listPurchaseRet(searchR){
+                if (this.validateSearchProvider()) {
+                    return;
+                }
+                let me = this;
+
+                var url='purchase/listPurchaseRet?search='+ searchR + '&id=' + me.provider_id;
+                axios.get(url).then(function(response){
+                    var response = response.data;
+                    me.arrayPurchase = response.purchases.data;
+                    console.log(me.arrayPurchase);
                 })
                 .catch(function (error) {
                         console.log(error);
@@ -698,6 +744,27 @@
                     me.tax_mount= 0.0;
                 }
             },
+            addDetailModal(data =[]){
+                let me = this;
+
+                if (me.find(data['id'])) {
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Error...',
+                        text: 'La Fatura ya se encuentra agregada'
+                    });
+                } else {
+                    me.arrayDetailr.push({
+                        purchase_id: data['id'],
+                        purchase_num: data['purchase_num'],
+                        voucher: data['voucher'],
+                        totalp: data['totalp'],
+                        tax: data['tax'],
+                        tax_mount: data['tax_mount'],
+                        datep: data['datep']
+                    });
+                }
+            },
             find(id){
                 var sw=0;
                 for(var i=0; i<this.arrayDetailr.length; i++){
@@ -706,6 +773,10 @@
                     }
                 }
                 return sw;
+            },
+            deleteBill(index){
+                let me=this;
+                me.arrayDetailr.splice(index, 1);
             },
             hideRet(){
                 this.list=1;
@@ -725,11 +796,38 @@
                 if (this.validateRet()){
                     return;
                 }
+                console.log(this.arrayDetailr);
                 let me = this;
                 axios.post('retention/register', {
                     'voucher_num':this.voucher_num,
                     'tax':this.tax,
-                    'total': this.total
+                    'total': this.total,
+                    'data': this.arrayDetailr
+                }).then(function(response){
+                    me.list=1;
+                    me.listRetention(1,'','voucher_num');
+                    me.date='';
+                    me.datep='';
+                    me.total=0;
+                    me.totalp=0;
+                    me.tax=0.16;
+                    me.ret_val=0;
+                    me.tax_mount=0.0;
+                    me.provider_id=0;
+                    me.user_id=0;
+                    me.name='';
+                    me.type='';
+                    me.rif='';
+                    me.address='';
+                    
+                    me.voucher='bill';
+                    me.voucher_num = 0;
+                    me.purchase_num='';
+                    me.arrayDetailr=[];
+
+                    window.open('http://localhost/sale/public/sale/pdf/'+ response.data.id + ','+ '_blank');
+
+
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -751,7 +849,7 @@
 
                 if (me.provider_id==0) me.errorSmsListR.push("Por favor Seleccione un cliente");
 
-                if (me.voucher_num == 0) me.errorSmsListR.push("Ingrese un numero de Factura o nota de crédito");
+                // if (me.voucher_num == 0) me.errorSmsListR.push("Ingrese un numero de Factura o nota de crédito");
 
                 if (me.arrayDetailr.length<=0) me.errorSmsListR.push("Por favor ingrese Facturas a retener");
 
@@ -761,6 +859,7 @@
                 if (me.errorSmsListR.length) me.errorSmsR = 1;
                 if (this.errorSmsListR.length >= 1) {
                         Swal.fire({
+                    type: 'error',
                     confirmButtonText: 'Aceptar!',
                     confirmButtonClass: 'btn btn-danger',
                     confirmButtonColor: '#3085d6',
@@ -769,6 +868,27 @@
                     });
                 };
                 return this.errorSmsR;
+            },
+            validateSearchProvider(){
+                let me=this;
+                me.errorSearchProvider = 0;
+                me.errorSearchProviderList=[];
+
+                var prod;
+                if(me.provider_id == 0) {
+                    me.errorSearchProvider = 1;
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Error',
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Aceptar!',
+                        confirmButtonAriaLabel: 'Thumbs up, great!',
+                        confirmButtonClass: 'btn btn-danger',
+                        confirmButtonColor: '#3085d6',
+                        text: 'Por favor seleccione un proveedor antes de realizas la busqueda',
+                        showCancelButton: false
+                    });
+                };
+                return me.errorSearchProvider;
             },
             closeModal(){
                 this.modal=0;
