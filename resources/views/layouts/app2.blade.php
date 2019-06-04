@@ -51,7 +51,7 @@
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                        <img src="img/avatars/6.jpg" class="img-avatar" alt="">
+                        <img src="img/avatars/6.png" class="img-avatar" alt="">
                         <span class="d-md-down-none">{{ Auth::user()->user }}</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
