@@ -198,9 +198,9 @@
                                                 <th>Opciones</th>
                                                 <th>Numero de documento</th>
                                                 <th>Documento</th>
-                                                <th>Monto Factura</th>
-                                                <th>Base I.v.a.</th>
-                                                <th>Total I.v.a.</th>
+                                                <th>I.V.A</th>
+                                                <th>Base Imponible</th>
+                                                <th>Total I.V.A</th>
                                                 <th>Monto Retenido</th>
                                             </tr>
                                         </thead>
@@ -218,22 +218,22 @@
                                                 </td>
                                                 <td>
                                                     
-                                                    <input v-model="detail.tax" type="number"  class="form-control" name="">
+                                                    <input v-model="detail.tax" type="number" disabled class="form-control" name="">
                                                 </td>
                                                 <td>
-                                                    <input v-model="detail.totalp" type="number"  class="form-control" name="">
+                                                    <input v-model="detail.totalp" disabled="" type="number"  class="form-control" name="">
                                                 </td>
 
                                                 <td>
-                                                    <input v-model="detail.tax_mount" type="number"  class="form-control" name="">
+                                                    <input v-model="detail.tax_mount" disabled type="number"  class="form-control" name="">
                                                 </td>
                                                 <td>
-                                                    {{ detail.tax_mount*ret_val }}
+                                                   Bs {{  detail.tax_mount*ret_val }}
                                                 </td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="6" align="right"><strong>Total Retenido: </strong></td>
-                                                <td>$ {{ totalPartial=(calculateTotalPartial) }}</td>
+                                                <td>Bs {{ totalPartial=(calculateTotalPartial) }}</td>
                                             </tr>
                                             <!-- <tr style="background-color: #CEECFS;">
                                                 <td colspan="5" align="right"><strong>Total Impuesto: </strong></td>

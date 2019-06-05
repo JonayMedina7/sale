@@ -113,6 +113,7 @@ var buildURL = __webpack_require__(/*! ./../helpers/buildURL */ "./node_modules/
 var parseHeaders = __webpack_require__(/*! ./../helpers/parseHeaders */ "./node_modules/axios/lib/helpers/parseHeaders.js");
 var isURLSameOrigin = __webpack_require__(/*! ./../helpers/isURLSameOrigin */ "./node_modules/axios/lib/helpers/isURLSameOrigin.js");
 var createError = __webpack_require__(/*! ../core/createError */ "./node_modules/axios/lib/core/createError.js");
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(/*! ./../helpers/btoa */ "./node_modules/axios/lib/helpers/btoa.js");
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -124,6 +125,22 @@ module.exports = function xhrAdapter(config) {
     }
 
     var request = new XMLHttpRequest();
+    var loadEvent = 'onreadystatechange';
+    var xDomain = false;
+
+    // For IE 8/9 CORS support
+    // Only supports POST and GET calls and doesn't returns the response headers.
+    // DON'T do this for testing b/c XMLHttpRequest is mocked, not XDomainRequest.
+    if ( true &&
+        typeof window !== 'undefined' &&
+        window.XDomainRequest && !('withCredentials' in request) &&
+        !isURLSameOrigin(config.url)) {
+      request = new window.XDomainRequest();
+      loadEvent = 'onload';
+      xDomain = true;
+      request.onprogress = function handleProgress() {};
+      request.ontimeout = function handleTimeout() {};
+    }
 
     // HTTP basic authentication
     if (config.auth) {
@@ -138,8 +155,8 @@ module.exports = function xhrAdapter(config) {
     request.timeout = config.timeout;
 
     // Listen for ready state
-    request.onreadystatechange = function handleLoad() {
-      if (!request || request.readyState !== 4) {
+    request[loadEvent] = function handleLoad() {
+      if (!request || (request.readyState !== 4 && !xDomain)) {
         return;
       }
 
@@ -156,8 +173,9 @@ module.exports = function xhrAdapter(config) {
       var responseData = !config.responseType || config.responseType === 'text' ? request.responseText : request.response;
       var response = {
         data: responseData,
-        status: request.status,
-        statusText: request.statusText,
+        // IE sends 1223 instead of 204 (https://github.com/axios/axios/issues/201)
+        status: request.status === 1223 ? 204 : request.status,
+        statusText: request.status === 1223 ? 'No Content' : request.statusText,
         headers: responseHeaders,
         config: config,
         request: request
@@ -966,6 +984,54 @@ module.exports = function bind(fn, thisArg) {
     return fn.apply(thisArg, args);
   };
 };
+
+
+/***/ }),
+
+/***/ "./node_modules/axios/lib/helpers/btoa.js":
+/*!************************************************!*\
+  !*** ./node_modules/axios/lib/helpers/btoa.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+// btoa polyfill for IE<10 courtesy https://github.com/davidchambers/Base64.js
+
+var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+
+function E() {
+  this.message = 'String contains an invalid character';
+}
+E.prototype = new Error;
+E.prototype.code = 5;
+E.prototype.name = 'InvalidCharacterError';
+
+function btoa(input) {
+  var str = String(input);
+  var output = '';
+  for (
+    // initialize result and counter
+    var block, charCode, idx = 0, map = chars;
+    // if the next str index does not exist:
+    //   change the mapping table to "="
+    //   check if d has no fractional digits
+    str.charAt(idx | 0) || (map = '=', idx % 1);
+    // "8 - idx % 1 * 8" generates the sequence 2, 4, 6, 8
+    output += map.charAt(63 & block >> 8 - idx % 1 * 8)
+  ) {
+    charCode = str.charCodeAt(idx += 3 / 4);
+    if (charCode > 0xFF) {
+      throw new E();
+    }
+    block = block << 8 | charCode;
+  }
+  return output;
+}
+
+module.exports = btoa;
 
 
 /***/ }),
@@ -7270,17 +7336,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-<<<<<<< HEAD
-=======
 //
 //
 //
-//
-//
-//
-//
-//
->>>>>>> 33ef8e1c5cad8bc31e78f5f0af2754c95f12207f
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -12532,9 +12590,19 @@ function toComment(sourceMap) {
  * @license  MIT
  */
 
-module.exports = function isBuffer (obj) {
-  return obj != null && obj.constructor != null &&
-    typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+// The _isBuffer check is for Safari 5-7 support, because it's missing
+// Object.prototype.constructor. Remove this eventually
+module.exports = function (obj) {
+  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
+}
+
+function isBuffer (obj) {
+  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+}
+
+// For Node v0.10 support. Remove this eventually.
+function isSlowBuffer (obj) {
+  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
 }
 
 
@@ -61858,7 +61926,7 @@ var render = function() {
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
-                                          "$ " +
+                                          "Bs " +
                                             _vm._s(
                                               (_vm.totalPartial = _vm.calculateTotalPartial.toFixed(
                                                 2
@@ -61881,7 +61949,7 @@ var render = function() {
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
-                                          "$ " +
+                                          "Bs " +
                                             _vm._s(
                                               (_vm.totalTax = (
                                                 _vm.totalPartial * _vm.tax
@@ -61904,7 +61972,7 @@ var render = function() {
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
-                                          "$ " +
+                                          "Bs " +
                                             _vm._s(
                                               (_vm.total = _vm.calculateTotal)
                                             )
@@ -61960,65 +62028,73 @@ var render = function() {
                   _c("div", { staticClass: "form-group row border" }, [
                     _c("div", { staticClass: "col-md-3" }, [
                       _c("div", { staticClass: "form-group" }, [
-                        _c("label", { attrs: { for: "client" } }, [
-                          _vm._v("Cliente")
-                        ]),
+                        _vm._m(6),
                         _vm._v(" "),
-                        _c("p", {
-                          domProps: { textContent: _vm._s(_vm.client) }
-                        })
+                        _c("h3", [
+                          _c("p", {
+                            domProps: { textContent: _vm._s(_vm.client) }
+                          })
+                        ])
                       ])
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-3" }, [
                       _c("div", { staticClass: "form-group" }, [
-                        _c("label", { attrs: { for: "user" } }, [
-                          _vm._v("Vendedor")
-                        ]),
+                        _vm._m(7),
                         _vm._v(" "),
-                        _c("p", { domProps: { textContent: _vm._s(_vm.user) } })
+                        _c("h3", [
+                          _c("p", {
+                            domProps: { textContent: _vm._s(_vm.user) }
+                          })
+                        ])
                       ])
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-3" }, [
-                      _c("label", { attrs: { for: "tax" } }, [
-                        _vm._v("Impuesto")
-                      ]),
+                      _vm._m(8),
                       _vm._v(" "),
-                      _c("p", { domProps: { textContent: _vm._s(_vm.tax) } })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-md-3" }, [
-                      _c("div", { staticClass: "form-group" }, [
-                        _c("label", [_vm._v("Tipo comprobante")]),
-                        _vm._v(" "),
-                        _vm.voucher == "bill"
-                          ? _c("p", [_vm._v("Factura")])
-                          : _vm.voucher == "note"
-                          ? _c("p", [_vm._v("Vale")])
-                          : _vm.voucher == "credit"
-                          ? _c("p", [_vm._v("Nota de credito")])
-                          : _vm._e()
+                      _c("h3", [
+                        _c("p", { domProps: { textContent: _vm._s(_vm.tax) } })
                       ])
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-3" }, [
                       _c("div", { staticClass: "form-group" }, [
-                        _c("label", [_vm._v("Serie Comprobante")]),
+                        _vm._m(9),
                         _vm._v(" "),
-                        _c("p", {
-                          domProps: { textContent: _vm._s(_vm.voucher_serie) }
-                        })
+                        _c("h3", [
+                          _vm.voucher == "bill"
+                            ? _c("p", [_vm._v("Factura")])
+                            : _vm.voucher == "note"
+                            ? _c("p", [_vm._v("Vale")])
+                            : _vm.voucher == "credit"
+                            ? _c("p", [_vm._v("Nota de credito")])
+                            : _vm._e()
+                        ])
                       ])
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-3" }, [
                       _c("div", { staticClass: "form-group" }, [
-                        _c("label", [_vm._v("Numero Comprobante")]),
+                        _vm._m(10),
                         _vm._v(" "),
-                        _c("p", {
-                          domProps: { textContent: _vm._s(_vm.voucher_num) }
-                        })
+                        _c("h3", [
+                          _c("p", {
+                            domProps: { textContent: _vm._s(_vm.voucher_serie) }
+                          })
+                        ])
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-3" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _vm._m(11),
+                        _vm._v(" "),
+                        _c("h3", [
+                          _c("p", {
+                            domProps: { textContent: _vm._s(_vm.voucher_num) }
+                          })
+                        ])
                       ])
                     ])
                   ]),
@@ -62032,7 +62108,7 @@ var render = function() {
                             "table table-bordered table-striped table-sm"
                         },
                         [
-                          _vm._m(6),
+                          _vm._m(12),
                           _vm._v(" "),
                           _vm.arrayDetail.length
                             ? _c(
@@ -62060,7 +62136,7 @@ var render = function() {
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
-                                          "\n                                            $ " +
+                                          "\n                                            Bs " +
                                             _vm._s(
                                               detail.price * detail.quantity
                                             ) +
@@ -62078,11 +62154,11 @@ var render = function() {
                                       }
                                     },
                                     [
-                                      _vm._m(7),
+                                      _vm._m(13),
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
-                                          "$ " +
+                                          "Bs " +
                                             _vm._s(
                                               (_vm.totalPartial = _vm.calculateTotalPartial.toFixed(
                                                 2
@@ -62101,12 +62177,12 @@ var render = function() {
                                       }
                                     },
                                     [
-                                      _vm._m(8),
+                                      _vm._m(14),
                                       _vm._v(" "),
                                       _c("td", {
                                         domProps: {
                                           textContent: _vm._s(
-                                            "$ " + _vm.tax_mount
+                                            "Bs " + _vm.tax_mount
                                           )
                                         }
                                       })
@@ -62121,17 +62197,17 @@ var render = function() {
                                       }
                                     },
                                     [
-                                      _vm._m(9),
+                                      _vm._m(15),
                                       _vm._v(" "),
                                       _c("td", [
-                                        _vm._v("$ " + _vm._s(_vm.total))
+                                        _vm._v("Bs " + _vm._s(_vm.total))
                                       ])
                                     ]
                                   )
                                 ],
                                 2
                               )
-                            : _c("tbody", [_vm._m(10)])
+                            : _c("tbody", [_vm._m(16)])
                         ]
                       )
                     ])
@@ -62372,7 +62448,7 @@ var render = function() {
                       staticClass: "table table-bordered table-striped table-sm"
                     },
                     [
-                      _vm._m(11),
+                      _vm._m(17),
                       _vm._v(" "),
                       _c(
                         "tbody",
@@ -62542,7 +62618,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Disponibilidad")]),
         _vm._v(" "),
-        _c("th", [_vm._v("SubTotal")])
+        _c("th", [_vm._v("Sub-Total")])
       ])
     ])
   },
@@ -62551,7 +62627,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("td", { attrs: { colspan: "5", align: "right" } }, [
-      _c("strong", [_vm._v("Total Parcial: ")])
+      _c("strong", [_vm._v("Sub-total: ")])
     ])
   },
   function() {
@@ -62559,7 +62635,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("td", { attrs: { colspan: "5", align: "right" } }, [
-      _c("strong", [_vm._v("Total Impuesto: ")])
+      _c("strong", [_vm._v("Impuesto: ")])
     ])
   },
   function() {
@@ -62567,7 +62643,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("td", { attrs: { colspan: "5", align: "right" } }, [
-      _c("strong", [_vm._v("Total a Pagar: ")])
+      _c("strong", [_vm._v("Total: ")])
     ])
   },
   function() {
@@ -62586,6 +62662,48 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "client" } }, [
+      _c("h6", [_vm._v("Cliente")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "user" } }, [
+      _c("h6", [_vm._v("Vendedor")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "tax" } }, [
+      _c("h6", [_vm._v("Impuesto")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", [_c("h6", [_vm._v("Tipo comprobante")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", [_c("h6", [_vm._v("Nro Control")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", [_c("h6", [_vm._v("Numero Comprobante")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
         _c("th", [_vm._v("Artículo")]),
@@ -62594,7 +62712,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Cantidad")]),
         _vm._v(" "),
-        _c("th", [_vm._v("subTotal")])
+        _c("th", [_vm._v("Sub-total")])
       ])
     ])
   },
@@ -62603,7 +62721,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("td", { attrs: { colspan: "3", align: "right" } }, [
-      _c("strong", [_vm._v("Total Parcial: ")])
+      _c("strong", [_vm._v("Sub-total: ")])
     ])
   },
   function() {
@@ -62611,7 +62729,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("td", { attrs: { colspan: "3", align: "right" } }, [
-      _c("strong", [_vm._v("Total Impuesto: ")])
+      _c("strong", [_vm._v("Impuesto: ")])
     ])
   },
   function() {
@@ -62619,7 +62737,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("td", { attrs: { colspan: "3", align: "right" } }, [
-      _c("strong", [_vm._v("Total a Pagar: ")])
+      _c("strong", [_vm._v("Total: ")])
     ])
   },
   function() {
@@ -64472,7 +64590,11 @@ var render = function() {
                                               }
                                             ],
                                             staticClass: "form-control",
-                                            attrs: { type: "number", name: "" },
+                                            attrs: {
+                                              type: "number",
+                                              disabled: "",
+                                              name: ""
+                                            },
                                             domProps: { value: detail.tax },
                                             on: {
                                               input: function($event) {
@@ -64500,7 +64622,11 @@ var render = function() {
                                               }
                                             ],
                                             staticClass: "form-control",
-                                            attrs: { type: "number", name: "" },
+                                            attrs: {
+                                              disabled: "",
+                                              type: "number",
+                                              name: ""
+                                            },
                                             domProps: { value: detail.totalp },
                                             on: {
                                               input: function($event) {
@@ -64528,7 +64654,11 @@ var render = function() {
                                               }
                                             ],
                                             staticClass: "form-control",
-                                            attrs: { type: "number", name: "" },
+                                            attrs: {
+                                              disabled: "",
+                                              type: "number",
+                                              name: ""
+                                            },
                                             domProps: {
                                               value: detail.tax_mount
                                             },
@@ -64549,7 +64679,7 @@ var render = function() {
                                         _vm._v(" "),
                                         _c("td", [
                                           _vm._v(
-                                            "\n                                            " +
+                                            "\n                                           Bs " +
                                               _vm._s(
                                                 detail.tax_mount * _vm.ret_val
                                               ) +
@@ -64572,7 +64702,7 @@ var render = function() {
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
-                                          "$ " +
+                                          "Bs " +
                                             _vm._s(
                                               (_vm.totalPartial =
                                                 _vm.calculateTotalPartial)
@@ -65060,11 +65190,11 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Documento")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Monto Factura")]),
+        _c("th", [_vm._v("I.V.A")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Base I.v.a.")]),
+        _c("th", [_vm._v("Base Imponible")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Total I.v.a.")]),
+        _c("th", [_vm._v("Total I.V.A")]),
         _vm._v(" "),
         _c("th", [_vm._v("Monto Retenido")])
       ])
@@ -78542,7 +78672,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! G:\installed\xampp\htdocs\sale\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\sale\resources\js\app.js */"./resources/js/app.js");
 
 
 /***/ })
