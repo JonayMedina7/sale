@@ -199,15 +199,15 @@
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="4" align="right"><strong>Total Parcial: </strong></td>
-                                                <td>$ {{ totalPartial=(total-totalTax).toFixed(2) }}</td>
+                                                <td>$ {{ totalPartial=(calculateTotalPartial).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="4" align="right"><strong>Total Impuesto: </strong></td>
-                                                <td>$ {{ totalTax=((total*tax)/(1+tax)).toFixed(2) }}</td>
+                                                <td>$ {{ totalTax=((totalPartial)*tax).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="4" align="right"><strong>Total a Pagar: </strong></td>
-                                                <td>$ {{ total=calculateTotal }}</td>
+                                                <td>$ {{ total=(calculateTotal).toFixed(2) }}</td>
                                             </tr>
                                         </tbody>
                                         <tbody v-else>
@@ -425,6 +425,7 @@
                 voucher_serie : '',
                 date : '',
                 tax : 0.16,
+                tax_mount:0.0,
                 arrayPurchase : [],
                 arrayDetail : [],
                 arrayProvider : [],
@@ -438,8 +439,6 @@
                 total: 0.0,
                 totalTax: 0.0,
                 totalPartial: 0.0,
-
-
                 modal1 : 0,
                 modal : 0,
                 titleModal : '',
@@ -491,12 +490,16 @@
                 }
                 return pagesArray;
             },
-            calculateTotal: function(){
+
+            calculateTotalPartial: function(){
                 var result=0.0;
                 for (var i = 0; i <this.arrayDetail.length; i++) {
                     result = result +(this.arrayDetail[i].price*this.arrayDetail[i].quantity)
                 }
                 return result;
+            },
+            calculateTotal: function(){
+                return parseFloat(this.totalTax) + parseFloat(this.totalPartial);
             }
 
         },
@@ -691,6 +694,7 @@
                     'voucher_num': this.voucher_num,
                     'voucher_serie': this.voucher_serie,
                     'tax': this.tax,
+                    'tax_mount': this.totalTax,
                     'total': this.total,
                     'data': this.arrayDetail
                     
@@ -704,6 +708,8 @@
                     me.voucher_num='';
                     me.voucher_serie='';
                     me.tax=0.16;
+                    me.totalTax=0.0;
+                    me.tax_mount=0.0;
                     me.total=0.0;
                     me.product='';
                     me.quantity=0;

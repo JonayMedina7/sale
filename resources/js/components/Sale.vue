@@ -215,7 +215,7 @@
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="5" align="right"><strong>Total a Pagar: </strong></td>
-                                                <td>$ {{ total=(calculateTotal) }}</td>
+                                                <td>$ {{ total=(calculateTotal).toFixed(2) }}</td>
                                             </tr>
                                         </tbody>
                                         <tbody v-else>
@@ -525,7 +525,7 @@
                 return result;
             },
             calculateTotal: function (){
-                return parseInt(this.totalTax) + parseInt(this.totalPartial);
+                return parseFloat(this.totalTax) + parseFloat(this.totalPartial);
             }
 
         },
@@ -782,6 +782,7 @@
                     me.product_id=0;
                     me.voucher_num='';
                     me.voucher_serie='';
+                    me.totalTax= 0.0;
                     me.tax=0.16;
                     me.tax_mount=0.0;
                     me.total=0.0;

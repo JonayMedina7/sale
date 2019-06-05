@@ -4898,6 +4898,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       voucher_serie: '',
       date: '',
       tax: 0.16,
+      tax_mount: 0.0,
       arrayPurchase: [],
       arrayDetail: [],
       arrayProvider: [],
@@ -4951,7 +4952,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       return pagesArray;
     },
-    calculateTotal: function calculateTotal() {
+    calculateTotalPartial: function calculateTotalPartial() {
       var result = 0.0;
 
       for (var i = 0; i < this.arrayDetail.length; i++) {
@@ -4959,6 +4960,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
 
       return result;
+    },
+    calculateTotal: function calculateTotal() {
+      return parseFloat(this.totalTax) + parseFloat(this.totalPartial);
     }
   },
   methods: {
@@ -5134,6 +5138,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         'voucher_num': this.voucher_num,
         'voucher_serie': this.voucher_serie,
         'tax': this.tax,
+        'tax_mount': this.totalTax,
         'total': this.total,
         'data': this.arrayDetail
       }).then(function (response) {
@@ -5146,6 +5151,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         me.voucher_num = '';
         me.voucher_serie = '';
         me.tax = 0.16;
+        me.totalTax = 0.0;
+        me.tax_mount = 0.0;
         me.total = 0.0;
         me.product = '';
         me.quantity = 0;
@@ -5953,7 +5960,7 @@ __webpack_require__.r(__webpack_exports__);
       return result;
     },
     calculateTotal: function calculateTotal() {
-      return parseInt(this.totalTax) + parseInt(this.totalPartial);
+      return parseFloat(this.totalTax) + parseFloat(this.totalPartial);
     }
   },
   methods: {
@@ -6184,6 +6191,7 @@ __webpack_require__.r(__webpack_exports__);
           me.product_id = 0;
           me.voucher_num = '';
           me.voucher_serie = '';
+          me.totalTax = 0.0;
           me.tax = 0.16;
           me.tax_mount = 0.0;
           me.total = 0.0;
@@ -7270,17 +7278,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-<<<<<<< HEAD
-=======
 //
 //
 //
-//
-//
-//
-//
-//
->>>>>>> 33ef8e1c5cad8bc31e78f5f0af2754c95f12207f
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -7381,7 +7381,7 @@ __webpack_require__.r(__webpack_exports__);
       return result;
     },
     calculateTotal: function calculateTotal() {
-      return parseInt(this.totalTax) + parseInt(this.totalPartial);
+      return parseFloat(this.totalTax) + parseFloat(this.totalPartial);
     }
   },
   methods: {
@@ -60056,9 +60056,9 @@ var render = function() {
                                         _vm._v(
                                           "$ " +
                                             _vm._s(
-                                              (_vm.totalPartial = (
-                                                _vm.total - _vm.totalTax
-                                              ).toFixed(2))
+                                              (_vm.totalPartial = _vm.calculateTotalPartial.toFixed(
+                                                2
+                                              ))
                                             )
                                         )
                                       ])
@@ -60080,8 +60080,7 @@ var render = function() {
                                           "$ " +
                                             _vm._s(
                                               (_vm.totalTax = (
-                                                (_vm.total * _vm.tax) /
-                                                (1 + _vm.tax)
+                                                _vm.totalPartial * _vm.tax
                                               ).toFixed(2))
                                             )
                                         )
@@ -60103,7 +60102,9 @@ var render = function() {
                                         _vm._v(
                                           "$ " +
                                             _vm._s(
-                                              (_vm.total = _vm.calculateTotal)
+                                              (_vm.total = _vm.calculateTotal.toFixed(
+                                                2
+                                              ))
                                             )
                                         )
                                       ])
@@ -61906,7 +61907,9 @@ var render = function() {
                                         _vm._v(
                                           "$ " +
                                             _vm._s(
-                                              (_vm.total = _vm.calculateTotal)
+                                              (_vm.total = _vm.calculateTotal.toFixed(
+                                                2
+                                              ))
                                             )
                                         )
                                       ])
