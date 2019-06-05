@@ -22,7 +22,7 @@ class ClientController extends Controller
         if ($search=='') {
             $clients = Client::orderBy('id', 'desc')->paginate(7);
         } else {
-            $clients = Client::where($criterion, 'like', '%'. $search . '%')->orderBy('id', 'desc')->paginate(7);
+            $clients = Client::where($criterion, 'like', '%'. $search . '%')->orderBy('id', 'desc')->paginate(10);
         }
 
         

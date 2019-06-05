@@ -152,7 +152,7 @@
                             label:'Ventas',
                             data: me.varTotalSale,
                             backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderColor: '#000',
                                 
                             borderWidth: 1
                         }]

@@ -10,9 +10,9 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Ventas&nbsp;&nbsp;
+                        
                         <button type="button" class="btn btn-success" @click="showDetail()">
-                            <i class="icon-plus"></i>&nbsp;Crear Factura
+                            <i class="fa fa-file"></i>&nbsp;&nbsp;Crear Factura
                         </button>
                     </div>
                     <!-- litado registros -->
@@ -164,30 +164,12 @@
                                         <label>Articulo <span style="color:red;" v-show="product_id==0">(*Seleccione)</span></label>
                                         <div class="form-inline">
                                             <input type="text" class="form-control" v-model="code" @keyup.enter="productSearch()" placeholder="Ingrese Producto" name="">
-                                            <button @click="openModal()" class="btn btn-primary">...</button>
+                                            <button @click="openModal()" class="btn btn-primary"><i class="fa fa-search"></i></button>
                                             <input type="text" readonly class="form-control" v-model="product" name="" placeholder="ENTER para buscar">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label>Precio <span style="color:red;" v-show="price==0">(*Ingrese precio)</span></label>
-                                        <input type="number" step="any" class="form-control" v-model="price" name="">
-                                    </div>
-                                </div>
                                 
-
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Cantidad <span style="color:red;" v-show="quantity==0">(*Ingrese cantidad)</span></label>
-                                        <input type="number" class="form-control" v-model="quantity" name="">
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <button @click="addDetail()" class="btn btn-success form-control btn-add"> <i class="icon-plus"></i></button>
-                                    </div>
-                                </div>
                             </div>
                             <div class="form-group row border">
                                 <div class="table-responsive col-md-12">
@@ -205,7 +187,7 @@
                                         <tbody v-if="arrayDetail.length">
                                             <tr v-for="(detail, index) in arrayDetail" :key="detail.id">
                                                 <td>
-                                                    <button @click="deleteDetail(index)" type="button" class="btn btn-danger btn-sm"><i class="icon-close"></i>
+                                                    <button @click="deleteDetail(index)" type="button" class="btn btn-danger btn-sm"><i class="fa fa-window-close"></i>
                                                     </button>
                                                 </td>
                                                 <td v-text="detail.product"></td>
@@ -384,7 +366,7 @@
                                           <option value="code">Codigo</option>
                                         </select>
                                         <input type="text" v-model="search" @keyup.enter="listProductSale(searchS,criteryS)" class="form-control" placeholder="Ingrese datos a Buscar">
-                                        <button type="submit" @click="listProductSale(searchS,criteryS)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
+                                        <button type="submit" @click="listProductSale(searchS,criteryS)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                     </div>
                                 </div>
                             </div>
@@ -405,7 +387,7 @@
                                         <tr v-for="product in arrayProduct" :key="product.id">
                                             <td>
                                                 <button type="button" class="btn btn-success btn-sm" @click="addDetailModal(product)">
-                                                  <i class="icon-check"></i>
+                                                  <i class="fa fa-plus"></i>&nbsp;&nbsp;Agregar
                                                 </button>
                                             </td>
                                             <td v-text="product.code"></td>

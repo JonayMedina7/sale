@@ -25,7 +25,7 @@ class SaleController extends Controller
             $sales = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
             ->join('users', 'sales.user_id', '=', 'users.id')
             ->select('sales.id', 'sales.voucher', 'sales.voucher_serial', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
-            ->where('sales.'.$criterion, 'like', '%'. $search . '%')->orderBy('sales.id', 'desc')->paginate(4);
+            ->where('sales.'.$criterion, 'like', '%'. $search . '%')->orderBy('sales.id', 'desc')->paginate(10);
         }
 
         

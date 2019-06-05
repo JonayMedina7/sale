@@ -10,9 +10,9 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Compras
-                        <button type="button" class="btn btn-secondary" @click="showDetail()">
-                            <i class="icon-plus"></i>&nbsp;Nuevo
+                        
+                        <button type="button" class="btn btn-success" @click="showDetail()">
+                            <i class="fa fa-file"></i>&nbsp;&nbsp;Ingresar Compra
                         </button>
                     </div>
                     <!-- litado registros -->
@@ -23,14 +23,17 @@
                                     <div class="input-group">
                                         <select class="form-control col-md-3" v-model="criterion">
                                           <option value="voucher">Tipo de Documento</option>
-                                          <option value="voucher_num">numero de comprobante</option>
+                                          <option value="voucher_num">Numero de comprobante</option>
                                           <option value="date">Fecha-hora</option>
                                         </select>
                                         <input type="text" v-model="search" @keyup.enter="listPurchase(1,search,criterion)" class="form-control" placeholder="Texto a Buscar">
-                                        <button type="submit" @click="listPurchase(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
+                                        <button type="submit" @click="listPurchase(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                     </div>
                                 </div>
                             </div>
+                            <div class="box-header">
+                                    <center><h3 class="box-title">Listado de Compras</h3></center>
+                                </div>  <br><hr>  
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-sm">
                                     <thead>
@@ -39,11 +42,11 @@
                                             <th>Nombre Usuario</th>
                                             <th>Proveedor</th>
                                             <th>Tipo de comprobante</th>
-                                            <th>Serie comprobante</th>
+                                            
                                             <th>Número comprobante</th>
                                             <th>Fecha Hora</th>
                                             <th>Total</th>
-                                            <th>Impuesto</th>
+                                            
                                             <th>Estado</th>
                                         </tr>
                                     </thead>
@@ -51,14 +54,10 @@
                                         <tr v-for="purchase in arrayPurchase" :key="purchase.id">
                                             <td>
                                                 <button type="button" class="btn btn-success btn-sm" @click="showPurchase(purchase.id)">
-                                                  <i class="icon-eye"></i>
+                                                  Detalles
                                                 </button> &nbsp;
 
-                                                <template  v-if="purchase.status=='Registrado'">
-                                                    <button type="button" @click="desactivePurchase(purchase.id)" class="btn btn-danger btn-sm" >
-                                                      <i class="icon-trash"></i>
-                                                    </button>
-                                                </template>
+                                                
                                                 
                                             </td>
                                             <td v-text="purchase.user"></td>
@@ -66,11 +65,11 @@
                                             <td v-if="purchase.voucher=='bill'">Factura</td>
                                             <td v-else-if="purchase.voucher=='note'">Vale</td>
                                             <td v-else-if="purchase.voucher=='credit'">Nota de Credito</td>
-                                            <td v-text="purchase.voucher_serie"></td>
+                                           
                                             <td v-text="purchase.voucher_num"></td>
                                             <td v-text="purchase.date"></td>
                                             <td v-text="purchase.total"></td>
-                                            <td v-text="purchase.tax"></td>
+                                         
                                             <td v-text="purchase.status"></td>                                     
                                         </tr>
                                         
@@ -315,6 +314,11 @@
                             <div class="form-group row">
                                 <div class="col-md-12">
                                     <button type="button" class="btn btn-secondary" @click="hideDetail()">Cerrar</button>
+                                    <template  v-if="status=='Registrado'">
+                                                    <button type="button" @click="desactivePurchase(purchase_id)" class="btn btn-danger btn-sm" >
+                                                      <i class="icon-trash"></i>
+                                                    </button>
+                                                </template>
                                 </div>
                             </div>
                         </div>
@@ -522,13 +526,16 @@
                 axios.get(url).then(function(response) {
                     var response = response.data; 
                     me.arrayPurchaseTemp = response.purchase;
-                    console.log(me.arrayPurchaseTemp);
+                    me.purchase_id =id;
+                    console.log(me.purchase_id);
                     me.provider = me.arrayPurchaseTemp[0]['name'];
                     me.voucher = me.arrayPurchaseTemp[0]['voucher'];
                     me.voucher_serie = me.arrayPurchaseTemp[0]['voucher_serie'];
                     me.voucher_num = me.arrayPurchaseTemp[0]['voucher_num'];
                     me.tax = me.arrayPurchaseTemp[0]['tax'];
                     me.total = me.arrayPurchaseTemp[0]['total'];
+                    me.status = me.arrayPurchaseTemp[0]['status'];
+                    console.log(me.status);
 
                 })
                 .catch(function (error) {
@@ -767,7 +774,7 @@
                 this.titleModal    = 'Seleccione uno o mas Productos';
                 this.modal         = 1;
             },
-            desactivePurchase(id){
+            desactivePurchase(purshase_id){
                 Swal.fire({
                     title: 'Esta seguro de anular esta factura?',
                     type: 'warning',
@@ -785,9 +792,10 @@
                         let me=this;
 
                         axios.put('purchase/desactive', {
-                            'id': id
+                            'id': purshase_id
                         }).then(function (response){
                            me.listPurchase(1,'','voucher_num');
+                           me.list =1;
                             Swal.fire(
                                 'Anulado!',
                                 'La compra ha sido anulada con éxito.',

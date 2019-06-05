@@ -1397,7 +1397,8 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
 .was-validated .form-control:valid, .form-control.is-valid, .was-validated
 .custom-select:valid,
 .custom-select.is-valid {
-  border-color: #4dbd74; }
+  ; 
+border-radius: .45rem;}
   .was-validated .form-control:valid:focus, .form-control.is-valid:focus, .was-validated
   .custom-select:valid:focus,
   .custom-select.is-valid:focus {
@@ -1538,7 +1539,7 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
 
 .btn {
   display: inline-block;
-  font-weight: normal;
+      font-weight: 400;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
@@ -1546,9 +1547,11 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+
   border: 1px solid transparent;
-  padding: 0.5rem 0.75rem;
+  padding: .375rem .75rem;
   font-size: 0.875rem;
+      border-radius: .25rem;
   line-height: 1.25;
   transition: all 0.15s ease-in-out; }
   .btn:focus, .btn:hover {
@@ -2747,7 +2750,9 @@ tbody.collapse.show {
   word-wrap: break-word;
   background-color: #fff;
   background-clip: border-box;
-  border: 1px solid #c2cfd6; }
+  border: 1px solid #c2cfd6; 
+  border-radius: .45rem;
+}
 
 .card-body, .card-block {
   -ms-flex: 1 1 auto;

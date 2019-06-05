@@ -8,9 +8,9 @@
 		                <!-- Ejemplo de tabla Listado -->
 		                <div class="card">
 		                    <div class="card-header">
-		                        <i class="fa fa-align-justify"></i> Categorias
-		                        <button type="button" class="btn btn-secondary" @click="openModal('category','register')">
-		                            <i class="icon-plus"></i>&nbsp;Nuevo
+		                        
+		                        <button type="button" class="btn btn-success" @click="openModal('category','register')">
+		                            <i class="icon-plus"></i>&nbsp;&nbsp;Nueva Categoria
 		                        </button>
 		                    </div>
 		                    <div class="card-body">
@@ -22,7 +22,7 @@
 		                                      <option value="description">Descripción</option>
 		                                    </select>
 		                                    <input type="number" v-model="search" @keyup.enter="listCategory(1,search,criterion)" class="form-control" placeholder="Categoria">
-		                                    <button type="submit" @click="listCategory(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
+		                                    <button type="submit" @click="listCategory(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
 		                                </div>
 		                            </div>
 		                        </div>
@@ -39,13 +39,13 @@
 		                                <tr v-for="category in arrayCategory" :key="category.id">
 		                                    <td>
 		                                        <button type="button" class="btn btn-warning btn-sm" @click="openModal('category','update', category)">
-		                                          <i class="icon-pencil"></i>
+		                                          <i class="icon-pencil"></i>&nbsp;&nbsp; Editar
 		                                        </button> &nbsp;
 		                                        <button v-if="category.condition" type="button" @click="openModal('category','desactive',category)" class="btn btn-danger btn-sm" >
-		                                          <i class="icon-trash"></i>
+		                                          <i class="icon-trash"></i> &nbsp;&nbsp; Desactivar
 		                                        </button>
 		                                        <button v-else type="button" @click="openModal('category','active',category)" class="btn btn-success btn-sm" >
-		                                          <i class="icon-check"></i>
+		                                          <i class="icon-check"></i>&nbsp;&nbsp;&nbsp; Activar
 		                                        </button>
 		                                    </td>
 		                                    <td v-text="category.name"></td>
@@ -55,7 +55,7 @@
 		                                        </div>
 
 		                                        <div v-else>
-		                                            <span class="badge badge-secondary">Inactivo</span>
+		                                            <span class="badge badge-danger">Inactivo</span>
 		                                        </div>
 		                                    </td>
 		                                </tr>

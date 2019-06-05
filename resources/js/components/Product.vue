@@ -3,19 +3,19 @@
             <!-- Breadcrumb -->
             <ol class="breadcrumb">
                 
-                <li class="breadcrumb-item"><a href="/">Escritorio</a></li>
+                <li class="breadcrumb-item"><a href="">Escritorio</a></li>
                 
             </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Productos
-                        <button type="button" class="btn btn-secondary" @click="openModal('product','register')">
-                            <i class="icon-plus"></i>&nbsp;Nuevo
+                        
+                        <button type="button" class="btn btn-success" @click="openModal('product','register')">
+                            <i class="fa fa-archive"></i>&nbsp;Ingresar Nuevo
                         </button>
                         <button type="button" class="btn btn-info" @click="loadPdf()">
-                            <i class="icon-doc"></i>&nbsp;Reporte
+                            <i class="icon-doc"></i>&nbsp;Listado de Productos
                         </button>
                     </div>
                     <div class="card-body">
@@ -70,7 +70,7 @@
                                         </div>
 
                                         <div v-else>
-                                            <span class="badge badge-secondary">Inactivo</span>
+                                            <span class="badge badge-danger">Inactivo</span>
                                         </div>
                                     </td>
                                 </tr>

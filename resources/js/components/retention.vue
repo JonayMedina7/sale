@@ -10,9 +10,9 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Retenciones
-                        <button type="button" class="btn btn-secondary" @click="showInsert()">
-                            <i class="icon-plus"></i>&nbsp;Nuevo
+                        
+                        <button type="button" class="btn btn-success" @click="showInsert()">
+                            <i class="fa fa-file"></i>&nbsp;&nbsp;Crear Retencion
                         </button>
                     </div>
                     <!-- litado registros -->
@@ -23,14 +23,17 @@
                                     <div class="input-group">
                                         <select class="form-control col-md-3" v-model="criterion">
                                           <option value="voucher">Tipo de Comprobante</option>
-                                          <option value="voucher_num">numero de comprobante</option>
+                                          <option value="voucher_num">Numero de comprobante</option>
                                           <option value="date">Fecha-hora</option>
                                         </select>
                                         <input type="text" v-model="search" @keyup.enter="listRetention(1,search,criterion)" class="form-control" placeholder="Texto a Buscar">
-                                        <button type="submit" @click="listRetention(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
+                                        <button type="submit" @click="listRetention(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                     </div>
                                 </div>
                             </div>
+                            <div class="box-header">
+                                    <center><h3 class="box-title">Listado de Retenciones</h3></center>
+                                </div>  <br><hr>  
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-sm">
                                     <thead>

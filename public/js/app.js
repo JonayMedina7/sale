@@ -2699,7 +2699,7 @@ __webpack_require__.r(__webpack_exports__);
             label: 'Ventas',
             data: me.varTotalSale,
             backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            borderColor: 'rgba(255, 99, 132, 1)',
+            borderColor: '#000',
             borderWidth: 1
           }]
         },
@@ -4200,6 +4200,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     var _ref;
@@ -4873,6 +4876,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -4975,13 +4982,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       axios.get(url).then(function (response) {
         var response = response.data;
         me.arrayPurchaseTemp = response.purchase;
-        console.log(me.arrayPurchaseTemp);
+        me.purchase_id = id;
+        console.log(me.purchase_id);
         me.provider = me.arrayPurchaseTemp[0]['name'];
         me.voucher = me.arrayPurchaseTemp[0]['voucher'];
         me.voucher_serie = me.arrayPurchaseTemp[0]['voucher_serie'];
         me.voucher_num = me.arrayPurchaseTemp[0]['voucher_num'];
         me.tax = me.arrayPurchaseTemp[0]['tax'];
         me.total = me.arrayPurchaseTemp[0]['total'];
+        me.status = me.arrayPurchaseTemp[0]['status'];
+        console.log(me.status);
       })["catch"](function (error) {
         console.log(error);
       }); // obtener los datos de los detalles de la compra
@@ -5197,7 +5207,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.titleModal = 'Seleccione uno o mas Productos';
       this.modal = 1;
     },
-    desactivePurchase: function desactivePurchase(id) {
+    desactivePurchase: function desactivePurchase(purshase_id) {
       var _this = this;
 
       Swal.fire({
@@ -5216,9 +5226,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         if (result.value) {
           var me = _this;
           axios.put('purchase/desactive', {
-            'id': id
+            'id': purshase_id
           }).then(function (response) {
             me.listPurchase(1, '', 'voucher_num');
+            me.list = 1;
             Swal.fire('Anulado!', 'La compra ha sido anulada con éxito.', 'success');
           })["catch"](function (error) {
             console.log(error);
@@ -5411,24 +5422,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_select__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_select__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-select/dist/vue-select.css */ "./node_modules/vue-select/dist/vue-select.css");
 /* harmony import */ var vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -6553,8 +6546,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     var _ref;
@@ -7279,6 +7270,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+<<<<<<< HEAD
+=======
+//
+//
+//
+//
+//
+//
+//
+//
+>>>>>>> 33ef8e1c5cad8bc31e78f5f0af2754c95f12207f
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -54354,12 +54356,10 @@ var render = function() {
     _c("div", { staticClass: "container-fluid" }, [
       _c("div", { staticClass: "card" }, [
         _c("div", { staticClass: "card-header" }, [
-          _c("i", { staticClass: "fa fa-align-justify" }),
-          _vm._v(" Categorias\n\t                        "),
           _c(
             "button",
             {
-              staticClass: "btn btn-secondary",
+              staticClass: "btn btn-success",
               attrs: { type: "button" },
               on: {
                 click: function($event) {
@@ -54369,7 +54369,7 @@ var render = function() {
             },
             [
               _c("i", { staticClass: "icon-plus" }),
-              _vm._v(" Nuevo\n\t                        ")
+              _vm._v("  Nueva Categoria\n\t                        ")
             ]
           )
         ]),
@@ -54459,7 +54459,7 @@ var render = function() {
                       }
                     }
                   },
-                  [_c("i", { staticClass: "fa fa-search" }), _vm._v(" search")]
+                  [_c("i", { staticClass: "fa fa-search" }), _vm._v(" Buscar")]
                 )
               ])
             ])
@@ -54491,7 +54491,12 @@ var render = function() {
                             }
                           }
                         },
-                        [_c("i", { staticClass: "icon-pencil" })]
+                        [
+                          _c("i", { staticClass: "icon-pencil" }),
+                          _vm._v(
+                            "   Editar\n\t                                        "
+                          )
+                        ]
                       ),
                       _vm._v("  \n\t                                        "),
                       category.condition
@@ -54510,7 +54515,12 @@ var render = function() {
                                 }
                               }
                             },
-                            [_c("i", { staticClass: "icon-trash" })]
+                            [
+                              _c("i", { staticClass: "icon-trash" }),
+                              _vm._v(
+                                "    Desactivar\n\t                                        "
+                              )
+                            ]
                           )
                         : _c(
                             "button",
@@ -54527,7 +54537,12 @@ var render = function() {
                                 }
                               }
                             },
-                            [_c("i", { staticClass: "icon-check" })]
+                            [
+                              _c("i", { staticClass: "icon-check" }),
+                              _vm._v(
+                                "    Activar\n\t                                        "
+                              )
+                            ]
                           )
                     ]),
                     _vm._v(" "),
@@ -54546,7 +54561,7 @@ var render = function() {
                           ])
                         ])
                       : _c("div", [
-                          _c("span", { staticClass: "badge badge-secondary" }, [
+                          _c("span", { staticClass: "badge badge-danger" }, [
                             _vm._v("Inactivo")
                           ])
                         ])
@@ -56100,7 +56115,7 @@ var render = function() {
         "div",
         { staticClass: "card" },
         [
-          _vm._m(0),
+          _c("div", { staticClass: "card-header" }),
           _vm._v(" "),
           _vm.list == 1
             ? [
@@ -56227,7 +56242,7 @@ var render = function() {
                           "table table-bordered table-striped table-sm"
                       },
                       [
-                        _vm._m(1),
+                        _vm._m(0),
                         _vm._v(" "),
                         _c(
                           "tbody",
@@ -56448,7 +56463,7 @@ var render = function() {
                             "table table-bordered table-striped table-sm"
                         },
                         [
-                          _vm._m(2),
+                          _vm._m(1),
                           _vm._v(" "),
                           _vm.arrayDetail.length
                             ? _c(
@@ -56494,7 +56509,7 @@ var render = function() {
                                       }
                                     },
                                     [
-                                      _vm._m(3),
+                                      _vm._m(2),
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
@@ -56517,7 +56532,7 @@ var render = function() {
                                       }
                                     },
                                     [
-                                      _vm._m(4),
+                                      _vm._m(3),
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
@@ -56540,7 +56555,7 @@ var render = function() {
                                       }
                                     },
                                     [
-                                      _vm._m(5),
+                                      _vm._m(4),
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v("$ " + _vm._s(_vm.total))
@@ -56550,7 +56565,7 @@ var render = function() {
                                 ],
                                 2
                               )
-                            : _c("tbody", [_vm._m(6)])
+                            : _c("tbody", [_vm._m(5)])
                         ]
                       )
                     ])
@@ -56583,15 +56598,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("i", { staticClass: "fa fa-align-justify" }),
-      _vm._v(" Compras\n            ")
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -57326,12 +57332,10 @@ var render = function() {
     _c("div", { staticClass: "container-fluid" }, [
       _c("div", { staticClass: "card" }, [
         _c("div", { staticClass: "card-header" }, [
-          _c("i", { staticClass: "fa fa-align-justify" }),
-          _vm._v(" Productos\n                "),
           _c(
             "button",
             {
-              staticClass: "btn btn-secondary",
+              staticClass: "btn btn-success",
               attrs: { type: "button" },
               on: {
                 click: function($event) {
@@ -57340,8 +57344,8 @@ var render = function() {
               }
             },
             [
-              _c("i", { staticClass: "icon-plus" }),
-              _vm._v(" Nuevo\n                ")
+              _c("i", { staticClass: "fa fa-archive" }),
+              _vm._v(" Ingresar Nuevo\n                ")
             ]
           ),
           _vm._v(" "),
@@ -57358,7 +57362,7 @@ var render = function() {
             },
             [
               _c("i", { staticClass: "icon-doc" }),
-              _vm._v(" Reporte\n                ")
+              _vm._v(" Listado de Productos\n                ")
             ]
           )
         ]),
@@ -57548,11 +57552,9 @@ var render = function() {
                             ])
                           ])
                         : _c("div", [
-                            _c(
-                              "span",
-                              { staticClass: "badge badge-secondary" },
-                              [_vm._v("Inactivo")]
-                            )
+                            _c("span", { staticClass: "badge badge-danger" }, [
+                              _vm._v("Inactivo")
+                            ])
                           ])
                     ])
                   ])
@@ -58109,7 +58111,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("ol", { staticClass: "breadcrumb" }, [
       _c("li", { staticClass: "breadcrumb-item" }, [
-        _c("a", { attrs: { href: "/" } }, [_vm._v("Escritorio")])
+        _c("a", { attrs: { href: "" } }, [_vm._v("Escritorio")])
       ])
     ])
   },
@@ -58223,12 +58225,10 @@ var render = function() {
     _c("div", { staticClass: "container-fluid" }, [
       _c("div", { staticClass: "card" }, [
         _c("div", { staticClass: "card-header" }, [
-          _c("i", { staticClass: "fa fa-align-justify" }),
-          _vm._v(" Proveedor\n                        "),
           _c(
             "button",
             {
-              staticClass: "btn btn-secondary",
+              staticClass: "btn btn-success",
               attrs: { type: "button" },
               on: {
                 click: function($event) {
@@ -58237,8 +58237,8 @@ var render = function() {
               }
             },
             [
-              _c("i", { staticClass: "icon-plus" }),
-              _vm._v(" Nuevo\n                        ")
+              _c("i", { staticClass: "fa fa-address-book-o" }),
+              _vm._v("  Agregar Nuevo\n                        ")
             ]
           )
         ]),
@@ -58326,11 +58326,27 @@ var render = function() {
                       }
                     }
                   },
-                  [_c("i", { staticClass: "fa fa-search" }), _vm._v(" search")]
+                  [_c("i", { staticClass: "fa fa-search" }), _vm._v(" Buscar")]
                 )
               ])
             ])
           ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "box-header" },
+            [
+              _c("center", [
+                _c("h3", { staticClass: "box-title" }, [
+                  _vm._v("Listado de Proveedores")
+                ])
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("br"),
+          _c("hr"),
           _vm._v(" "),
           _c(
             "table",
@@ -58354,7 +58370,12 @@ var render = function() {
                             }
                           }
                         },
-                        [_c("i", { staticClass: "icon-pencil" })]
+                        [
+                          _c("i", { staticClass: "icon-pencil" }),
+                          _vm._v(
+                            "   Editar\n                                        "
+                          )
+                        ]
                       ),
                       _vm._v(
                         "  \n                                        \n                                    "
@@ -59204,12 +59225,10 @@ var render = function() {
         { staticClass: "card" },
         [
           _c("div", { staticClass: "card-header" }, [
-            _c("i", { staticClass: "fa fa-align-justify" }),
-            _vm._v(" Compras\n                "),
             _c(
               "button",
               {
-                staticClass: "btn btn-secondary",
+                staticClass: "btn btn-success",
                 attrs: { type: "button" },
                 on: {
                   click: function($event) {
@@ -59218,8 +59237,8 @@ var render = function() {
                 }
               },
               [
-                _c("i", { staticClass: "icon-plus" }),
-                _vm._v(" Nuevo\n                ")
+                _c("i", { staticClass: "fa fa-file" }),
+                _vm._v("  Ingresar Compra\n                ")
               ]
             )
           ]),
@@ -59264,7 +59283,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("option", { attrs: { value: "voucher_num" } }, [
-                              _vm._v("numero de comprobante")
+                              _vm._v("Numero de comprobante")
                             ]),
                             _vm._v(" "),
                             _c("option", { attrs: { value: "date" } }, [
@@ -59334,12 +59353,28 @@ var render = function() {
                           },
                           [
                             _c("i", { staticClass: "fa fa-search" }),
-                            _vm._v(" search")
+                            _vm._v(" Buscar")
                           ]
                         )
                       ])
                     ])
                   ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "box-header" },
+                    [
+                      _c("center", [
+                        _c("h3", { staticClass: "box-title" }, [
+                          _vm._v("Listado de Compras")
+                        ])
+                      ])
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("br"),
+                  _c("hr"),
                   _vm._v(" "),
                   _c("div", { staticClass: "table-responsive" }, [
                     _c(
@@ -59355,52 +59390,28 @@ var render = function() {
                           "tbody",
                           _vm._l(_vm.arrayPurchase, function(purchase) {
                             return _c("tr", { key: purchase.id }, [
-                              _c(
-                                "td",
-                                [
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass: "btn btn-success btn-sm",
-                                      attrs: { type: "button" },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.showPurchase(purchase.id)
-                                        }
+                              _c("td", [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-success btn-sm",
+                                    attrs: { type: "button" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.showPurchase(purchase.id)
                                       }
-                                    },
-                                    [_c("i", { staticClass: "icon-eye" })]
-                                  ),
-                                  _vm._v(
-                                    "  \n\n                                        "
-                                  ),
-                                  purchase.status == "Registrado"
-                                    ? [
-                                        _c(
-                                          "button",
-                                          {
-                                            staticClass:
-                                              "btn btn-danger btn-sm",
-                                            attrs: { type: "button" },
-                                            on: {
-                                              click: function($event) {
-                                                return _vm.desactivePurchase(
-                                                  purchase.id
-                                                )
-                                              }
-                                            }
-                                          },
-                                          [
-                                            _c("i", {
-                                              staticClass: "icon-trash"
-                                            })
-                                          ]
-                                        )
-                                      ]
-                                    : _vm._e()
-                                ],
-                                2
-                              ),
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                          Detalles\n                                        "
+                                    )
+                                  ]
+                                ),
+                                _vm._v(
+                                  "  \n\n                                        \n                                        \n                                    "
+                                )
+                              ]),
                               _vm._v(" "),
                               _c("td", {
                                 domProps: { textContent: _vm._s(purchase.user) }
@@ -59420,12 +59431,6 @@ var render = function() {
                               _vm._v(" "),
                               _c("td", {
                                 domProps: {
-                                  textContent: _vm._s(purchase.voucher_serie)
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("td", {
-                                domProps: {
                                   textContent: _vm._s(purchase.voucher_num)
                                 }
                               }),
@@ -59438,10 +59443,6 @@ var render = function() {
                                 domProps: {
                                   textContent: _vm._s(purchase.total)
                                 }
-                              }),
-                              _vm._v(" "),
-                              _c("td", {
-                                domProps: { textContent: _vm._s(purchase.tax) }
                               }),
                               _vm._v(" "),
                               _c("td", {
@@ -60325,21 +60326,46 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group row" }, [
-                    _c("div", { staticClass: "col-md-12" }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-secondary",
-                          attrs: { type: "button" },
-                          on: {
-                            click: function($event) {
-                              return _vm.hideDetail()
+                    _c(
+                      "div",
+                      { staticClass: "col-md-12" },
+                      [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-secondary",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                return _vm.hideDetail()
+                              }
                             }
-                          }
-                        },
-                        [_vm._v("Cerrar")]
-                      )
-                    ])
+                          },
+                          [_vm._v("Cerrar")]
+                        ),
+                        _vm._v(" "),
+                        _vm.status == "Registrado"
+                          ? [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-danger btn-sm",
+                                  attrs: { type: "button" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.desactivePurchase(
+                                        _vm.purchase_id
+                                      )
+                                    }
+                                  }
+                                },
+                                [_c("i", { staticClass: "icon-trash" })]
+                              )
+                            ]
+                          : _vm._e()
+                      ],
+                      2
+                    )
                   ])
                 ])
               ]
@@ -60647,15 +60673,11 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Tipo de comprobante")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Serie comprobante")]),
-        _vm._v(" "),
         _c("th", [_vm._v("Número comprobante")]),
         _vm._v(" "),
         _c("th", [_vm._v("Fecha Hora")]),
         _vm._v(" "),
         _c("th", [_vm._v("Total")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Impuesto")]),
         _vm._v(" "),
         _c("th", [_vm._v("Estado")])
       ])
@@ -61047,8 +61069,6 @@ var render = function() {
         { staticClass: "card" },
         [
           _c("div", { staticClass: "card-header" }, [
-            _c("i", { staticClass: "fa fa-align-justify" }),
-            _vm._v(" Ventas  \n                "),
             _c(
               "button",
               {
@@ -61061,8 +61081,8 @@ var render = function() {
                 }
               },
               [
-                _c("i", { staticClass: "icon-plus" }),
-                _vm._v(" Crear Factura\n                ")
+                _c("i", { staticClass: "fa fa-file" }),
+                _vm._v("  Crear Factura\n                ")
               ]
             )
           ]),
@@ -61639,7 +61659,7 @@ var render = function() {
                                 }
                               }
                             },
-                            [_vm._v("...")]
+                            [_c("i", { staticClass: "fa fa-search" })]
                           ),
                           _vm._v(" "),
                           _c("input", {
@@ -61669,113 +61689,6 @@ var render = function() {
                             }
                           })
                         ])
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-md-2" }, [
-                      _c("div", { staticClass: "form-group" }, [
-                        _c("label", [
-                          _vm._v("Precio "),
-                          _c(
-                            "span",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: _vm.price == 0,
-                                  expression: "price==0"
-                                }
-                              ],
-                              staticStyle: { color: "red" }
-                            },
-                            [_vm._v("(*Ingrese precio)")]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.price,
-                              expression: "price"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          attrs: { type: "number", step: "any", name: "" },
-                          domProps: { value: _vm.price },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.price = $event.target.value
-                            }
-                          }
-                        })
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-md-4" }, [
-                      _c("div", { staticClass: "form-group" }, [
-                        _c("label", [
-                          _vm._v("Cantidad "),
-                          _c(
-                            "span",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: _vm.quantity == 0,
-                                  expression: "quantity==0"
-                                }
-                              ],
-                              staticStyle: { color: "red" }
-                            },
-                            [_vm._v("(*Ingrese cantidad)")]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.quantity,
-                              expression: "quantity"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          attrs: { type: "number", name: "" },
-                          domProps: { value: _vm.quantity },
-                          on: {
-                            input: function($event) {
-                              if ($event.target.composing) {
-                                return
-                              }
-                              _vm.quantity = $event.target.value
-                            }
-                          }
-                        })
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-md-2" }, [
-                      _c("div", { staticClass: "form-group" }, [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-success form-control btn-add",
-                            on: {
-                              click: function($event) {
-                                return _vm.addDetail()
-                              }
-                            }
-                          },
-                          [_c("i", { staticClass: "icon-plus" })]
-                        )
                       ])
                     ])
                   ]),
@@ -61815,7 +61728,7 @@ var render = function() {
                                           },
                                           [
                                             _c("i", {
-                                              staticClass: "icon-close"
+                                              staticClass: "fa fa-window-close"
                                             })
                                           ]
                                         )
@@ -62445,7 +62358,7 @@ var render = function() {
                         },
                         [
                           _c("i", { staticClass: "fa fa-search" }),
-                          _vm._v(" search")
+                          _vm._v(" Buscar")
                         ]
                       )
                     ])
@@ -62477,7 +62390,12 @@ var render = function() {
                                     }
                                   }
                                 },
-                                [_c("i", { staticClass: "icon-check" })]
+                                [
+                                  _c("i", { staticClass: "fa fa-plus" }),
+                                  _vm._v(
+                                    "  Agregar\n                                        "
+                                  )
+                                ]
                               )
                             ]),
                             _vm._v(" "),
@@ -62766,12 +62684,10 @@ var render = function() {
     _c("div", { staticClass: "container-fluid" }, [
       _c("div", { staticClass: "card" }, [
         _c("div", { staticClass: "card-header" }, [
-          _c("i", { staticClass: "fa fa-align-justify" }),
-          _vm._v(" Usuarios\n                        "),
           _c(
             "button",
             {
-              staticClass: "btn btn-secondary",
+              staticClass: "btn btn-success",
               attrs: { type: "button" },
               on: {
                 click: function($event) {
@@ -62780,8 +62696,8 @@ var render = function() {
               }
             },
             [
-              _c("i", { staticClass: "icon-plus" }),
-              _vm._v(" Nuevo\n                        ")
+              _c("i", { staticClass: "fa fa-user" }),
+              _vm._v(" Nuevo Usuario\n                        ")
             ]
           )
         ]),
@@ -62869,7 +62785,7 @@ var render = function() {
                       }
                     }
                   },
-                  [_c("i", { staticClass: "fa fa-search" }), _vm._v(" search")]
+                  [_c("i", { staticClass: "fa fa-search" }), _vm._v(" Buscar")]
                 )
               ])
             ])
@@ -62938,29 +62854,11 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("td", {
-                      domProps: {
-                        textContent: _vm._s(client.type + "-" + client.rif)
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("td", {
                       domProps: { textContent: _vm._s(client.name) }
                     }),
                     _vm._v(" "),
                     _c("td", {
-                      domProps: { textContent: _vm._s(client.phone) }
-                    }),
-                    _vm._v(" "),
-                    _c("td", {
                       domProps: { textContent: _vm._s(client.email) }
-                    }),
-                    _vm._v(" "),
-                    _c("td", {
-                      domProps: { textContent: _vm._s(client.retention) }
-                    }),
-                    _vm._v(" "),
-                    _c("td", {
-                      domProps: { textContent: _vm._s(client.address) }
                     }),
                     _vm._v(" "),
                     _c("td", {
@@ -63681,17 +63579,9 @@ var staticRenderFns = [
       _c("tr", [
         _c("th", [_vm._v("Opciones")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Rif")]),
-        _vm._v(" "),
         _c("th", [_vm._v("Nombre y Apellido")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Teléfono")]),
-        _vm._v(" "),
         _c("th", [_vm._v("Corre o Electrónico")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Agente de retención")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Dirección")]),
         _vm._v(" "),
         _c("th", [_vm._v("Usuario")]),
         _vm._v(" "),
@@ -63788,12 +63678,10 @@ var render = function() {
         { staticClass: "card" },
         [
           _c("div", { staticClass: "card-header" }, [
-            _c("i", { staticClass: "fa fa-align-justify" }),
-            _vm._v(" Retenciones\n                "),
             _c(
               "button",
               {
-                staticClass: "btn btn-secondary",
+                staticClass: "btn btn-success",
                 attrs: { type: "button" },
                 on: {
                   click: function($event) {
@@ -63802,8 +63690,8 @@ var render = function() {
                 }
               },
               [
-                _c("i", { staticClass: "icon-plus" }),
-                _vm._v(" Nuevo\n                ")
+                _c("i", { staticClass: "fa fa-file" }),
+                _vm._v("  Crear Retencion\n                ")
               ]
             )
           ]),
@@ -63848,7 +63736,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("option", { attrs: { value: "voucher_num" } }, [
-                              _vm._v("numero de comprobante")
+                              _vm._v("Numero de comprobante")
                             ]),
                             _vm._v(" "),
                             _c("option", { attrs: { value: "date" } }, [
@@ -63918,12 +63806,28 @@ var render = function() {
                           },
                           [
                             _c("i", { staticClass: "fa fa-search" }),
-                            _vm._v(" search")
+                            _vm._v(" Buscar")
                           ]
                         )
                       ])
                     ])
                   ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "box-header" },
+                    [
+                      _c("center", [
+                        _c("h3", { staticClass: "box-title" }, [
+                          _vm._v("Listado de Retenciones")
+                        ])
+                      ])
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("br"),
+                  _c("hr"),
                   _vm._v(" "),
                   _c("div", { staticClass: "table-responsive" }, [
                     _c(
