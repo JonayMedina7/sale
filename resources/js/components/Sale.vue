@@ -214,8 +214,13 @@
                                                 <td>Bs {{ totalTax=(((totalPartial)*tax)).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
+<<<<<<< HEAD
                                                 <td colspan="5" align="right"><strong>Total: </strong></td>
                                                 <td>Bs {{ total=(calculateTotal) }}</td>
+=======
+                                                <td colspan="5" align="right"><strong>Total a Pagar: </strong></td>
+                                                <td>$ {{ total=(calculateTotal).toFixed(2) }}</td>
+>>>>>>> 8df81349b930ac02041ee22c5a5cfb90e064ab7a
                                             </tr>
                                         </tbody>
                                         <tbody v-else>
@@ -525,7 +530,7 @@
                 return result;
             },
             calculateTotal: function (){
-                return parseInt(this.totalTax) + parseInt(this.totalPartial);
+                return parseFloat(this.totalTax) + parseFloat(this.totalPartial);
             }
 
         },
@@ -782,6 +787,7 @@
                     me.product_id=0;
                     me.voucher_num='';
                     me.voucher_serie='';
+                    me.totalTax= 0.0;
                     me.tax=0.16;
                     me.tax_mount=0.0;
                     me.total=0.0;

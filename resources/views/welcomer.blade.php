@@ -130,7 +130,7 @@
                 <div class="d-flex bd-highlight justify-content-start mb-14">
                     
                     <div class="p-2 flex-fill bd-highlight">{{ $d->id }}</div>
-                    <div class="p-2 flex-fill bd-highlight">{{ $d->date }}</div>
+                    <div class="p-2 flex-fill bd-highlight">{{ $d->datep->format('d/m/Y') }}</div>
                     <div class="p-2 flex-fill bd-highlight">{{ $d->purchase_num }}</div>
                     <div class="p-2 flex-fill bd-highlight">{{ $d->voucher_serie }}</div>
                     <div class="p-2 flex-fill bd-highlight">0</div>
@@ -151,7 +151,7 @@
         </main>
         {{-- end main --}} 
             
-               
+        0414 4482607 0243 2330019 Omira la tintoria 
 
             
         

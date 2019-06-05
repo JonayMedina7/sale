@@ -113,7 +113,7 @@ class RetentionController extends Controller
         ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.year', 'retentions.month', 'retentions.status', 'clients.name', 'clients.type', 'clients.rif', 'purchases.user_id', 'users.user')
         ->where('retentions.id','=',$id)->take(1)->get();
 
-        $detailret = Purchase::select('purchases.voucher', 'purchases.date as datep', 'purchases.voucher_num as purchase_num', 'purchases.voucher_serie', 'purchases.total as totalp', 'purchases.tax_mount')
+        $detailret = Purchase::select('purchases.id', 'purchases.voucher', 'purchases.date as datep', 'purchases.voucher_num as purchase_num', 'purchases.voucher_serie', 'purchases.total as totalp', 'purchases.tax', 'purchases.tax_mount')
             ->where('purchases.ret_id','=',$id)->get();
         return view('welcomer', compact('retention', 'detailret'));
     }

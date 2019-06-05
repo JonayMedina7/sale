@@ -534,7 +534,7 @@
                 return result;
             },
             calculateTotal: function(){
-                return parseInt(this.totalTax) + parseInt(this.totalPartial);
+                return parseFloat(this.totalTax) + parseFloat(this.totalPartial);
             }
 
         },

@@ -94,6 +94,7 @@ class PurchaseController extends Controller
         $purchase->date = $mytime->toDateString();
         
         $purchase->tax = $request->tax;
+        $purchase->tax_mount = $request->tax_mount;
         $purchase->total = $request->total;
         $purchase->status = 'Registrado';
         $purchase->ret_id = 0;

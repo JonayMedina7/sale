@@ -4964,6 +4964,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       voucher_serie: '',
       date: '',
       tax: 0.16,
+      tax_mount: 0.0,
       arrayPurchase: [],
       arrayDetail: [],
       arrayProvider: [],
@@ -5017,7 +5018,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       return pagesArray;
     },
-    calculateTotal: function calculateTotal() {
+    calculateTotalPartial: function calculateTotalPartial() {
       var result = 0.0;
 
       for (var i = 0; i < this.arrayDetail.length; i++) {
@@ -5025,6 +5026,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
 
       return result;
+    },
+    calculateTotal: function calculateTotal() {
+      return parseFloat(this.totalTax) + parseFloat(this.totalPartial);
     }
   },
   methods: {
@@ -5200,6 +5204,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         'voucher_num': this.voucher_num,
         'voucher_serie': this.voucher_serie,
         'tax': this.tax,
+        'tax_mount': this.totalTax,
         'total': this.total,
         'data': this.arrayDetail
       }).then(function (response) {
@@ -5212,6 +5217,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         me.voucher_num = '';
         me.voucher_serie = '';
         me.tax = 0.16;
+        me.totalTax = 0.0;
+        me.tax_mount = 0.0;
         me.total = 0.0;
         me.product = '';
         me.quantity = 0;
@@ -5915,6 +5922,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -6019,7 +6031,7 @@ __webpack_require__.r(__webpack_exports__);
       return result;
     },
     calculateTotal: function calculateTotal() {
-      return parseInt(this.totalTax) + parseInt(this.totalPartial);
+      return parseFloat(this.totalTax) + parseFloat(this.totalPartial);
     }
   },
   methods: {
@@ -6250,6 +6262,7 @@ __webpack_require__.r(__webpack_exports__);
           me.product_id = 0;
           me.voucher_num = '';
           me.voucher_serie = '';
+          me.totalTax = 0.0;
           me.tax = 0.16;
           me.tax_mount = 0.0;
           me.total = 0.0;
@@ -7439,7 +7452,7 @@ __webpack_require__.r(__webpack_exports__);
       return result;
     },
     calculateTotal: function calculateTotal() {
-      return parseInt(this.totalTax) + parseInt(this.totalPartial);
+      return parseFloat(this.totalTax) + parseFloat(this.totalPartial);
     }
   },
   methods: {
@@ -60124,9 +60137,9 @@ var render = function() {
                                         _vm._v(
                                           "$ " +
                                             _vm._s(
-                                              (_vm.totalPartial = (
-                                                _vm.total - _vm.totalTax
-                                              ).toFixed(2))
+                                              (_vm.totalPartial = _vm.calculateTotalPartial.toFixed(
+                                                2
+                                              ))
                                             )
                                         )
                                       ])
@@ -60148,8 +60161,7 @@ var render = function() {
                                           "$ " +
                                             _vm._s(
                                               (_vm.totalTax = (
-                                                (_vm.total * _vm.tax) /
-                                                (1 + _vm.tax)
+                                                _vm.totalPartial * _vm.tax
                                               ).toFixed(2))
                                             )
                                         )
@@ -60171,7 +60183,9 @@ var render = function() {
                                         _vm._v(
                                           "$ " +
                                             _vm._s(
-                                              (_vm.total = _vm.calculateTotal)
+                                              (_vm.total = _vm.calculateTotal.toFixed(
+                                                2
+                                              ))
                                             )
                                         )
                                       ])
@@ -61150,7 +61164,7 @@ var render = function() {
               },
               [
                 _c("i", { staticClass: "fa fa-file" }),
-                _vm._v("  Crear Factura\n                ")
+                _vm._v("  Crear Factura\n                        ")
               ]
             )
           ]),
@@ -61312,12 +61326,12 @@ var render = function() {
                                   },
                                   [
                                     _vm._v(
-                                      "\n                                          Detalles"
+                                      "\n                                                  Detalles"
                                     )
                                   ]
                                 ),
                                 _vm._v(
-                                  "  \n                                      \n                                        \n                                    "
+                                  "  \n                                              \n                                                \n                                            "
                                 )
                               ]),
                               _vm._v(" "),
@@ -61904,11 +61918,11 @@ var render = function() {
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
-                                          "\n                                            " +
+                                          "\n                                                    " +
                                             _vm._s(
                                               detail.price * detail.quantity
                                             ) +
-                                            "\n                                        "
+                                            "\n                                                "
                                         )
                                       ])
                                     ])
@@ -61968,6 +61982,9 @@ var render = function() {
                                       }
                                     },
                                     [
+                                      _vm._v(
+                                        "\n<<<<<<< HEAD\n                                                "
+                                      ),
                                       _vm._m(4),
                                       _vm._v(" "),
                                       _c("td", [
@@ -61977,13 +61994,31 @@ var render = function() {
                                               (_vm.total = _vm.calculateTotal)
                                             )
                                         )
-                                      ])
+                                      ]),
+                                      _vm._v(
+                                        "\n=======\n                                                "
+                                      ),
+                                      _vm._m(5),
+                                      _vm._v(" "),
+                                      _c("td", [
+                                        _vm._v(
+                                          "$ " +
+                                            _vm._s(
+                                              (_vm.total = _vm.calculateTotal.toFixed(
+                                                2
+                                              ))
+                                            )
+                                        )
+                                      ]),
+                                      _vm._v(
+                                        "\n>>>>>>> 8df81349b930ac02041ee22c5a5cfb90e064ab7a\n                                            "
+                                      )
                                     ]
                                   )
                                 ],
                                 2
                               )
-                            : _c("tbody", [_vm._m(5)])
+                            : _c("tbody", [_vm._m(6)])
                         ]
                       )
                     ])
@@ -62028,7 +62063,7 @@ var render = function() {
                   _c("div", { staticClass: "form-group row border" }, [
                     _c("div", { staticClass: "col-md-3" }, [
                       _c("div", { staticClass: "form-group" }, [
-                        _vm._m(6),
+                        _vm._m(7),
                         _vm._v(" "),
                         _c("h3", [
                           _c("p", {
@@ -62040,7 +62075,7 @@ var render = function() {
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-3" }, [
                       _c("div", { staticClass: "form-group" }, [
-                        _vm._m(7),
+                        _vm._m(8),
                         _vm._v(" "),
                         _c("h3", [
                           _c("p", {
@@ -62051,7 +62086,7 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-3" }, [
-                      _vm._m(8),
+                      _vm._m(9),
                       _vm._v(" "),
                       _c("h3", [
                         _c("p", { domProps: { textContent: _vm._s(_vm.tax) } })
@@ -62060,7 +62095,7 @@ var render = function() {
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-3" }, [
                       _c("div", { staticClass: "form-group" }, [
-                        _vm._m(9),
+                        _vm._m(10),
                         _vm._v(" "),
                         _c("h3", [
                           _vm.voucher == "bill"
@@ -62076,7 +62111,7 @@ var render = function() {
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-3" }, [
                       _c("div", { staticClass: "form-group" }, [
-                        _vm._m(10),
+                        _vm._m(11),
                         _vm._v(" "),
                         _c("h3", [
                           _c("p", {
@@ -62088,7 +62123,7 @@ var render = function() {
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-3" }, [
                       _c("div", { staticClass: "form-group" }, [
-                        _vm._m(11),
+                        _vm._m(12),
                         _vm._v(" "),
                         _c("h3", [
                           _c("p", {
@@ -62108,7 +62143,7 @@ var render = function() {
                             "table table-bordered table-striped table-sm"
                         },
                         [
-                          _vm._m(12),
+                          _vm._m(13),
                           _vm._v(" "),
                           _vm.arrayDetail.length
                             ? _c(
@@ -62136,11 +62171,11 @@ var render = function() {
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
-                                          "\n                                            Bs " +
+                                          "\n                                                    Bs " +
                                             _vm._s(
                                               detail.price * detail.quantity
                                             ) +
-                                            "\n                                        "
+                                            "\n                                                "
                                         )
                                       ])
                                     ])
@@ -62154,7 +62189,7 @@ var render = function() {
                                       }
                                     },
                                     [
-                                      _vm._m(13),
+                                      _vm._m(14),
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
@@ -62177,7 +62212,7 @@ var render = function() {
                                       }
                                     },
                                     [
-                                      _vm._m(14),
+                                      _vm._m(15),
                                       _vm._v(" "),
                                       _c("td", {
                                         domProps: {
@@ -62197,7 +62232,7 @@ var render = function() {
                                       }
                                     },
                                     [
-                                      _vm._m(15),
+                                      _vm._m(16),
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v("Bs " + _vm._s(_vm.total))
@@ -62207,7 +62242,7 @@ var render = function() {
                                 ],
                                 2
                               )
-                            : _c("tbody", [_vm._m(16)])
+                            : _c("tbody", [_vm._m(17)])
                         ]
                       )
                     ])
@@ -62245,12 +62280,12 @@ var render = function() {
                           },
                           [
                             _vm._v(
-                              "\n                                          Reemprimir"
+                              "\n                                                  Reemprimir"
                             )
                           ]
                         ),
                         _vm._v(
-                          "  \n\n                                        "
+                          "  \n\n                                                "
                         ),
                         _vm.status == "Registrado"
                           ? [
@@ -62267,7 +62302,7 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    "\n                                             Anular\n                                            "
+                                    "\n                                                     Anular\n                                                    "
                                   )
                                 ]
                               )
@@ -62448,7 +62483,7 @@ var render = function() {
                       staticClass: "table table-bordered table-striped table-sm"
                     },
                     [
-                      _vm._m(17),
+                      _vm._m(18),
                       _vm._v(" "),
                       _c(
                         "tbody",
@@ -62469,7 +62504,7 @@ var render = function() {
                                 [
                                   _c("i", { staticClass: "fa fa-plus" }),
                                   _vm._v(
-                                    "  Agregar\n                                        "
+                                    "  Agregar\n                                                "
                                   )
                                 ]
                               )
@@ -62650,10 +62685,18 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("td", { attrs: { colspan: "5", align: "right" } }, [
+      _c("strong", [_vm._v("Total a Pagar: ")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("tr", [
       _c("td", [
         _vm._v(
-          "\n                                            No hay articulos agredados\n                                        "
+          "\n                                                    No hay articulos agredados\n                                                "
         )
       ])
     ])
@@ -62747,7 +62790,7 @@ var staticRenderFns = [
     return _c("tr", [
       _c("td", [
         _vm._v(
-          "\n                                            No hay articulos agredados\n                                        "
+          "\n                                                    No hay articulos agredados\n                                                "
         )
       ])
     ])
