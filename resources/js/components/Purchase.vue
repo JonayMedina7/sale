@@ -1,18 +1,23 @@
  <template>
         <main class="main">
-            <!-- Breadcrumb -->
-            <!-- <ol class="breadcrumb">
-                
-                <li class="breadcrumb-item"><a href="/">Escritorio</a></li>
-                
-            </ol> -->
+           <ol class="breadcrumb">
+          <li class="breadcrumb-item">Inicio</li>
+          <li class="breadcrumb-item">
+            <a href="#">Dilia Software</a>
+          </li>
+          <li class="breadcrumb-item active"> Compras&nbsp;&nbsp;<i class="fa fa-cart-plus"></i></li>
+          <!-- Breadcrumb Menu-->
+          <li class="breadcrumb-menu d-md-down-none">
+            
+          </li>
+        </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
                         
                         <button type="button" class="btn btn-success" @click="showDetail()">
-                            <i class="fa fa-file"></i>&nbsp;&nbsp;Ingresar Compra
+                            <i class="fa fa-cart-plus"></i>&nbsp;&nbsp;Ingresar Compra
                         </button>
                     </div>
                     <!-- litado registros -->
@@ -177,7 +182,7 @@
                                                 <th>Artículo</th>
                                                 <th>Precio</th>
                                                 <th>Cantidad</th>
-                                                <th>subTotal</th> 
+                                                <th>Sub-total</th> 
                                             </tr>
                                         </thead>
                                         <tbody v-if="arrayDetail.length">
@@ -194,20 +199,20 @@
                                                     <input v-model="detail.quantity" type="number"  class="form-control" name="">
                                                 </td>
                                                 <td>
-                                                    {{ detail.price*detail.quantity }}
+                                                   Bs {{ detail.price*detail.quantity }}
                                                 </td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="4" align="right"><strong>Total Parcial: </strong></td>
-                                                <td>$ {{ totalPartial=(calculateTotalPartial).toFixed(2) }}</td>
+                                                <td>Bs {{ totalPartial=(calculateTotalPartial).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="4" align="right"><strong>Total Impuesto: </strong></td>
-                                                <td>$ {{ totalTax=((totalPartial)*tax).toFixed(2) }}</td>
+                                                <td>Bs {{ totalTax=((totalPartial)*tax).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="4" align="right"><strong>Total a Pagar: </strong></td>
-                                                <td>$ {{ total=(calculateTotal).toFixed(2) }}</td>
+                                                <td>Bs {{ total=(calculateTotal).toFixed(2) }}</td>
                                             </tr>
                                         </tbody>
                                         <tbody v-else>
@@ -236,32 +241,32 @@
                             <div class="form-group row border">
                                 <div class="col-md-9">
                                     <div class="form-group">
-                                        <label for="">Proveedor</label>
-                                        <p v-text="provider"></p>
+                                        <label for=""><h6>Proveedor</h6></label>
+                                        <h3><p v-text="provider"></p></h3>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="">Impuesto</label>
-                                    <p v-text="tax"></p>
+                                    <label for=""><h6>Impuesto</h6></label>
+                                    <h3><p v-text="tax"></p></h3>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Tipo comprobante</label>
-                                        <p v-if="voucher=='bill'">Factura</p>
+                                        <label><h6>Tipo comprobante</h6></label>
+                                       <h3> <p v-if="voucher=='bill'">Factura</p>
                                         <p v-else-if="voucher=='note'">Vale</p>
-                                        <p v-else-if="voucher=='credit'">Nota de credito</p>
+                                        <p v-else-if="voucher=='credit'">Nota de credito</p></h3>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Serie Comprobante</label>
-                                        <p v-text="voucher_serie"></p>
+                                        <label><h6>Nro Control</h6></label>
+                                        <h3><p v-text="voucher_serie"></p></h3>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Numero Comprobante</label>
-                                        <p v-text="voucher_num"></p>
+                                        <label><h6>Numero Comprobante</h6></label>
+                                        <h3><p v-text="voucher_num"></p></h3>
                                     </div>
                                 </div>
                                 
@@ -275,7 +280,7 @@
                                                 <th>Artículo</th>
                                                 <th>Precio</th>
                                                 <th>Cantidad</th>
-                                                <th>subTotal</th> 
+                                                <th>Sub-Total</th> 
                                             </tr>
                                         </thead>
                                         <tbody v-if="arrayDetail.length">
@@ -290,15 +295,15 @@
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="3" align="right"><strong>Total Parcial: </strong></td>
-                                                <td>$ {{ totalPartial=(total-totalTax).toFixed(2) }}</td>
+                                                <td>Bs {{ totalPartial=(total-totalTax).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="3" align="right"><strong>Total Impuesto: </strong></td>
-                                                <td>$ {{ totalTax=((total*tax)).toFixed(2) }}</td>
+                                                <td>Bs {{ totalTax=((total*tax)).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="3" align="right"><strong>Total a Pagar: </strong></td>
-                                                <td>$ {{ total }}</td>
+                                                <td>Bs {{ total }}</td>
                                             </tr>
                                         </tbody>
                                         <tbody v-else>
@@ -316,7 +321,7 @@
                                     <button type="button" class="btn btn-secondary" @click="hideDetail()">Cerrar</button>
                                     <template  v-if="status=='Registrado'">
                                                     <button type="button" @click="desactivePurchase(purchase_id)" class="btn btn-danger btn-sm" >
-                                                      <i class="icon-trash"></i>
+                                                      Anular
                                                     </button>
                                                 </template>
                                 </div>
@@ -347,7 +352,7 @@
                                           <option value="code">Codigo</option>
                                         </select>
                                         <input type="text" v-model="search" @keyup.enter="listProduct(searchP,criteryP)" class="form-control" placeholder="Ingrese datos a Buscar">
-                                        <button type="submit" @click="listProduct(searchP,criteryP)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
+                                        <button type="submit" @click="listProduct(searchP,criteryP)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                     </div>
                                 </div>
                             </div>

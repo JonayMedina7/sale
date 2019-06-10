@@ -1,10 +1,21 @@
 <template>
     <main class="main">
+         <ol class="breadcrumb">
+          <li class="breadcrumb-item">Inicio</li>
+          <li class="breadcrumb-item">
+            <a href="#">Dilia Software</a>
+          </li>
+          <li class="breadcrumb-item active"> <i class="icon-graph"></i>Graficos</li>
+          <!-- Breadcrumb Menu-->
+          <li class="breadcrumb-menu d-md-down-none">
+            
+          </li>
+        </ol>
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header">
-                    
-                </div>
+                      <i class="icon-graph"></i></div>
+                
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
@@ -44,7 +55,9 @@
                         </div>
                     </div>
                 </div>
-                
+                </div>
+            </div>
+
             </div>
         </div>
 

@@ -1,11 +1,16 @@
  <template>
         <main class="main">
-            <!-- Breadcrumb -->
-            <!-- <ol class="breadcrumb">
-                
-                <li class="breadcrumb-item"><a href="/">Escritorio</a></li>
-                
-            </ol> -->
+           <ol class="breadcrumb">
+          <li class="breadcrumb-item">Inicio</li>
+          <li class="breadcrumb-item">
+            <a href="#">Dilia Software</a>
+          </li>
+          <li class="breadcrumb-item active"> Ventas&nbsp;&nbsp;<i class="fa fa-file"></i></li>
+          <!-- Breadcrumb Menu-->
+          <li class="breadcrumb-menu d-md-down-none">
+            
+          </li>
+        </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
@@ -161,11 +166,11 @@
                             <div class="form-group row border">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Articulo <span style="color:red;" v-show="product_id==0">(*Seleccione)</span></label>
+                                        <label><h6>Selecciones los Articulos</h6>  <span style="color:red;" v-show="product_id==0"></span></label>
                                         <div class="form-inline">
-                                            <input type="text" class="form-control" v-model="code" @keyup.enter="productSearch()" placeholder="Ingrese Producto" name="">
-                                            <button @click="openModal()" class="btn btn-primary"><i class="fa fa-search"></i></button>
-                                            <input type="text" readonly class="form-control" v-model="product" name="" placeholder="ENTER para buscar">
+                                           <!--  <input type="text" class="form-control" v-model="code" @keyup.enter="productSearch()" placeholder="Ingrese Producto" name=""> -->
+                                            <button @click="openModal()" class="btn btn-primary">Buscar&nbsp;&nbsp;<i class="fa fa-search"></i></button>
+                                            <!-- <input type="text" readonly class="form-control" v-model="product" name="" placeholder="ENTER para buscar"> -->
                                         </div>
                                     </div>
                                 </div>
@@ -180,7 +185,7 @@
                                                 <th>Artículo</th>
                                                 <th>Precio</th>
                                                 <th>Cantidad</th>
-                                                <th>Disponibilidad</th>
+                                                <th>Stock</th>
                                                 <th>Sub-Total</th> 
                                             </tr>
                                         </thead>
@@ -214,13 +219,13 @@
                                                 <td>Bs {{ totalTax=(((totalPartial)*tax)).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
-<<<<<<< HEAD
+
                                                 <td colspan="5" align="right"><strong>Total: </strong></td>
                                                 <td>Bs {{ total=(calculateTotal) }}</td>
-=======
+
                                                 <td colspan="5" align="right"><strong>Total a Pagar: </strong></td>
                                                 <td>$ {{ total=(calculateTotal).toFixed(2) }}</td>
->>>>>>> 8df81349b930ac02041ee22c5a5cfb90e064ab7a
+
                                             </tr>
                                         </tbody>
                                         <tbody v-else>
@@ -348,7 +353,7 @@
                         </div>
                     </template>
                     <!-- Fin panel vistas ventas -->
-
+                </div>
                 </div>
                 <!-- Fin ejemplo de tabla Listado -->
             </div>
@@ -646,7 +651,7 @@
                         me.stock= me.arrayProduct[0]['stock'];
                         me.price= me.arrayProduct[0]['price_sell'];
                     }else {
-                        me.product = 'No existe le Producto';
+                        me.product = 'No existe el Producto';
                         me.product_id =0;
                     }
                 })
@@ -825,7 +830,7 @@
 
                 if (me.arrayDetail.length<=0) me.errorSmsListS.push("Por favor ingrese productos a la compra");
 
-                if (!me.tax) me.errorSmsListS.push("ingrese un impuesto valido");
+                if (!me.tax) me.errorSmsListS.push("Ingrese un impuesto valido");
 
                 if (me.arrayDetail.length<=0) me.errorSmsListS.push("Ingrese productos");
 

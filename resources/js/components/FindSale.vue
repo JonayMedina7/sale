@@ -1,16 +1,21 @@
  <template>
         <main class="main">
-            <!-- Breadcrumb -->
-            <!-- <ol class="breadcrumb">
-                
-                <li class="breadcrumb-item"><a href="/">Escritorio</a></li>
-                
-            </ol> -->
+               <ol class="breadcrumb">
+          <li class="breadcrumb-item">Inicio</li>
+          <li class="breadcrumb-item">
+            <a href="#">Dilia Software</a>
+          </li>
+          <li class="breadcrumb-item active"> Cuentas por Cobrar&nbsp;&nbsp;<i class="icon-chart"></i></li>
+          <!-- Breadcrumb Menu-->
+          <li class="breadcrumb-menu d-md-down-none">
+            
+          </li>
+        </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> ventas
+                        
                     </div>
                     <!-- litado registros -->
                     <template v-if="list==1">
@@ -36,7 +41,7 @@
                                             <th>Nombre Usuario</th>
                                             <th>Cliente</th>
                                             <th>Tipo de comprobante</th>
-                                            <th>Serie comprobante</th>
+                                            <!-- <th>Serie comprobante</th> -->
                                             <th>Número comprobante</th>
                                             <th>Fecha Hora</th>
                                             <th>Total</th>
@@ -48,18 +53,18 @@
                                         <tr v-for="sale in arraySale" :key="sale.id">
                                             <td>
                                                 <button type="button" class="btn btn-success btn-sm" @click="showSale(sale.id)">
-                                                  <i class="icon-eye"></i>
+                                                  Detalles
                                                 </button> &nbsp;
-                                                <button type="button" class="btn btn-info btn-sm" @click="pdfSale(sale.id)">
+                                                <!-- <button type="button" class="btn btn-info btn-sm" @click="pdfSale(sale.id)">
                                                   <i class="icon-doc"></i>
-                                                </button>                                                
+                                                </button> -->                                                
                                             </td>
                                             <td v-text="sale.user"></td>
                                             <td v-text="sale.name"></td>
                                             <td v-if="sale.voucher=='bill'">Factura</td>
                                             <td v-else-if="sale.voucher=='note'">Vale</td>
                                             <td v-else-if="sale.voucher=='credit'">Nota de Credito</td>
-                                            <td v-text="sale.voucher_serie"></td>
+                                            <!-- <td v-text="sale.voucher_serie"></td> -->
                                             <td v-text="sale.voucher_num"></td>
                                             <td v-text="sale.date"></td>
                                             <td v-text="sale.total"></td>
