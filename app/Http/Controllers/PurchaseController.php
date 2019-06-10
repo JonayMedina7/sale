@@ -19,12 +19,12 @@ class PurchaseController extends Controller
         if ($search=='') {
             $purchases = Purchase::join('clients', 'purchases.provider_id', '=', 'clients.id')
             ->join('users', 'purchases.user_id', '=', 'users.id')
-            ->select('purchases.id', 'purchases.voucher', 'purchases.voucher_serie', 'purchases.voucher_num', 'purchases.date', 'purchases.tax', 'purchases.total', 'purchases.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
+            ->select('purchases.id', 'purchases.voucher', 'purchases.voucher_serie', 'purchases.voucher_num', 'purchases.date', 'purchases.tax', 'purchases.tax_mount', 'purchases.total', 'purchases.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
             ->orderBy('purchases.id', 'desc')->paginate(10);
         } else {
             $purchases = Purchase::join('clients', 'purchases.provider_id', '=', 'clients.id')
             ->join('users', 'purchases.user_id', '=', 'users.id')
-            ->select('purchases.id', 'purchases.voucher', 'purchases.voucher_serie', 'purchases.voucher_num', 'purchases.date', 'purchases.tax', 'purchases.total', 'purchases.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
+            ->select('purchases.id', 'purchases.voucher', 'purchases.voucher_serie', 'purchases.voucher_num', 'purchases.date', 'purchases.tax', 'purchases.tax_mount', 'purchases.total', 'purchases.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
             ->where('purchases.'.$criterion, 'like', '%'. $search . '%')->orderBy('purchases.id', 'desc')->paginate(10);
         }
 
@@ -49,7 +49,7 @@ class PurchaseController extends Controller
         
         $purchase = Purchase::join('clients', 'purchases.provider_id', '=', 'clients.id')
         ->join('users', 'purchases.user_id', '=', 'users.id')
-        ->select('purchases.id', 'purchases.voucher', 'purchases.voucher_serie', 'purchases.voucher_num', 'purchases.date', 'purchases.tax', 'purchases.total', 'purchases.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
+        ->select('purchases.id', 'purchases.voucher', 'purchases.voucher_serie', 'purchases.voucher_num', 'purchases.date', 'purchases.tax', 'purchases.tax_mount', 'purchases.total', 'purchases.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
         ->where('purchases.id','=',$id)
         ->orderBy('purchases.id', 'desc')->take(1)->get();
         

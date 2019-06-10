@@ -167,8 +167,10 @@ Route::group(['middleware' =>['auth']], function()
 		route::get('/retention/getDetail', 'RetentionController@getDetail');
 		route::put('/retention/update', 'RetentionController@update');
 		route::put('/retention/desactive', 'RetentionController@desactive');
+		route::get('/retention/pdf/{id}', 'RetentionController@pdf')->name('ventar');
 		route::get('/retention/pdfw/{id}', 'RetentionController@pdfw')->name('venta'); 
 		
+		route::get('/company', 'CompanyController@index');
 	});
 	
 

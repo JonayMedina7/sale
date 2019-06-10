@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Retention;
 use App\Purchase;
-
+use App\Company;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -87,26 +87,24 @@ class RetentionController extends Controller
 
     public function pdf(Request $request, $id)
     {
-        $retention = retention::join('clients', 'retentions.provider_id', '=', 'clients.id')
-        ->join('users', 'retentions.user_id', '=', 'users.id')
-        ->select('retentions.id', 'retentions.voucher', 'retentions.voucher_serie', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.status', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
+        $company = Company::all();
+        $retention = retention::join('purchases', 'retentions.id', '=', 'purchases.ret_id')
+        ->join('users', 'purchases.user_id', '=', 'users.id')
+        ->join('clients', 'purchases.provider_id', '=', 'clients.id')
+        ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.year', 'retentions.month', 'retentions.status', 'clients.name', 'clients.type', 'clients.rif', 'clients.retention', 'purchases.user_id', 'users.user')
         ->where('retentions.id','=',$id)->take(1)->get();
 
-         $details = Detailretention::join('products', 'detailretentions.product_id', '=', 'products.id')
-        ->select('detailretentions.quantity', 'detailretentions.price', 'products.name as product')
-        ->where('detailretentions.retention_id','=',$id)
-        ->orderBy('detailretentions.id', 'desc')->get();
+        $detailret = Purchase::select('purchases.id', 'purchases.voucher', 'purchases.date as datep', 'purchases.voucher_num as purchase_num', 'purchases.voucher_serie', 'purchases.total as totalp', 'purchases.tax', 'purchases.tax_mount')
+            ->where('purchases.ret_id','=',$id)->get();
 
-        $numretention = retention::select('voucher_num')->where('id',$id)->get();
-        /*$retention=strtoupper($retention->name, $retention->address);
-        $details=strtoupper($details);*/
-
-        $pdf = \PDF::loadView('pdf.retention',['retention'=>$retention]);
-        return $pdf->download('venta-'.$numretention[0]->voucher_num.'.pdf');
+        $pdf = \PDF::loadView('pdf.ret',['retention'=>$retention, 'detailret'=>$detailret, 'company'=>$company]);
+        $pdf->setPaper('A4', 'landscape');
+        return $pdf->stream('venta-'.$retention[0]->voucher_num.'.pdf');
     }
 
     public function pdfw(Request $request, $id)
     {
+        $company = Company::all();
         $retention = retention::join('purchases', 'retentions.id', '=', 'purchases.ret_id')
         ->join('users', 'purchases.user_id', '=', 'users.id')
         ->join('clients', 'purchases.provider_id', '=', 'clients.id')
@@ -115,7 +113,7 @@ class RetentionController extends Controller
 
         $detailret = Purchase::select('purchases.id', 'purchases.voucher', 'purchases.date as datep', 'purchases.voucher_num as purchase_num', 'purchases.voucher_serie', 'purchases.total as totalp', 'purchases.tax', 'purchases.tax_mount')
             ->where('purchases.ret_id','=',$id)->get();
-        return view('welcomer', compact('retention', 'detailret'));
+        return view('welcomer', compact('retention', 'detailret', 'company'));
     }
   
 

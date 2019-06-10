@@ -248,7 +248,7 @@
                 name : '',
                 phone : '',
                 email: '',
-                retention : '0',
+                retention : 'no',
                 address : '',
                 condition : '',
                 user: '',
@@ -461,7 +461,7 @@
                 this.client_id= 0;
                 this.name='';
                 this.address='';
-                this.retention='0';
+                this.retention='no';
                 this.type = 'c';
                 this.rif=0;
                 this.phone='';
@@ -484,7 +484,7 @@
 
                                 this.name='';
 				                this.address='';
-				                this.retention='0';
+				                this.retention='no';
 				                this.rif=0;
 				                this.phone='';
 				                this.email='';

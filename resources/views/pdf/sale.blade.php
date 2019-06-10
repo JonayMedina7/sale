@@ -19,7 +19,6 @@
         background-position: center;
         background-size: cover;
         
-
         /*font-family: SourceSansPro;*/
         }
         html, body { height: 100%; }
@@ -32,28 +31,21 @@
             padding: 0px;
             top: 0px;
             bottom: 0px;
+            background-color:#ececec;
         }
         tr th, tr td {
             padding: 4px;
             font-size: 11px;
         }
-
        
         #data{
         float: left;
         margin: 0px 2%;
         
         font-size: 11px;
-
         /*text-align: justify;*/
         }
-        #sidebar {
-        height: 48%;
-        width: 100%;
-        border: solid 1px;
-        }
-
-
+        
         #inv{
         /*position: relative;*/
         float: right;
@@ -61,22 +53,20 @@
         padding: 0px;
         font-size: 15px;
         }
-
         table{
         /*position: relative;*/
         clear: left;
         font-size: 11px;
+        
         }
         /*#fact{
         
         float: right;
-
         margin-top: 0%;
         margin-left: 2%;
         margin-right: 2%;
         font-size: 20px;
         }*/
-
         #facliente{
         width: 100%;
         border: 1px solid #000;
@@ -89,20 +79,17 @@
         /*tr #fac{
             width: 100%;
         }*/
-
         #fac, #fv, #fa{
         color: #FFFFFF;
         font-size: 5px;
         }
-
         #facliente thead{
         padding: 20px;
-        background: #2183E3;
+        background-color:#ececec;
         text-align: left;
         border-bottom: 1px solid #FFFFFF;  
         font-size: 11px;
         }
-
         #facvendedor{
         width: 100%;
         border-collapse: collapse;
@@ -111,7 +98,6 @@
         margin-bottom: 12px;
         font-size: 11px;
         }
-
         #facvendedor thead{
         padding: 20px;
         background: #2183E3;
@@ -119,26 +105,31 @@
         border-bottom: 1px solid #FFFFFF;
         font-size: 11px;  
         }
-
         #facarticulo{
         width: 100%;
         border-collapse: collapse;
         border-spacing: 0;
         margin-bottom: 12px;
         font-size: 11px;
+        
+        height: 60%;
+        overflow: auto;
         }
         #facarticulo td{
              position: absolute;
              font-size: 11px;
         }
-
         #facarticulo thead{
         padding: 20px;
         text-align: center;
-        border-bottom: 1px solid #FFFFFF;
+        border: 1px solid #000;
         font-size: 11px;  
+        background-color:#ececec;
         }
-
+        #facarticulo tbody {
+            height: 60%;
+            background-color:#ececec;
+        }
         #total {
         width: 100%;
         
@@ -146,7 +137,6 @@
         margin-top: 15px;
         margin-bottom: 12px; 
         }
-
         #total thead{
         /*display: block;*/
         font-size: 13px;
@@ -174,7 +164,6 @@
         #footer2 p {
             padding-top: 10px;
         }
-
         .border1 {
         position:absolute;
         left:56px;
@@ -183,16 +172,14 @@
         height:48.3%;
         border-left: 1px solid black;
         }
-
         .border2 {
         position:absolute;
         left: 532px;
         top:228px;
         width:1px;
-        height: 48.3%;
+        min-height: 48.3%;
         border-left: 1px solid black;
         }
-
         .border3 {
         position:absolute;
         left:629px;
@@ -205,7 +192,6 @@
        /*div#footer { width: 99%; font-size: 13px; height: 16%; position: absolute; bottom: -.15in; text-align: right; border-top: 1px solid black;  }
        div#footer2 { width: 100%; font-size: 12px; height: 15%; position: absolute; bottom: -.15in; text-align: left;  }*/
     
-
     </style>
     
     <body  >
@@ -272,13 +258,11 @@
         {{-- Inicio Seccion detalles factura --}}
         <section >
 
-            <div id="sidebar">
+            
                 <table id="facarticulo"  >
                     <thead>
-                        <tr style="border-right: 1px; ">
-                            <p class="border1"></p>
-                            <p class="border2"></p>
-                            <p class="border3"></p>
+                        <tr>
+                            
                             <th style="text-align: center; width: 5%;">CANT</th>
                             <th style="text-align: center; width: 65%;">DESCRIPCION</th>
                             <th style="text-align: right; width: 15%;">PRECIO UNIT</th>
@@ -294,11 +278,12 @@
                             <td style="text-align: right;">{{ $d->price }}</td>
                             <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
                         </tr>
+                        
                         @endforeach
                     </tbody>
                                 
                 </table>
-            </div>
+            
         </section>
        {{-- Fin Seccion detalles factura --}}
 
@@ -307,8 +292,8 @@
             <div id="footer" >
 
                     @foreach ($sale as $s)
-                    <p>SUBTOTAL Bs:&nbsp;&nbsp;{{ round($s->total-($s->tax_mount),2) }}</p>
-                    <p>IVA Bs:&nbsp;&nbsp;{{ $s->tax_mount }}</p>
+                    <p>SUBTOTAL Bs:&nbsp;&nbsp;{{ round($s->total-($s->total*$s->tax),2) }}</p>
+                    <p>IVA Bs:&nbsp;&nbsp;{{ round($s->total*$s->tax,2) }}</p>
                     <p id="total">TOTAL Bs:&nbsp;&nbsp; {{ $s->total }}</p>
                     @endforeach
             </div>

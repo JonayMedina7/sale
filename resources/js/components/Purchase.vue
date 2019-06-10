@@ -351,8 +351,13 @@
                                           <option value="name">Nombre</option>
                                           <option value="code">Codigo</option>
                                         </select>
+<<<<<<< HEAD
                                         <input type="text" v-model="search" @keyup.enter="listProduct(searchP,criteryP)" class="form-control" placeholder="Ingrese datos a Buscar">
                                         <button type="submit" @click="listProduct(searchP,criteryP)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+=======
+                                        <input type="text" v-model="search" @keyup.enter="listProduct(1,searchP,criteryP)" class="form-control" placeholder="Ingrese datos a Buscar">
+                                        <button type="submit" @click="listProduct(1,searchP,criteryP)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
+>>>>>>> e8783293765e3c6842fa2cb442d59890decdd520
                                     </div>
                                 </div>
                             </div>
@@ -395,6 +400,20 @@
                                         
                                     </tbody>
                                 </table>
+                                <nav>
+                                <ul class="pagination">
+                                    <li class="page-item" v-if="pagination.current_page > 1">
+                                        <a class="page-link" href="#" @click.prevent="changePageModal(pagination.current_page -1, search, criterion)">Ant</a>
+                                    </li>
+                                    <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActive ? 'active' : '']">
+                                        <a class="page-link" href="#" @click.prevent="changePageModal(page, search, criterion)" v-text="page"></a>
+                                    </li>
+                                    
+                                    <li class="page-item" v-if="pagination.current_page < pagination.last_page">
+                                        <a class="page-link" href="#" @click.prevent="changePageModal(pagination.current_page +1, search, criterion)">Sig</a>
+                                    </li>
+                                </ul>
+                            </nav>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -610,6 +629,13 @@
                 // envia la peticion para visualizar la data de esa pagina
                 me.listPurchase(page, search, criterion);
             },
+            changePageModal(page, search, criterion){
+                let me = this;
+                // actualiza la pagina 
+                me.pagination.current_page = page;
+                // envia la peticion para visualizar la data de esa pagina
+                me.listProduct(page, search, criterion);
+            },
             find(id){
                 var sw=0;
                 for(var i=0;i<this.arrayDetail.length;i++){
@@ -671,13 +697,14 @@
                 }
                 
             },
-            listProduct (searchP,criteryP){
+            listProduct (page,searchP,criteryP){
                 let me=this;
 
-                var url='product/listProduct?search=' + searchP + '&critery=' + criteryP;
+                var url='product/listProduct?page='+ page + '&search=' + searchP + '&critery=' + criteryP;
                 axios.get(url).then(function(response) {
                     var response = response.data;
                      me.arrayProduct = response.products.data;
+                     me.pagination = response.pagination;
                 })
                 .catch(function (error) {
                     console.log(error);

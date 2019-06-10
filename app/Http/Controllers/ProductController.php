@@ -65,7 +65,17 @@ class ProductController extends Controller
         }
 
         
-        return [ 'products' => $products ];
+        return [
+            'pagination' => [
+                'total'         => $products->total(),
+                'current_page'  => $products->currentPage(),
+                'per_page'      => $products->perPage(),
+                'last_page'     => $products->lastPage(),
+                'from'          => $products->firstItem(),
+                'to'            => $products->lastItem(),
+            ],
+            'products' => $products
+        ];
     }
 
     public function listPdf(Request $request)
@@ -77,8 +87,8 @@ class ProductController extends Controller
 
             $cont = Product::count();
 
-        $pdf = \PDF::loadView('pdf.productspdf',['products'=>$products,'cont'=>$cont]);
-        return $pdf->download('productos.pdf');
+            $pdf = \PDF::loadView('pdf.productspdf',['products'=>$products,'cont'=>$cont]);
+            return $pdf->download('productos.pdf');
     }
 
     public function listProductSale(Request $request)
@@ -105,7 +115,17 @@ class ProductController extends Controller
         }
 
         
-        return [ 'products' => $products ];
+        return [
+            'pagination' => [
+                'total'         => $products->total(),
+                'current_page'  => $products->currentPage(),
+                'per_page'      => $products->perPage(),
+                'last_page'     => $products->lastPage(),
+                'from'          => $products->firstItem(),
+                'to'            => $products->lastItem(),
+            ],
+            'products' => $products
+        ];
     }
 
     public function productSearch(Request $request)
@@ -151,6 +171,7 @@ class ProductController extends Controller
         $product->name = $request->name;
         $product->stock = $request->stock;
         $product->price_buy = $request->price_buy;
+        $product->price_sell = 0;
 
         $product->description = $request->description;
         $product->condition = '1';

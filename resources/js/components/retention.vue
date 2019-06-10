@@ -232,13 +232,22 @@
                                                 <td>
                                                     <input v-model="detail.tax_mount" disabled type="number"  class="form-control" name="">
                                                 </td>
+<<<<<<< HEAD
                                                 <td>
                                                    Bs {{  detail.tax_mount*ret_val }}
+=======
+                                                <td>Bs.:
+                                                    {{ ret_amount = (detail.tax_mount*ret_val) }}
+>>>>>>> e8783293765e3c6842fa2cb442d59890decdd520
                                                 </td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="6" align="right"><strong>Total Retenido: </strong></td>
+<<<<<<< HEAD
                                                 <td>Bs {{ totalPartial=(calculateTotalPartial) }}</td>
+=======
+                                                <td>Bs.: {{ totalPartial=(calculateTotalPartial) }}</td>
+>>>>>>> e8783293765e3c6842fa2cb442d59890decdd520
                                             </tr>
                                             <!-- <tr style="background-color: #CEECFS;">
                                                 <td colspan="5" align="right"><strong>Total Impuesto: </strong></td>
@@ -462,6 +471,7 @@
                 datep: '',
                 tax : 0.16,
                 tax_mount: 0.0,
+                ret_amount: 0.0,
                 total : 0.0,
                 status: '',
                 purchase_num: '',
@@ -787,7 +797,7 @@
             },
             pdfRet(id){
                 /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
-                window.open('http://localhost/sale/public/purchase/pdf/'+ id + ','+ '_blank');
+                window.open('http://localhost/sale/public/retention/pdf/'+ id + ','+ '_blank');
             },
             changePage(page, search, criterion){
                 let me = this;
@@ -805,7 +815,7 @@
                 axios.post('retention/register', {
                     'voucher_num':this.voucher_num,
                     'tax':this.tax,
-                    'total': this.total,
+                    'total': this.totalPartial,
                     'data': this.arrayDetailr
                 }).then(function(response){
                     me.list=1;
@@ -829,7 +839,7 @@
                     me.purchase_num='';
                     me.arrayDetailr=[];
 
-                    window.open('http://localhost/sale/public/sale/pdf/'+ response.data.id + ','+ '_blank');
+                    window.open('http://localhost/sale/public/retention/pdf/'+ response.data.id + ','+ '_blank');
 
 
                 })
