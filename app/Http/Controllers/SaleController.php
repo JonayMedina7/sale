@@ -157,6 +157,7 @@ class SaleController extends Controller
         
         $sale->tax = $request->tax;
         $sale->tax_mount = $request->tax_mount;
+        $sale->ret_num = 0;
         $sale->total = $request->total;
         $sale->status = 'Registrado';
         $sale->save();

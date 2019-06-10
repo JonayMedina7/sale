@@ -4214,7 +4214,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       name: '',
       phone: '',
       email: '',
-      retention: 0,
+      retention: 'no',
       address: '',
       condition: ''
     }, _defineProperty(_ref, "type", ''), _defineProperty(_ref, "contact", ''), _defineProperty(_ref, "contact_phone", ''), _defineProperty(_ref, "arrayClient", []), _defineProperty(_ref, "modal1", 0), _defineProperty(_ref, "modal", 0), _defineProperty(_ref, "titleModal", ''), _defineProperty(_ref, "actionType", 0), _defineProperty(_ref, "errorSms", 0), _defineProperty(_ref, "errorSmsList", []), _defineProperty(_ref, "pagination", {
@@ -4381,7 +4381,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.client_id = 0;
       this.name = '';
       this.address = '';
-      this.retention = 0;
+      this.retention = 'no';
       this.rif = 0;
       this.phone = '';
       this.email = '';
@@ -4403,7 +4403,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                   this.actionType = 1;
                   this.name = '';
                   this.address = '';
-                  this.retention = 0;
+                  this.retention = 'no';
                   this.rif = 0;
                   this.phone = '';
                   this.email = '';
@@ -4471,6 +4471,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1__);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -5052,6 +5066,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       me.listPurchase(page, search, criterion);
     },
+    changePageModal: function changePageModal(page, search, criterion) {
+      var me = this; // actualiza la pagina 
+
+      me.pagination.current_page = page; // envia la peticion para visualizar la data de esa pagina
+
+      me.listProduct(page, search, criterion);
+    },
     find: function find(id) {
       var sw = 0;
 
@@ -5113,12 +5134,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         });
       }
     },
-    listProduct: function listProduct(searchP, criteryP) {
+    listProduct: function listProduct(page, searchP, criteryP) {
       var me = this;
-      var url = 'product/listProduct?search=' + searchP + '&critery=' + criteryP;
+      var url = 'product/listProduct?page=' + page + '&search=' + searchP + '&critery=' + criteryP;
       axios.get(url).then(function (response) {
         var response = response.data;
         me.arrayProduct = response.products.data;
+        me.pagination = response.pagination;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -5856,6 +5878,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -6076,6 +6112,13 @@ __webpack_require__.r(__webpack_exports__);
 
       me.listSale(page, search, criterion);
     },
+    changePageModal: function changePageModal(page, search, criterion) {
+      var me = this; // actualiza la pagina 
+
+      me.pagination.current_page = page; // envia la peticion para visualizar la data de esa pagina
+
+      me.listProductSale(page, search, criterion);
+    },
     find: function find(id) {
       var sw = 0;
 
@@ -6148,12 +6191,13 @@ __webpack_require__.r(__webpack_exports__);
         });
       }
     },
-    listProductSale: function listProductSale(searchS, criteryS) {
+    listProductSale: function listProductSale(page, searchS, criteryS) {
       var me = this;
-      var url = 'product/listProductSale?search=' + searchS + '&critery=' + criteryS;
+      var url = 'product/listProductSale?page=' + page + '&search=' + searchS + '&critery=' + criteryS;
       axios.get(url).then(function (response) {
         var response = response.data;
         me.arrayProduct = response.products.data;
+        me.pagination = response.pagination;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -6565,7 +6609,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       name: '',
       phone: '',
       email: '',
-      retention: '0',
+      retention: 'no',
       address: '',
       condition: '',
       user: '',
@@ -6750,7 +6794,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.client_id = 0;
       this.name = '';
       this.address = '';
-      this.retention = '0';
+      this.retention = 'no';
       this.type = 'c';
       this.rif = 0;
       this.phone = '';
@@ -6774,7 +6818,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                   this.actionType = 1;
                   this.name = '';
                   this.address = '';
-                  this.retention = '0';
+                  this.retention = 'no';
                   this.rif = 0;
                   this.phone = '';
                   this.email = '';
@@ -7298,6 +7342,7 @@ __webpack_require__.r(__webpack_exports__);
       datep: '',
       tax: 0.16,
       tax_mount: 0.0,
+      ret_amount: 0.0,
       total: 0.0,
       status: '',
       purchase_num: '',
@@ -7611,7 +7656,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     pdfRet: function pdfRet(id) {
       /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
-      window.open('http://localhost/sale/public/purchase/pdf/' + id + ',' + '_blank');
+      window.open('http://localhost/sale/public/retention/pdf/' + id + ',' + '_blank');
     },
     changePage: function changePage(page, search, criterion) {
       var me = this; // actualiza la pagina 
@@ -7630,7 +7675,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('retention/register', {
         'voucher_num': this.voucher_num,
         'tax': this.tax,
-        'total': this.total,
+        'total': this.totalPartial,
         'data': this.arrayDetailr
       }).then(function (response) {
         me.list = 1;
@@ -7652,7 +7697,7 @@ __webpack_require__.r(__webpack_exports__);
         me.voucher_num = 0;
         me.purchase_num = '';
         me.arrayDetailr = [];
-        window.open('http://localhost/sale/public/sale/pdf/' + response.data.id + ',' + '_blank');
+        window.open('http://localhost/sale/public/retention/pdf/' + response.data.id + ',' + '_blank');
       })["catch"](function (error) {
         console.log(error);
       });
@@ -58931,7 +58976,7 @@ var render = function() {
                             }
                           },
                           [
-                            _c("option", { attrs: { value: "0" } }, [
+                            _c("option", { attrs: { value: "no" } }, [
                               _vm._v("No")
                             ]),
                             _vm._v(" "),
@@ -60495,7 +60540,7 @@ var render = function() {
                             ) {
                               return null
                             }
-                            return _vm.listProduct(_vm.searchP, _vm.criteryP)
+                            return _vm.listProduct(1, _vm.searchP, _vm.criteryP)
                           },
                           input: function($event) {
                             if ($event.target.composing) {
@@ -60513,7 +60558,11 @@ var render = function() {
                           attrs: { type: "submit" },
                           on: {
                             click: function($event) {
-                              return _vm.listProduct(_vm.searchP, _vm.criteryP)
+                              return _vm.listProduct(
+                                1,
+                                _vm.searchP,
+                                _vm.criteryP
+                              )
                             }
                           }
                         },
@@ -60601,7 +60650,90 @@ var render = function() {
                         0
                       )
                     ]
-                  )
+                  ),
+                  _vm._v(" "),
+                  _c("nav", [
+                    _c(
+                      "ul",
+                      { staticClass: "pagination" },
+                      [
+                        _vm.pagination.current_page > 1
+                          ? _c("li", { staticClass: "page-item" }, [
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "page-link",
+                                  attrs: { href: "#" },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.changePageModal(
+                                        _vm.pagination.current_page - 1,
+                                        _vm.search,
+                                        _vm.criterion
+                                      )
+                                    }
+                                  }
+                                },
+                                [_vm._v("Ant")]
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm._l(_vm.pagesNumber, function(page) {
+                          return _c(
+                            "li",
+                            {
+                              key: page,
+                              staticClass: "page-item",
+                              class: [page == _vm.isActive ? "active" : ""]
+                            },
+                            [
+                              _c("a", {
+                                staticClass: "page-link",
+                                attrs: { href: "#" },
+                                domProps: { textContent: _vm._s(page) },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.changePageModal(
+                                      page,
+                                      _vm.search,
+                                      _vm.criterion
+                                    )
+                                  }
+                                }
+                              })
+                            ]
+                          )
+                        }),
+                        _vm._v(" "),
+                        _vm.pagination.current_page < _vm.pagination.last_page
+                          ? _c("li", { staticClass: "page-item" }, [
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "page-link",
+                                  attrs: { href: "#" },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.changePageModal(
+                                        _vm.pagination.current_page + 1,
+                                        _vm.search,
+                                        _vm.criterion
+                                      )
+                                    }
+                                  }
+                                },
+                                [_vm._v("Sig")]
+                              )
+                            ])
+                          : _vm._e()
+                      ],
+                      2
+                    )
+                  ])
                 ])
               ]),
               _vm._v(" "),
@@ -62332,6 +62464,7 @@ var render = function() {
                               return null
                             }
                             return _vm.listProductSale(
+                              1,
                               _vm.searchS,
                               _vm.criteryS
                             )
@@ -62353,6 +62486,7 @@ var render = function() {
                           on: {
                             click: function($event) {
                               return _vm.listProductSale(
+                                1,
                                 _vm.searchS,
                                 _vm.criteryS
                               )
@@ -62448,7 +62582,90 @@ var render = function() {
                         0
                       )
                     ]
-                  )
+                  ),
+                  _vm._v(" "),
+                  _c("nav", [
+                    _c(
+                      "ul",
+                      { staticClass: "pagination" },
+                      [
+                        _vm.pagination.current_page > 1
+                          ? _c("li", { staticClass: "page-item" }, [
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "page-link",
+                                  attrs: { href: "#" },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.changePageModal(
+                                        _vm.pagination.current_page - 1,
+                                        _vm.search,
+                                        _vm.criterion
+                                      )
+                                    }
+                                  }
+                                },
+                                [_vm._v("Ant")]
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm._l(_vm.pagesNumber, function(page) {
+                          return _c(
+                            "li",
+                            {
+                              key: page,
+                              staticClass: "page-item",
+                              class: [page == _vm.isActive ? "active" : ""]
+                            },
+                            [
+                              _c("a", {
+                                staticClass: "page-link",
+                                attrs: { href: "#" },
+                                domProps: { textContent: _vm._s(page) },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.changePageModal(
+                                      page,
+                                      _vm.search,
+                                      _vm.criterion
+                                    )
+                                  }
+                                }
+                              })
+                            ]
+                          )
+                        }),
+                        _vm._v(" "),
+                        _vm.pagination.current_page < _vm.pagination.last_page
+                          ? _c("li", { staticClass: "page-item" }, [
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "page-link",
+                                  attrs: { href: "#" },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.changePageModal(
+                                        _vm.pagination.current_page + 1,
+                                        _vm.search,
+                                        _vm.criterion
+                                      )
+                                    }
+                                  }
+                                },
+                                [_vm._v("Sig")]
+                              )
+                            ])
+                          : _vm._e()
+                      ],
+                      2
+                    )
+                  ])
                 ])
               ]),
               _vm._v(" "),
@@ -64552,9 +64769,11 @@ var render = function() {
                                         _vm._v(" "),
                                         _c("td", [
                                           _vm._v(
-                                            "\n                                            " +
+                                            "Bs.:\n                                            " +
                                               _vm._s(
-                                                detail.tax_mount * _vm.ret_val
+                                                (_vm.ret_amount =
+                                                  detail.tax_mount *
+                                                  _vm.ret_val)
                                               ) +
                                               "\n                                        "
                                           )
@@ -64575,7 +64794,7 @@ var render = function() {
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
-                                          "$ " +
+                                          "Bs.: " +
                                             _vm._s(
                                               (_vm.totalPartial =
                                                 _vm.calculateTotalPartial)
@@ -78455,14 +78674,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!***********************************************!*\
   !*** ./resources/js/components/retention.vue ***!
   \***********************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _retention_vue_vue_type_template_id_53a39a63___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./retention.vue?vue&type=template&id=53a39a63& */ "./resources/js/components/retention.vue?vue&type=template&id=53a39a63&");
 /* harmony import */ var _retention_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./retention.vue?vue&type=script&lang=js& */ "./resources/js/components/retention.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _retention_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./retention.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/retention.vue?vue&type=style&index=0&lang=css&");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _retention_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _retention_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _retention_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./retention.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/retention.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -78494,7 +78714,7 @@ component.options.__file = "resources/js/components/retention.vue"
 /*!************************************************************************!*\
   !*** ./resources/js/components/retention.vue?vue&type=script&lang=js& ***!
   \************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

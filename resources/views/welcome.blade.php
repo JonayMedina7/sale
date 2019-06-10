@@ -14,7 +14,7 @@
         /*background: #FFFFFF; */
         font-family: Arial, sans-serif; 
         font-size: 9px;
-        background-image: url('{{ asset('img/fondo.png') }}');
+        {{-- background-image: url('{{ asset('img/fondo.png') }}'); --}}
         background-repeat: no-repeat;
         background-position: center;
         background-size: cover;
@@ -48,7 +48,7 @@
         /*text-align: justify;*/
         }
         #sidebar {
-        height: 48%;
+        height: 80%;
         width: 100%;
         border: solid 1px;
         }
@@ -64,18 +64,13 @@
 
         table{
         /*position: relative;*/
-        clear: left;
-        font-size: 11px;
-        }
-        /*#fact{
         
-        float: right;
-
-        margin-top: 0%;
-        margin-left: 2%;
-        margin-right: 2%;
-        font-size: 20px;
-        }*/
+        font-size: 11px;
+        
+        }
+        thead {
+            border-bottom: 1px solid black;
+        }
 
         #facliente{
         width: 100%;
@@ -86,9 +81,6 @@
         margin-bottom: 12px;
         font-size: 11px;
         }
-        /*tr #fac{
-            width: 100%;
-        }*/
 
         #fac, #fv, #fa{
         color: #FFFFFF;
@@ -124,18 +116,25 @@
         width: 100%;
         border-collapse: collapse;
         border-spacing: 0;
-        margin-bottom: 12px;
+        margin-bottom: 0;
         font-size: 11px;
         }
+        /*table#facarticulo {
+            height: 60%;
+            width: 100%;
+            border: solid 1px;
+        }*/
         #facarticulo td{
-             position: absolute;
+             position: relative;
              font-size: 11px;
+             border-left: 1px solid black;
+             border-right: 1px solid black;
         }
 
         #facarticulo thead{
         padding: 20px;
         text-align: center;
-        border-bottom: 1px solid #FFFFFF;
+        border-bottom: 1px solid #000;
         font-size: 11px;  
         }
 
@@ -145,24 +144,20 @@
         border-spacing: 0;
         margin-top: 15px;
         margin-bottom: 12px; 
+        font-size: 15px;
         }
 
-        #total thead{
-        /*display: block;*/
-        font-size: 13px;
-        font-weight: bold;
-        
-        }
         footer {
             margin-top: 5px;
         }
+
         #footer {
             padding: 2px 7px 0 22px;
             float: right;
             text-align: right;
             border: #000 1px solid;
             font-size: 12px;
-            width: 20%;
+            min-width: 20%;
             
         }
         #footer2 {
@@ -217,7 +212,7 @@
         <header class="clearfix">
          
             <div id="data" class="clearfix">
-                <p > Fecha de Emisión: {{ date("d-m-Y",strtotime($s->date)) }}</p>
+                <p > <b>Fecha de Emisión:</b> {{ date("d-m-Y",strtotime($s->date)) }}</p>
             </div> 
             <div id="inv" class="clearfix">
                 <p><b> @if ($s->voucher=='bill')
@@ -227,9 +222,9 @@
                 @elseif ($s->voucher=='note')
                     VALE N°: 00
                 @endif
-
-                {{ '000'.$s->voucher_num }}</p>
-
+                
+                {{ '000'.$s->voucher_num }}</b></p>
+                
                
 
             </div>
@@ -242,25 +237,25 @@
                 <table id="facliente"  >
                                          
                         <tr>
-                            <td colspan="6"  width="100%" align="center">DATOS DE CLIENTE</td>
+                            <td colspan="6"  width="100%" align="center"><b>DATOS DE CLIENTE</b></td>
                         </tr>
                    
                     
                         <tr>
-                            <td colspan="1"  >RAZÓN SOCIAL: </td>
+                            <td colspan="1"  ><b>RAZÓN SOCIAL: </b></td>
                             <td  colspan="4" >{{ strtoupper($s->name) }}</td>
                             
                         </tr>
                         <tr>
-                            <td colspan="1" >DIRECCIÓN FISCAL: </td>
+                            <td colspan="1" ><b>DIRECCIÓN FISCAL: </b></td>
                             <td colspan="4">{{ strtoupper($s->address) }}</td>
                            
                         </tr>
                         <tr>
-                            <td colspan="1" ><p >Rif/C.I.:</p></td>
-                            <td colspan="1" > {{ $s->rif }}</td>
-                            <td colspan="2" ><p >Telefono: {{ $s->phone }}</p></td>
-                            <td colspan="2" ><p >Email: {{ strtoupper($s->email) }}</p></td>
+                            <td colspan="1" ><p ><b>RIF/C.I.:</b></p></td>
+                            <td colspan="1" > {{ strtoupper($s->type.$s->rif) }}</td>
+                            <td colspan="2" ><p >TELÉFONO: {{ $s->phone }}</p></td>
+                            <td colspan="2" ><p >CORREO ELECTRÓNICO: {{ strtoupper($s->email) }}</p></td>
                         </tr>
                    
                 </table>
@@ -275,26 +270,386 @@
             <div id="sidebar">
                 <table id="facarticulo"  >
                     <thead>
-                        <tr style="border-right: 1px; ">
-                            <p class="border1"></p>
-                            <p class="border2"></p>
-                            <p class="border3"></p>
+                        <tr style="border-right: 1px; border-bottom: 1px;">
                             <th style="text-align: center; width: 5%;">CANT</th>
                             <th style="text-align: center; width: 65%;">DESCRIPCION</th>
                             <th style="text-align: right; width: 15%;">PRECIO UNIT</th>
                             <th style="text-align: right; width: 15%;">PRECIO TOTAL</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody >
                         @foreach ($details as $d)
                             
                         <tr>
                             <td style="text-align: center;">{{ $d->quantity }}</td>
-                            <td style="text-align: center;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: left;">{{ strtoupper($d->product) }}</td>
                             <td style="text-align: right;">{{ $d->price }}</td>
                             <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
                         </tr>
                         @endforeach
+                        <tr class="tbody">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr> 
+
                     </tbody>
                                 
                 </table>
@@ -304,17 +659,20 @@
 
        {{-- Inicio totales factura --}}
         <footer>
-            <div id="footer" >
+            <div class="row">
+                <div id="footer" >
 
                     @foreach ($sale as $s)
-                    <p>SUBTOTAL Bs:&nbsp;&nbsp;{{ round($s->total-($s->total*$s->tax),2) }}</p>
-                    <p>IVA Bs:&nbsp;&nbsp;{{ round($s->total*$s->tax,2) }}</p>
-                    <p id="total">TOTAL Bs:&nbsp;&nbsp; {{ $s->total }}</p>
+                    <p><b>SUBTOTAL Bs:</b>&nbsp;&nbsp;{{ round($s->total-($s->tax_mount),2) }}</p>
+                    <p><b>IVA Bs:</b>&nbsp;&nbsp;{{ $s->tax_mount }}</p>
+                    <p id="total"><b>TOTAL Bs:&nbsp;&nbsp; {{ $s->total }}</b></p>
                     @endforeach
             </div>
             <div id="footer2">
                 <p>Recibido por: ____________________________</p>
                 <p><b>Observaciones:</b></p>
+            </div>
+
             </div>
         </footer>
         {{-- Fin totales factura --}}

@@ -89,8 +89,8 @@
     
 
     <footer class="app-footer">
-        <span><a href="http://www.dilia.com.ve/">Dilia Solucciones c.a.</a> &copy; 2019</span>
-        <span class="ml-auto">Desarrollado por <a href="http://www.dilia.com.ve/">Dilia Software</a></span>
+        <span>Desarrollado por:<a href="http://www.dilia.com.ve/">Dilia Solucciones c.a.</a> &copy; 2019</span>
+        <span class="ml-auto"><a href="http://www.dilia.com.ve/">Dilia Software</a></span>
     </footer>
 
     <!-- Bootstrap and necessary plugins -->

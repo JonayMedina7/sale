@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use DB;
+
 use App\Client;
 use App\Provider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProviderController extends Controller
 {
@@ -62,7 +63,7 @@ class ProviderController extends Controller
         if (!$request->ajax()) return redirect('/');
 
         try {
-        DB::begingTransaction();
+        DB::beginTransaction();
         $client = new Client();
         $client->name = $request->name;
         $client->phone = $request->phone;
@@ -101,7 +102,7 @@ class ProviderController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
 try {
-        DB::begingTransaction();
+        DB::beginTransaction();
 
         $provider = Provider::findOrFail($request->id);
 

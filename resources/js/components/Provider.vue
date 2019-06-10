@@ -167,7 +167,7 @@
                                     <label class="col-md-3 form-control-label" for="retention">Es Agente de Retención?</label>
                                     <div class="col-md-5">
                                         <select class="form-control" v-model="retention" required>
-											<option value="0" >No</option>
+											<option value="no" >No</option>
 											<option value="75" >75%</option>
 											<option value="100" >100%</option>
                                         </select>
@@ -239,7 +239,7 @@
                 name : '',
                 phone : '',
                 email: '',
-                retention : 0,
+                retention : 'no',
                 address : '',
                 condition : '',
                 type: '',
@@ -429,7 +429,7 @@
                 this.client_id= 0;
                 this.name='';
                 this.address='';
-                this.retention=0;
+                this.retention='no';
                 this.rif=0;
                 this.phone='';
                 this.email='';
@@ -450,7 +450,7 @@
 
                                 this.name='';
 				                this.address='';
-				                this.retention=0;
+				                this.retention='no';
 				                this.rif=0;
 				                this.phone='';
 				                this.email='';

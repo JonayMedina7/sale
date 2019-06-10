@@ -19,7 +19,7 @@
                 padding-left: 15px;
         }
         @page {
-            size: 29.7cm 21.6cm;margin: 60px 2px 15px 2px;
+            size: 29cm 21cm;margin: 60px 45px 15px 15px;
         }
         body {
         /*position: relative;*/
@@ -64,7 +64,7 @@
             padding:  0px;
             top:0;
             bottom: 0px;
-            font-size: 14;
+            font-size: 11;
             font-weight: 400;
             text-align: center;
         }
@@ -72,22 +72,22 @@
             
             margin:0;
             padding:  0px;
-            top: 10px;
+            top: 7px;
             bottom: 0px;
             
             
         }
         table.art thead, table.art tbody{
             margin: 4px;
-            font-size: 11px;
+            font-size: 10px;
         }
         tr th, tr td {
             padding: 3px;
             margin: 3px;
-            font-size: 11px;
+            font-size: 10px;
         }
         .art{
-            font-size: 11;
+            font-size: 10;
             text-align: justify;
             margin:0 0 0 5px;
         }
@@ -96,11 +96,11 @@
         }
         div p.card-text {
             text-align: center;
-            font-size: 11;
+            font-size: 10;
         }
         div.form-group p.card-text {
             text-align: justify;
-            font-size: 11;
+            font-size: 10;
         }
         .container-fluid {
             width: 100%;
@@ -171,7 +171,7 @@
             border: 1px solid #dee2e6;
         }
         .table th, .table td {
-            padding: 4px;
+            padding: 2px;
             vertical-align: top;
             border-top: 1px solid #dee2e6;
         }
@@ -210,17 +210,17 @@
         .signat1 {
             padding: 2px 0px 0 10px;
             float: left;
-            font-size: 11px;
+            font-size: 10px;
             width: 50%;
         }
         .signat2 {
             float: right;
             padding: 2px 0px 0 10px;
-            font-size: 11px;
+            font-size: 10px;
             width: 50%;
         }
         footer span{
-            font-size: 10px;
+            font-size: 9px;
         }
 
     </style>
@@ -240,12 +240,12 @@
                      <thead>
                         <tr>
                              <td  rowspan="2" class="law"><b>Ley IVA - Art. 11:</b>Decreto con Rango, Valor y Fuerza de Ley de Reforma de la Ley del Impuesto al Valor Agregado N° 1.436 del 17 de noviembre de 2014 "La Administración Tributaria podrá designar como responsables del pago del impuesto, en calidad de agentes de retención, a quienes por sus funciones públicas o por razón de sus actividades privadas intervengan en operaciones gravadas con el impuesto establecido en esta Ley. (...)"</td>
-                             <td nowrap class="border widtd1 ">0. NRO COMPROBANTE <br> {{ $r->voucher_num }}
+                             <td nowrap class="border widtd1 ">0. NRO COMPROBANTE <br> <b>{{ $r->voucher_num }}</b>
                             </td>
-                            <td nowrap class="border widtd1 ">1. FECHA<br>{{ date("d-m-Y", strtotime($r->date)) }}</td>
+                            <td nowrap class="border widtd1 ">1. FECHA<br><b>{{ date("d-m-Y", strtotime($r->date)) }}</b></td>
                         </tr>
                         <tr>
-                            <td colspan="2" class="border widtd1 ">4. PERIODO FISCAL <br> AÑO: {{ $r->year }} / MES: {{ $r->month }}</td>
+                            <td colspan="2" class="border widtd1 ">4. PERIODO FISCAL <br> <b>AÑO: {{ $r->year }} / MES: {{ $r->month }}</b></td>
                         </tr>
                      </thead>
                  </table>
@@ -276,8 +276,8 @@
                             <th scope="col">Fecha</th>
                             <th scope="col">Factura</th>
                             <th scope="col">Control</th>
-                            <th scope="col">N. Debito</th>
-                            <th scope="col">N. Credito</th>
+                            <th scope="col">N. Débito</th>
+                            <th scope="col">N. Crédito</th>
                             <th scope="col">Tipo Trans.</th>
                             <th scope="col">Fact Afect.</th>
                             <th scope="col">Compras + IVA</th>
@@ -305,7 +305,10 @@
                             <td>{{ $d->totalp - $d->tax_mount }}</td>
                             <td>{{ $d->tax }}</td>
                             <td>{{ $d->tax_mount }}</td>
-                            <td>{{ $d->tax_mount }}</td>
+                            @foreach ($retention as $r)
+                            <td>{{ $r->total }}</td>    
+                            @endforeach
+                            
                         </tr>
                         @endforeach
                     </tbody>
