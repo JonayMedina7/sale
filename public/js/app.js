@@ -5317,10 +5317,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -7326,11 +7322,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_select__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_select__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-select/dist/vue-select.css */ "./node_modules/vue-select/dist/vue-select.css");
 /* harmony import */ var vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1__);
-//
-//
-//
-//
-//
 //
 //
 //
@@ -60533,7 +60524,7 @@ var render = function() {
               },
               [
                 _c("i", { staticClass: "fa fa-cart-plus" }),
-                _vm._v("  Ingresar Compra\n                        ")
+                _vm._v("  Ingresar Compra\n                ")
               ]
             )
           ]),
@@ -60699,12 +60690,12 @@ var render = function() {
                                   },
                                   [
                                     _vm._v(
-                                      "\n                                                  Detalles\n                                                "
+                                      "\n                                          Detalles\n                                        "
                                     )
                                   ]
                                 ),
                                 _vm._v(
-                                  "  \n\n                                                \n                                                \n                                            "
+                                  "  \n\n                                        \n                                        \n                                    "
                                 )
                               ]),
                               _vm._v(" "),
@@ -61327,11 +61318,11 @@ var render = function() {
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
-                                          "\n                                                   Bs " +
+                                          "\n                                           Bs " +
                                             _vm._s(
                                               detail.price * detail.quantity
                                             ) +
-                                            "\n                                                "
+                                            "\n                                        "
                                         )
                                       ])
                                     ])
@@ -61549,11 +61540,11 @@ var render = function() {
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
-                                          "\n                                                    " +
+                                          "\n                                            " +
                                             _vm._s(
                                               detail.price * detail.quantity
                                             ) +
-                                            "\n                                                "
+                                            "\n                                        "
                                         )
                                       ])
                                     ])
@@ -61665,7 +61656,7 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    "\n                                                      Anular\n                                                    "
+                                    "\n                                              Anular\n                                            "
                                   )
                                 ]
                               )
@@ -61772,68 +61763,7 @@ var render = function() {
                           ])
                         ]
                       ),
-                      _vm._v(
-                        "\n<<<<<<< HEAD\n                                        "
-                      ),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.search,
-                            expression: "search"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: {
-                          type: "text",
-                          placeholder: "Ingrese datos a Buscar"
-                        },
-                        domProps: { value: _vm.search },
-                        on: {
-                          keyup: function($event) {
-                            if (
-                              !$event.type.indexOf("key") &&
-                              _vm._k(
-                                $event.keyCode,
-                                "enter",
-                                13,
-                                $event.key,
-                                "Enter"
-                              )
-                            ) {
-                              return null
-                            }
-                            return _vm.listProduct(_vm.searchP, _vm.criteryP)
-                          },
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.search = $event.target.value
-                          }
-                        }
-                      }),
                       _vm._v(" "),
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-primary",
-                          attrs: { type: "submit" },
-                          on: {
-                            click: function($event) {
-                              return _vm.listProduct(_vm.searchP, _vm.criteryP)
-                            }
-                          }
-                        },
-                        [
-                          _c("i", { staticClass: "fa fa-search" }),
-                          _vm._v(" Buscar")
-                        ]
-                      ),
-                      _vm._v(
-                        "\n=======\n                                        "
-                      ),
                       _c("input", {
                         directives: [
                           {
@@ -61893,9 +61823,6 @@ var render = function() {
                           _c("i", { staticClass: "fa fa-search" }),
                           _vm._v(" search")
                         ]
-                      ),
-                      _vm._v(
-                        "\n>>>>>>> e8783293765e3c6842fa2cb442d59890decdd520\n                                    "
                       )
                     ])
                   ])
@@ -62210,7 +62137,7 @@ var staticRenderFns = [
     return _c("tr", [
       _c("td", [
         _vm._v(
-          "\n                                                    No hay articulos agredados\n                                                "
+          "\n                                            No hay articulos agredados\n                                        "
         )
       ])
     ])
@@ -62294,7 +62221,7 @@ var staticRenderFns = [
     return _c("tr", [
       _c("td", [
         _vm._v(
-          "\n                                                    No hay articulos agredados\n                                                "
+          "\n                                            No hay articulos agredados\n                                        "
         )
       ])
     ])
@@ -65321,7 +65248,7 @@ var render = function() {
               },
               [
                 _c("i", { staticClass: "fa fa-file" }),
-                _vm._v("  Crear Retencion\n                        ")
+                _vm._v("  Crear Retencion\n                ")
               ]
             )
           ]),
@@ -65490,7 +65417,7 @@ var render = function() {
                                     [_c("i", { staticClass: "icon-eye" })]
                                   ),
                                   _vm._v(
-                                    "  \n                                                "
+                                    "  \n                                        "
                                   ),
                                   _c(
                                     "button",
@@ -65506,7 +65433,7 @@ var render = function() {
                                     [_c("i", { staticClass: "icon-doc" })]
                                   ),
                                   _vm._v(
-                                    "  \n\n                                                "
+                                    "  \n\n                                        "
                                   ),
                                   ret.status == "Registrado"
                                     ? [
@@ -66188,27 +66115,16 @@ var render = function() {
                                             }
                                           })
                                         ]),
-                                        _vm._v(
-                                          "\n<<<<<<< HEAD\n                                                "
-                                        ),
+                                        _vm._v(" "),
                                         _c("td", [
                                           _vm._v(
-                                            "\n                                                   Bs " +
-                                              _vm._s(
-                                                detail.tax_mount * _vm.ret_val
-                                              ) +
-                                              "\n=======\n                                                "
-                                          )
-                                        ]),
-                                        _c("td", [
-                                          _vm._v(
-                                            "Bs.:\n                                                    " +
+                                            "Bs.:\n                                            " +
                                               _vm._s(
                                                 (_vm.ret_amount =
                                                   detail.tax_mount *
                                                   _vm.ret_val)
                                               ) +
-                                              "\n>>>>>>> e8783293765e3c6842fa2cb442d59890decdd520\n                                                "
+                                              "\n\n                                        "
                                           )
                                         ])
                                       ]
@@ -66224,21 +66140,7 @@ var render = function() {
                                     },
                                     [
                                       _vm._m(3),
-                                      _vm._v(
-                                        "\n<<<<<<< HEAD\n                                                "
-                                      ),
-                                      _c("td", [
-                                        _vm._v(
-                                          "Bs " +
-                                            _vm._s(
-                                              (_vm.totalPartial =
-                                                _vm.calculateTotalPartial)
-                                            )
-                                        )
-                                      ]),
-                                      _vm._v(
-                                        "\n=======\n                                                "
-                                      ),
+                                      _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
                                           "Bs.: " +
@@ -66247,10 +66149,7 @@ var render = function() {
                                                 _vm.calculateTotalPartial)
                                             )
                                         )
-                                      ]),
-                                      _vm._v(
-                                        "\n>>>>>>> e8783293765e3c6842fa2cb442d59890decdd520\n                                            "
-                                      )
+                                      ])
                                     ]
                                   )
                                 ],
@@ -66776,7 +66675,7 @@ var staticRenderFns = [
     return _c("tr", [
       _c("td", [
         _vm._v(
-          "\n                                                    No hay artículos agregados\n                                                "
+          "\n                                            No hay artículos agregados\n                                        "
         )
       ])
     ])
@@ -66804,7 +66703,7 @@ var staticRenderFns = [
     return _c("tr", [
       _c("td", [
         _vm._v(
-          "\n                                                    No hay facturas agregadas\n                                                "
+          "\n                                            No hay facturas agregadas\n                                        "
         )
       ])
     ])
