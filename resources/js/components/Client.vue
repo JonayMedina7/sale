@@ -1,18 +1,24 @@
  <template>
         <main class="main">
             <!-- Breadcrumb -->
-            <ol class="breadcrumb">
-                
-                <li class="breadcrumb-item"><a href="/">Escritorio</a></li>
-                
-            </ol>
+             <ol class="breadcrumb">
+          <li class="breadcrumb-item">Inicio</li>
+          <li class="breadcrumb-item">
+            <a href="#">Dilia Software</a>
+          </li>
+          <li class="breadcrumb-item active"> Clientes&nbsp;&nbsp;<i class="fa fa-address-book-o"></i></li>
+          <!-- Breadcrumb Menu-->
+          <li class="breadcrumb-menu d-md-down-none">
+            
+          </li>
+        </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Cliente
-                        <button type="button" class="btn btn-secondary" @click="openModal('client','register')">
-                            <i class="icon-plus"></i>&nbsp;Nuevo
+                        
+                        <button type="button" class="btn btn-success" @click="openModal('client','register')">
+                            <i class="fa fa-address-book-o"></i>&nbsp;&nbsp; Agregar Nuevo
                         </button>
                     </div>
                     <div class="card-body">
@@ -24,7 +30,7 @@
                                       <option value="rif">Rif</option>
                                     </select>
                                     <input type="number" v-model="search" @keyup.enter="listClient(1,search,criterion)" class="form-control" placeholder="Texto a Buscar">
-                                    <button type="submit" @click="listClient(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
+                                    <button type="submit" @click="listClient(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -45,10 +51,10 @@
                                 <tr v-for="client in arrayClient" :key="client.id">
                                     <td>
                                         <button type="button" class="btn btn-warning btn-sm" @click="openModal('client','update', client)">
-                                          <i class="icon-pencil"></i>
+                                          &nbsp;&nbsp;Editar
                                         </button> &nbsp;
                                         <button v-if="client.condition" type="button" @click="openModal('client','desactive',client)" class="btn btn-danger btn-sm" >
-                                          <i class="icon-trash"></i>
+                                          &nbsp;&nbsp;Anular
                                         </button>
                                         <button v-else type="button" @click="openModal('client','active',client)" class="btn btn-success btn-sm" >
                                           <i class="icon-check"></i>
@@ -58,10 +64,10 @@
                                     <td v-text="client.name"></td>
                                     <td v-text="client.phone"></td>
                                     <td v-text="client.email"></td>
-                                    <div >
+                                   
                                     	<td v-if="client.retention>=75" v-text="client.retention + '%' "></td>
-										<td v-else>No es Agente de retención</td>
-									</div>
+										<td v-else>No aplica</td>
+									
                                     <td v-text="client.address"></td>
                                     <td>
                                         <div v-if="client.condition">
@@ -425,7 +431,7 @@
                         switch(accion){
                             case 'register':
                             {
-                                this.titleModal    = 'Registrar Client';
+                                this.titleModal    = 'Registrar Cliente';
                                 this.modal          = 1;
                                 this.actionType     = 1;
 

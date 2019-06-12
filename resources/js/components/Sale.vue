@@ -1,11 +1,16 @@
  <template>
         <main class="main">
-            <!-- Breadcrumb -->
-            <!-- <ol class="breadcrumb">
-                
-                <li class="breadcrumb-item"><a href="/">Escritorio</a></li>
-                
-            </ol> -->
+           <ol class="breadcrumb">
+          <li class="breadcrumb-item">Inicio</li>
+          <li class="breadcrumb-item">
+            <a href="#">Dilia Software</a>
+          </li>
+          <li class="breadcrumb-item active"> Ventas&nbsp;&nbsp;<i class="fa fa-file"></i></li>
+          <!-- Breadcrumb Menu-->
+          <li class="breadcrumb-menu d-md-down-none">
+            
+          </li>
+        </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
@@ -158,11 +163,11 @@
                             <div class="form-group row border">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Articulo <span style="color:red;" v-show="product_id==0">(*Seleccione)</span></label>
+                                        <label><h6>Selecciones los Articulos</h6>  <span style="color:red;" v-show="product_id==0"></span></label>
                                         <div class="form-inline">
-                                            <input type="text" class="form-control" v-model="code" @keyup.enter="productSearch()" placeholder="Ingrese Producto" name="">
-                                            <button @click="openModal()" class="btn btn-primary"><i class="fa fa-search"></i></button>
-                                            <input type="text" readonly class="form-control" v-model="product" name="" placeholder="ENTER para buscar">
+                                           <!--  <input type="text" class="form-control" v-model="code" @keyup.enter="productSearch()" placeholder="Ingrese Producto" name=""> -->
+                                            <button @click="openModal()" class="btn btn-primary">Buscar&nbsp;&nbsp;<i class="fa fa-search"></i></button>
+                                            <!-- <input type="text" readonly class="form-control" v-model="product" name="" placeholder="ENTER para buscar"> -->
                                         </div>
                                     </div>
                                 </div>
@@ -177,8 +182,8 @@
                                                 <th>Artículo</th>
                                                 <th>Precio</th>
                                                 <th>Cantidad</th>
-                                                <th>Disponibilidad</th>
-                                                <th>SubTotal</th> 
+                                                <th>Stock</th>
+                                                <th>Sub-Total</th> 
                                             </tr>
                                         </thead>
                                         <tbody v-if="arrayDetail.length">
@@ -203,16 +208,21 @@
                                                 </td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
-                                                <td colspan="5" align="right"><strong>Total Parcial: </strong></td>
-                                                <td>$ {{ totalPartial=(calculateTotalPartial).toFixed(2) }}</td>
+                                                <td colspan="5" align="right"><strong>Sub-total: </strong></td>
+                                                <td>Bs {{ totalPartial=(calculateTotalPartial).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
-                                                <td colspan="5" align="right"><strong>Total Impuesto: </strong></td>
-                                                <td>$ {{ totalTax=(((totalPartial)*tax)).toFixed(2) }}</td>
+                                                <td colspan="5" align="right"><strong>Impuesto: </strong></td>
+                                                <td>Bs {{ totalTax=(((totalPartial)*tax)).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
+
+                                                <td colspan="5" align="right"><strong>Total: </strong></td>
+                                                <td>Bs {{ total=(calculateTotal) }}</td>
+
                                                 <td colspan="5" align="right"><strong>Total a Pagar: </strong></td>
                                                 <td>$ {{ total=(calculateTotal).toFixed(2) }}</td>
+
                                             </tr>
                                         </tbody>
                                         <tbody v-else>
@@ -241,39 +251,39 @@
                             <div class="form-group row border">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="client">Cliente</label>
-                                        <p v-text="client"></p>
+                                        <label for="client"><h6>Cliente</h6></label>
+                                        <h3><p v-text="client"></p></h3>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="user">Vendedor</label>
-                                        <p v-text="user"></p>
+                                        <label for="user"><h6>Vendedor</h6></label>
+                                        <h3><p v-text="user"></p></h3>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="tax">Impuesto</label>
-                                    <p v-text="tax"></p>
+                                    <label for="tax"><h6>Impuesto</h6></label>
+                                    <h3><p v-text="tax"></p></h3>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Tipo comprobante</label>
+                                        <label><h6>Tipo comprobante</h6></label>
 
-                                        <p v-if="voucher=='bill'">Factura</p>
-                                        <p v-else-if="voucher=='note'">Vale</p>
-                                        <p v-else-if="voucher=='credit'">Nota de credito</p>
+                                       <h3> <p v-if="voucher=='bill'">Factura</p>
+                                       <p v-else-if="voucher=='note'">Vale</p>
+                                        <p v-else-if="voucher=='credit'">Nota de credito</p></h3>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Serie Comprobante</label>
-                                        <p v-text="voucher_serie"></p>
+                                        <label><h6>Nro Control</h6></label>
+                                        <h3><p v-text="voucher_serie"></p></h3>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Numero Comprobante</label>
-                                        <p v-text="voucher_num"></p>
+                                        <label><h6>Numero Comprobante</h6></label>
+                                        <h3><p v-text="voucher_num"></p></h3>
                                     </div>
                                 </div>
                                 
@@ -287,7 +297,7 @@
                                                 <th>Artículo</th>
                                                 <th>Precio</th>
                                                 <th>Cantidad</th>
-                                                <th>subTotal</th> 
+                                                <th>Sub-total</th> 
                                             </tr>
                                         </thead>
                                         <tbody v-if="arrayDetail.length">
@@ -297,20 +307,20 @@
                                                 <td v-text="detail.price" ></td>
                                                 <td v-text="detail.quantity" ></td>
                                                 <td>
-                                                    $ {{ detail.price*detail.quantity }}
+                                                    Bs {{ detail.price*detail.quantity }}
                                                 </td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
-                                                <td colspan="3" align="right"><strong>Total Parcial: </strong></td>
-                                                <td>$ {{ totalPartial=(calculateTotalPartial).toFixed(2) }}</td>
+                                                <td colspan="3" align="right"><strong>Sub-total: </strong></td>
+                                                <td>Bs {{ totalPartial=(calculateTotalPartial).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
-                                                <td colspan="3" align="right"><strong>Total Impuesto: </strong></td>
-                                                <td v-text="'$ ' + tax_mount"> <!-- {{ totalTax=(detail.tax_mount).toFixed(2) }} --></td>
+                                                <td colspan="3" align="right"><strong>Impuesto: </strong></td>
+                                                <td v-text="'Bs ' + tax_mount"> <!-- {{ totalTax=(detail.tax_mount).toFixed(2) }} --></td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
-                                                <td colspan="3" align="right"><strong>Total a Pagar: </strong></td>
-                                                <td>$ {{ total }}</td>
+                                                <td colspan="3" align="right"><strong>Total: </strong></td>
+                                                <td>Bs {{ total }}</td>
                                             </tr>
                                         </tbody>
                                         <tbody v-else>
@@ -340,7 +350,7 @@
                         </div>
                     </template>
                     <!-- Fin panel vistas ventas -->
-
+                </div>
                 </div>
                 <!-- Fin ejemplo de tabla Listado -->
             </div>
@@ -652,7 +662,7 @@
                         me.stock= me.arrayProduct[0]['stock'];
                         me.price= me.arrayProduct[0]['price_sell'];
                     }else {
-                        me.product = 'No existe le Producto';
+                        me.product = 'No existe el Producto';
                         me.product_id =0;
                     }
                 })
@@ -839,7 +849,7 @@
 
                 if (me.arrayDetail.length<=0) me.errorSmsListS.push("Por favor ingrese productos a la compra");
 
-                if (!me.tax) me.errorSmsListS.push("ingrese un impuesto valido");
+                if (!me.tax) me.errorSmsListS.push("Ingrese un impuesto valido");
 
                 if (me.arrayDetail.length<=0) me.errorSmsListS.push("Ingrese productos");
 

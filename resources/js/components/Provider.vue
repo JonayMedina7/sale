@@ -2,10 +2,16 @@
         <main class="main">
             <!-- Breadcrumb -->
             <ol class="breadcrumb">
-                
-                <li class="breadcrumb-item"><a href="/">Escritorio</a></li>
-                
-            </ol>
+          <li class="breadcrumb-item">Inicio</li>
+          <li class="breadcrumb-item">
+            <a href="#">Dilia Software</a>
+          </li>
+          <li class="breadcrumb-item active"> Proveedores&nbsp;&nbsp;<i class="fa fa-address-book-o"></i></li>
+          <!-- Breadcrumb Menu-->
+          <li class="breadcrumb-menu d-md-down-none">
+            
+          </li>
+        </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
@@ -57,10 +63,10 @@
                                     <td v-text="client.name"></td>
                                     <td v-text="client.phone"></td>
                                     <td v-text="client.email"></td>
-                                    <div >
+                                    
                                     	<td v-if="client.retention>=75" v-text="client.retention + '%' "></td>
-										<td v-else>No es Agente de retención</td>
-									</div>
+										<td v-else>No Aplica</td>
+								
                                     <td v-text="client.address"></td>
                                     <td v-text="client.contact"></td>
                                     <td>

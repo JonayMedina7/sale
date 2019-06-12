@@ -2,8 +2,16 @@
 	<main class="main">
 		            <!-- Breadcrumb -->
 		            <ol class="breadcrumb">
-		                <li class="breadcrumb-item"><a href="/">Escritorio</a></li>
-		            </ol>
+          <li class="breadcrumb-item">Inicio</li>
+          <li class="breadcrumb-item">
+            <a href="#">Dilia Software</a>
+          </li>
+          <li class="breadcrumb-item active"> Categorias&nbsp;&nbsp;<i class="fa fa-file"></i></li>
+          <!-- Breadcrumb Menu-->
+          <li class="breadcrumb-menu d-md-down-none">
+            
+          </li>
+        </ol>
 		            <div class="container-fluid">
 		                <!-- Ejemplo de tabla Listado -->
 		                <div class="card">
@@ -39,13 +47,13 @@
 		                                <tr v-for="category in arrayCategory" :key="category.id">
 		                                    <td>
 		                                        <button type="button" class="btn btn-warning btn-sm" @click="openModal('category','update', category)">
-		                                          <i class="icon-pencil"></i>&nbsp;&nbsp; Editar
+		                                          Editar
 		                                        </button> &nbsp;
 		                                        <button v-if="category.condition" type="button" @click="openModal('category','desactive',category)" class="btn btn-danger btn-sm" >
-		                                          <i class="icon-trash"></i> &nbsp;&nbsp; Desactivar
+		                                           Desactivar
 		                                        </button>
 		                                        <button v-else type="button" @click="openModal('category','active',category)" class="btn btn-success btn-sm" >
-		                                          <i class="icon-check"></i>&nbsp;&nbsp;&nbsp; Activar
+		                                           Activar
 		                                        </button>
 		                                    </td>
 		                                    <td v-text="category.name"></td>
