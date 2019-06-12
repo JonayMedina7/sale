@@ -14,6 +14,9 @@
                             <li @click="menu=5" class="nav-item">
                                 <a class="nav-link" href="#"><i class="fa fa-file-pdf-o"></i> Facturas</a>
                             </li>
+                            <li @click="menu=14" class="nav-item">
+                                <a class="nav-link" href="#"><i class="fa fa-file-pdf-o"></i> Cotizaciones</a>
+                            </li>
                             <li @click="menu=6" class="nav-item">
                                 <a class="nav-link" href="#"><i class="fa fa-address-book-o"></i> Clientes</a>
                             </li>

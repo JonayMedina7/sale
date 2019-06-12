@@ -160,6 +160,15 @@ Route::group(['middleware' =>['auth']], function()
 		route::get('/sale/saleId', 'SaleController@saleId');
 		route::get('/sale/saleSearchRet', 'SaleController@saleSearchRet');
 
+		route::get('/quota', 'QuotaController@index');
+		route::post('/quota/register', 'QuotaController@store');
+		route::put('/quota/update', 'QuotaController@update');
+		route::put('/quota/desactive', 'QuotaController@desactive');
+		route::get('/quota/getHeader', 'QuotaController@getHeader');
+		route::get('/quota/getDetail', 'QuotaController@getDetail');
+		route::get('/quota/quotaId', 'QuotaController@quotaId');
+		route::get('/quota/quotaSearchRet', 'QuotaController@saleSearchRet');
+
 		route::get('/retention', 'RetentionController@index');
 		route::get('retention/retId', 'RetentionController@retId');
 		route::post('/retention/register', 'RetentionController@store');

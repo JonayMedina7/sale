@@ -53,6 +53,10 @@
                     <ret></ret>
                   </template>
 
+                  <template v-if="menu==14">
+                    <quota></quota>
+                  </template>
+
                   <template v-if="menu==12">
                     <h1> contenido ayuda de sistema</h1>
                   </template>
@@ -75,6 +79,10 @@
                             
                   <template v-if="menu==10">
                     <finds></finds>
+                  </template>
+                  
+                  <template v-if="menu==14">
+                    <quota></quota>
                   </template>
 
                   <template v-if="menu==11">
