@@ -73,7 +73,10 @@
                         <a class="nav-link" href="#"><i class="fa fa-support"></i> Ayuda <span class="badge badge-danger">PDF</span></a>
                     </li>
                     <li @click="menu=13" class="nav-item">
-                        <a class="nav-link" href="#"><i class="icon-info"></i> Acerca de...<span class="badge badge-info">IT</span></a>
+                        <a class="nav-link" href="#"><i class="icon-info"></i> Acerca de...<span class="badge badge-info">DS</span></a>
+                    </li>
+                    <li @click="menu=15" class="nav-item">
+                        <a class="nav-link" href="#"><i class="icon-info"></i> Datos Empresa</a>
                     </li>
                     
                    

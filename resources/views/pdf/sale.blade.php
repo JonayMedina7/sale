@@ -5,6 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Reporte de venta</title>
     <style>
+        @page {
+            margin: 150px 10px 40px auto 10px;
+        }
         body {
         /*position: relative;*/
         /*width: 16cm;  */
@@ -21,27 +24,31 @@
         
         /*font-family: SourceSansPro;*/
         }
-        html, body { height: 100%; }
+        html{ min-height: 100%; position:relative; }
+        body {
+            margin: 0 auto 10px;
+        }
         nav{
             height: 80px;
         }
         header{
+            position: relative;
             
-            margin: 0px;
-            padding: 0px;
+            /*padding: 0px;
             top: 0px;
-            bottom: 0px;
-            background-color:#ececec;
+            */
+            /*height: 50px;*/
+            
         }
         tr th, tr td {
-            padding: 4px;
-            font-size: 11px;
+            padding: 7px;
+            font-size: 11px;            
         }
        
         #data{
         float: left;
-        margin: 0px 2%;
-        
+        margin: 0;
+        padding: 10px 10px;
         font-size: 11px;
         /*text-align: justify;*/
         }
@@ -50,60 +57,29 @@
         /*position: relative;*/
         float: right;
         margin: 0px;
-        padding: 0px;
+        padding: 8px 10px ;
         font-size: 15px;
         }
         table{
-        /*position: relative;*/
-        clear: left;
+        border:1px solid black;
+        clear: both;
         font-size: 11px;
+        border-collapse: collapse;
         
         }
-        /*#fact{
-        
-        float: right;
-        margin-top: 0%;
-        margin-left: 2%;
-        margin-right: 2%;
-        font-size: 20px;
-        }*/
         #facliente{
         width: 100%;
         border: 1px solid #000;
-        
         border-spacing: 0;
         text-align: left;
         margin-bottom: 12px;
         font-size: 11px;
-        }
-        /*tr #fac{
-            width: 100%;
-        }*/
-        #fac, #fv, #fa{
-        color: #FFFFFF;
-        font-size: 5px;
         }
         #facliente thead{
-        padding: 20px;
-        background-color:#ececec;
+        padding: 10px;
         text-align: left;
-        border-bottom: 1px solid #FFFFFF;  
+        /*border-bottom: 1px solid #FFFFFF;  */
         font-size: 11px;
-        }
-        #facvendedor{
-        width: 100%;
-        border-collapse: collapse;
-        border-spacing: 0;
-        text-align: center;
-        margin-bottom: 12px;
-        font-size: 11px;
-        }
-        #facvendedor thead{
-        padding: 20px;
-        background: #2183E3;
-        text-align: center;
-        border-bottom: 1px solid #FFFFFF;
-        font-size: 11px;  
         }
         #facarticulo{
         width: 100%;
@@ -112,23 +88,22 @@
         margin-bottom: 12px;
         font-size: 11px;
         
-        height: 60%;
-        overflow: auto;
+        /*height: 60%;*/
+        /*overflow: auto;*/
         }
         #facarticulo td{
-             position: absolute;
+             border-left: 1px solid black;
              font-size: 11px;
         }
         #facarticulo thead{
-        padding: 20px;
+        /*padding: 20px;*/
         text-align: center;
         border: 1px solid #000;
         font-size: 11px;  
-        background-color:#ececec;
         }
         #facarticulo tbody {
-            height: 60%;
-            background-color:#ececec;
+            /*min-height: 60%;*/
+
         }
         #total {
         width: 100%;
@@ -137,14 +112,17 @@
         margin-top: 15px;
         margin-bottom: 12px; 
         }
-        #total thead{
-        /*display: block;*/
-        font-size: 13px;
-        font-weight: bold;
-        
+        .trfill {
+            height: 20px
         }
         footer {
             margin-top: 5px;
+            height: 150px;
+            /*position: absolute;*/
+            left: 0;
+            bottom:0;
+            width: 100%;
+            display: table;
         }
         #footer {
             padding: 2px 7px 0 22px;
@@ -164,29 +142,9 @@
         #footer2 p {
             padding-top: 10px;
         }
-        .border1 {
-        position:absolute;
-        left:56px;
-        top:228px;
-        width:1px;
-        height:48.3%;
-        border-left: 1px solid black;
-        }
-        .border2 {
-        position:absolute;
-        left: 532px;
-        top:228px;
-        width:1px;
-        min-height: 48.3%;
-        border-left: 1px solid black;
-        }
-        .border3 {
-        position:absolute;
-        left:629px;
-        top:228px;
-        width:1px;
-        height: 48.3%;
-        border-left: 1px solid black;
+        
+        .clearfix{
+            overflow: auto;
         }
         
        /*div#footer { width: 99%; font-size: 13px; height: 16%; position: absolute; bottom: -.15in; text-align: right; border-top: 1px solid black;  }
@@ -202,11 +160,11 @@
         {{-- Inicio Header --}}
         <header class="clearfix">
          
-            <div id="data" class="clearfix">
-                <p > Fecha de Emisión: {{ date("d-m-Y",strtotime($s->date)) }}</p>
+            <div id="data">
+                <span > Fecha de Emisión: {{ date("d-m-Y",strtotime($s->date)) }}</span>
             </div> 
-            <div id="inv" class="clearfix">
-                <p><b> @if ($s->voucher=='bill')
+            <div id="inv" >
+                <span><b> @if ($s->voucher=='bill')
                     FACTURA N°: 
                 @elseif ($s->voucher=='credit')
                     NOTA DE CRÉDITO N°: 000
@@ -214,39 +172,35 @@
                     VALE N°: 00
                 @endif
 
-                {{ '000'.$s->voucher_num }}</p>
-
-               
+                {{ '000'.$s->voucher_num }}</b></span>
 
             </div>
         </header>
         {{-- Fin Header --}}
-        <br>
         {{-- Inicio Seccion info Cliente --}}
         <section>
             <div>
-                <table id="facliente"  >
+                <table id="facliente">
                                          
                         <tr>
-                            <td colspan="6"  width="100%" align="center">DATOS DE CLIENTE</td>
+                            <td colspan="6"  width="100%" align="center"><b>DATOS DE CLIENTE</b></td>
                         </tr>
                    
                     
                         <tr>
-                            <td colspan="1"  >RAZÓN SOCIAL: </td>
-                            <td  colspan="4" >{{ strtoupper($s->name) }}</td>
+                            <td colspan="1"  ><b>RAZÓN SOCIAL: </b></td>
+                            <td  colspan="5" >{{ strtoupper($s->name) }}</td>
                             
                         </tr>
                         <tr>
-                            <td colspan="1" >DIRECCIÓN FISCAL: </td>
-                            <td colspan="4">{{ strtoupper($s->address) }}</td>
+                            <td colspan="1" ><b>DIRECCIÓN FISCAL: </b></td>
+                            <td colspan="5">{{ strtoupper($s->address) }}</td>
                            
                         </tr>
                         <tr>
-                            <td colspan="1" ><p >Rif/C.I.:</p></td>
-                            <td colspan="1" > {{ $s->rif }}</td>
-                            <td colspan="2" ><p >Telefono: {{ $s->phone }}</p></td>
-                            <td colspan="2" ><p >Email: {{ strtoupper($s->email) }}</p></td>
+                            <td colspan="2" ><p ><b>Rif/C.I.: </b>{{ $s->rif }}</p></td>
+                            <td colspan="2" ><p ><b>Telefono: </b>{{ $s->phone }}</p></td>
+                            <td colspan="2" ><p ><b>Email: </b>{{ strtoupper($s->email) }}</p></td>
                         </tr>
                    
                 </table>
@@ -259,7 +213,7 @@
         <section >
 
             
-                <table id="facarticulo"  >
+                <table id="facarticulo">
                     <thead>
                         <tr>
                             
@@ -278,8 +232,24 @@
                             <td style="text-align: right;">{{ $d->price }}</td>
                             <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
                         </tr>
-                        
+                        <tr>
+                            <td style="text-align: center;">{{ $d->quantity }}</td>
+                            <td style="text-align: center;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: right;">{{ $d->price }}</td>
+                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                        </tr>
+
                         @endforeach
+
+                        @for ($i =20; $i > count($details); $i--)
+                        <tr class="trfill">
+                            <td style="text-align: center;"></td>
+                            <td style="text-align: center;"></td>
+                            <td style="text-align: right;"></td>
+                            <td style="text-align: right;"></td>
+                        </tr>
+                        @endfor
+                        
                     </tbody>
                                 
                 </table>
@@ -288,7 +258,7 @@
        {{-- Fin Seccion detalles factura --}}
 
        {{-- Inicio totales factura --}}
-        <footer>
+        <footer class="">
             <div id="footer" >
 
                     @foreach ($sale as $s)

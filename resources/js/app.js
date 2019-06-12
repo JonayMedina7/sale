@@ -48,6 +48,8 @@ Vue.component('dash', require('./components/Dashboard.vue').default);
 
 Vue.component('ret', require('./components/retention.vue').default);
 
+Vue.component('company', require('./components/Company.vue').default);
+
 
 
 /**

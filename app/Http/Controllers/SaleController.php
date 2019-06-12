@@ -59,7 +59,7 @@ class SaleController extends Controller
         $filter = $request->filter;
         $id = $request->id;
         $sales = Sale::where('voucher_num','=', $filter)
-        ->select('id','voucher', 'voucher_num as sale_num', 'total as totals', 'tax', 'tax_mount',)
+        ->select('id','voucher', 'voucher_num as sale_num', 'total as totals', 'tax', 'tax_mount')
         ->orderBy('id', 'desc')->take(1)->get();
 
         return ['sales' => $sales];

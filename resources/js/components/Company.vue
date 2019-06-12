@@ -2,73 +2,63 @@
 	<main class="main">
 		            <!-- Breadcrumb -->
 		            <ol class="breadcrumb">
-		                <li class="breadcrumb-item"><a href="/">Escritorio</a></li>
+		                <li class="breadcrumb-item"><a href="/dashboard">Escritorio</a></li>
 		            </ol>
 		            <div class="container-fluid">
 		                <!-- Ejemplo de tabla Listado -->
-		                <div class="card">
+		                <div class="card" v-if="arrayCompany.length">
 		                    <div class="card-header">
 		                        
-		                        <button type="button" class="btn btn-success" @click="openModal('category','register')">
-		                            <i class="icon-plus"></i>&nbsp;&nbsp;Registrar empresa
+		                        <button type="button" class="btn btn-success" @click="openModal('company','update')">
+		                            <i class="icon-plus"></i>&nbsp;&nbsp;Editar Datos de la Empresa
 		                        </button>
 		                    </div>
-		                    <div class="card-body">
-		                        <table class="table table-bordered table-striped table-sm">
-		                            <thead>
-		                                <tr>
-		                                    <th>Opciones</th>
-		                                    <th>Nombre Empresa</th>
-		                                    <th>Rif</th>
-		                                    <th>Telefono</th>
-		                                    <th>Correo</th>
-		                                    <th>Dirección</th>
-		                                    <th></th>
-		                                </tr>
-		                            </thead>
-		                            <tbody>
-		                                <tr v-for="category in arrayCategory" :key="category.id">
-		                                    <td>
-		                                        <button type="button" class="btn btn-warning btn-sm" @click="openModal('category','update', category)">
-		                                          <i class="icon-pencil"></i>&nbsp;&nbsp; Editar
-		                                        </button> &nbsp;
-		                                        <button v-if="category.condition" type="button" @click="openModal('category','desactive',category)" class="btn btn-danger btn-sm" >
-		                                          <i class="icon-trash"></i> &nbsp;&nbsp; Desactivar
-		                                        </button>
-		                                        <button v-else type="button" @click="openModal('category','active',category)" class="btn btn-success btn-sm" >
-		                                          <i class="icon-check"></i>&nbsp;&nbsp;&nbsp; Activar
-		                                        </button>
-		                                    </td>
-		                                    <td v-text="category.name"></td>
-		                                    <td v-text="category.description"></td>
-		                                        <div v-if="category.condition">
-		                                            <span class="badge badge-success">Activo</span>
-		                                        </div>
-
-		                                        <div v-else>
-		                                            <span class="badge badge-danger">Inactivo</span>
-		                                        </div>
-		                                    </td>
-		                                </tr>
-		                            </tbody>
-		                        </table>
-		                        <nav>
-		                            <ul class="pagination">
-		                                <li class="page-item" v-if="pagination.current_page > 1">
-		                                    <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page -1, search, criterion)">Ant</a>
-		                                </li>
-		                                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActive ? 'active' : '']">
-		                                    <a class="page-link" href="#" @click.prevent="changePage(page, search, criterion)" v-text="page"></a>
-		                                </li>
-		                                
-		                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-		                                    <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page +1, search, criterion)">Sig</a>
-		                                </li>
-		                            </ul>
-		                        </nav>
+		                    <div class="card-body" v-for="det in arrayCompany" :key="det.id">
+                                <div class="form-group row border">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="name">Nombre de La Empresa</label>
+                                            <h4 class="upper" v-text="det.name"></h4>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="rif">RIF.:</label>
+                                            <h4 class="upper" v-text="det.type + '-' + det.rif"></h4>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <div class="form-group">
+                                            <label for="address">Direcciòn</label>
+                                            <h4 class="upper" v-text="det.address"></h4>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="phone">Telefono:</label>
+                                            <h4 class="upper" v-text="det.phone"></h4>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="email">Correo Electronico.:</label>
+                                            <h4 class="upper" v-text="det.email"></h4>
+                                        </div>
+                                    </div>
+                                </div>
 		                    </div>
 		                </div>
-		                <!-- Fin ejemplo de tabla Listado -->
+                        <div class="card " v-else>
+                            <div class="card-header">
+                                <button type="button" class="btn btn-success" @click="openModal('company','register')">
+                                    <i class="icon-plus"></i>&nbsp;&nbsp;Registrar la Empresa
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <h4>Por Favor Registre los Datos de la Empresa</h4>
+                            </div>
+                        </div>
+		                <!-- Fin ejemplo de tabla mostar -->
 		            </div>
 		            <!--Inicio del modal agregar/actualizar-->
 		            <div class="modal fade" tabindex="-1" :class="{'show' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
@@ -82,19 +72,41 @@
 		                        </div>
 		                        <div class="modal-body">
 		                            <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-		                                <div class="form-group row">
-		                                    <label class="col-md-3 form-control-label" for="name">Nombre</label>
-		                                    <input type="text" v-model="name" class="form-control" placeholder="Nombre de Categoria">
+		                                <div class="col-6">
+		                                    <label class=" form-control-label" for="name">Nombre de la Empresa</label>
+		                                    <input type="text" v-model="name" class="form-control" placeholder="Nombre de la Empresa">
 		                                </div>
+                                        <div class=" col-6">
+                                            <label class=" form-control-label" for="rif">Rif.:</label>
+                                            <div class="form-group">
+                                                <select name="type" v-model="type">
+                                                    <option value="j">J</option>
+                                                    <option value="g">G</option>
+                                                    <option value="c">V</option>
+                                                    <option value="c">Cedula</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <input type="number" name="rif" class="form-control" placeholder="Ingrese Rif." v-model="rif" maxlength="9" minlength="6">
+                                            </div>
+                                        </div>
 		                                <div class="form-group row">
-		                                    <label class="col-md-3 form-control-label" for="description">Descripción</label>
-		                                    <input type="text" v-model="description" class="form-control" placeholder="Descripción de la Categoria">
+		                                    <label class="col-md-12 form-control-label" for="address">Dirección</label>
+		                                    <input type="text" v-model="address" class="form-control" placeholder="Ingrese dirección de la empresa">
 		                                </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 form-control-label" for="email">Correo Electronico</label>
+                                            <input type="text" v-model="email" class="form-control" placeholder="Ingrese Email de la empresa">
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 form-control-label" for="phone">Telefono</label>
+                                            <input type="text" v-model="phone" class="form-control" placeholder="Ingrese Telefono de la empresa">
+                                        </div>
 		                            </form>
 		                        </div>
 		                        <div class="modal-footer">
 		                            <button type="button" class="btn btn-secondary" @click="closeModal()">Cerrar</button>
-		                            <button v-if="actionType==1" type="button" class="btn btn-primary" @click="registerCategory()">Guardar</button>
+		                            <button v-if="actionType==1" type="button" class="btn btn-primary" @click="registerCompany()">Guardar</button>
 		                            <button v-if="actionType==2" type="button" class="btn btn-primary" @click="updateCategory()">Actualizar</button>
 		                        </div>
 		                    </div>
@@ -124,13 +136,13 @@
 		                    </div>
 		                    <div v-else class="modal-content">
 		                        <div class="modal-header">
-		                            <h4 class="modal-title">Activar Category</h4>
+		                            <h4 class="modal-title">Activar</h4>
 		                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		                              <span aria-hidden="true">×</span>
 		                            </button>
 		                        </div>
 		                        <div class="modal-body">
-		                            <p>Pulse Activar para activar al Category</p>
+		                            <p>Pulse Activar para activar</p>
 		                        </div>
 		                        <div class="modal-footer">
 		                            <button type="button" class="btn btn-secondary" @click="closeModal()">Cancelar</button>
@@ -149,25 +161,21 @@
 	export default {
 		data (){
 			return{
-				id: 0,
+			id: 0,
 			name: '',
-			description: '',
+            address: '',
+            phone: '',
+            email: '',
+            type: 'j',
+            rif: 0,
 			condition: 0,
-			arrayCategory: [],
+			arrayCompany: [],
 			modal1 : 0,
             modal : 0,
             titleModal : '',
             actionType : 0,
             errorSms : 0,
             errorSmsList : [],
-            pagination : {
-                'total' : 0,
-                'current_page' : 0,
-                'per_page' : 0,
-                'last_page' : 0,
-                'from' : 0,
-                'to' : 0,
-            },
             offset : 3,
             criterion : 'name',
             search : ''
@@ -179,84 +187,61 @@
                 return this.pagination.current_page;
             },
             //esta calcula los elementos de la paginacion
-            pagesNumber: function(){
-                if(!this.pagination.to) {
-                    return[];
-                }
-                var from = this.pagination.current_page - this.offset;
-                if(from < 1) {
-                    from = 1;
-                }
-
-
-                var to = from + (this.offset * 2);
-                if (to >= this.pagination.last_page){
-                    to = this.pagination.last_page;
-                }
-
-                var pagesArray = [];
-                while(from <= to ){
-                    pagesArray.push(from);
-                    from++;
-                }
-                return pagesArray;
-            	}
 		},
 		methods: {
-			listCategory (page,search,criterion){
+			listCompany (){
 				let me = this;
 
-				var url='category?page=' + page + '&search=' + search + '&criterion=' + criterion;
+				var url='company';
                 axios.get(url).then(function(response) {
                     var response = response.data; 
-                     me.arrayCategory = response.categories.data;
-                     me.pagination = response.pagination;
-                     // console.log(url);
+
+                     me.arrayCompany = response.company;
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
             },
-            changePage(page, search, criterion){
-                let me = this;
-                // actualiza la pagina 
-                me.pagination.current_page = page;
-                // envia la peticion para visualizar la data de esa pagina
-                me.listClient(page, search, criterion);
-
-            },
-            registerCategory(){
-            	if (this.validateCategory()){
+            registerCompany(){
+            	if (this.validateCompany()){
             		return;
             	}
             	let me = this;
 
-            	axios.post('category/register', {
+            	axios.post('company/register', {
             		'name': this.name,
-            		'description': this.description
+                    'type': this.type,
+                    'rif': this.rif,
+                    'address': this.address,
+                    'email': this.email,
+                    'phone':this.phone
 
             	}).then(function(response) {
                     me.closeModal();
-                    me.listCategory(1,'','name');
+                    me.listCompany(1,'','name');
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
             },
             updateCategory(){
-            	if (this.validateCategory()){
+            	if (this.validateCompany()){
             		return;
             	}
             	let me = this;
 
-            	axios.put('category/update', {
+            	axios.put('company/update', {
             		'id':this.id,
             		'name': this.name,
-            		'description': this.description
+            		'type': this.type,
+                    'rif': this.rif,
+                    'address': this.address,
+                    'email': this.email,
+                    'phone':this.phone
 
             	}).then(function(response) {
                     me.closeModal();
-                    me.listCategory(1,'','name');
+                    me.listCompany(1,'','name');
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -267,6 +252,9 @@
                 this.errorCategoryList =[];
 
                 if(!this.name) this.errorCategoryList.push("El Nombre de la Categoria no Puede estar vacio");
+                if(!this.rif) this.errorCategoryList.push("Por favor ingresar un Rif Valido");
+
+                if(!this.address) this.errorCategoryList.push("Por Favor ingresar la dirección registrada bajo su Rif");
 
                 if (this.errorCategoryList.length) this.errorCategory = 1;
                     if (this.errorCategoryList.length >= 1) {
@@ -283,11 +271,11 @@
             desactiveCategory(){
                 let me = this;
 
-                axios.put('category/desactive', {
+                axios.put('company/desactive', {
                     'id': this.id,
                 }).then(function (response) {
                     me.closeModal();
-                    me.listCategory(1,'', 'name');
+                    me.listCompany(1,'', 'name');
                 })
                 .catch(function (error) {
                    console.log(error); 
@@ -296,11 +284,11 @@
             activeCategory(){
                 let me = this;
 
-                axios.put('category/active', {
+                axios.put('company/active', {
                     'id': this.id,
                 }).then(function (response) {
                     me.closeModal();
-                    me.listCategory(1,'', 'name');
+                    me.listCompany(1,'', 'name');
                 }).catch(function (error) {
                     console.log(error); 
                 });
@@ -313,12 +301,16 @@
 
                 this.id= 0;
                 this.name='';
-                this.description='';
+                this.type= 'j';
+                this.rif= 0;
+                this.address= '';
+                this.email= '';
+                this.phone= 0;
                 this.condition= 0;
             },
             openModal(modelo, accion, data = []){
                 switch(modelo) {
-                    case "category" :
+                    case "company" :
                     {
                         switch(accion){
                             case 'register':
@@ -328,7 +320,11 @@
                                 this.actionType     = 1;
 
                                 this.name='';
-				                this.description='';
+				                this.type= 'j';
+                                this.rif= 0;
+                                this.address= '';
+                                this.email= '';
+                                this.phone= 0;
                                 break;
                             }
                             case 'update':
@@ -338,7 +334,11 @@
                                 this.actionType     = 2;
                                 this.id  = data['id'];
                                 this.name  		= data['name'];
-                                this.description		=data['description'];
+                                this.type		=data['type'];
+                                this.rif        =data['rif'];
+                                this.address        =data['address'];
+                                this.email        =data['email'];
+                                this.phone        =data['phone'];
                                 break;
                             }
                             case 'desactive':
@@ -361,7 +361,7 @@
             }
 		},
 		mounted(){
-			this.listCategory(1,this.search,this.name);
+			this.listCompany(1,this.search,this.name);
 		}
 
 	};
@@ -387,6 +387,9 @@
     .text-error{
         color: red !important;
         font-weight: bold;
+    }
+    .upper{
+        text-transform: uppercase;
     }
 
 </style>
