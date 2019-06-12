@@ -10,6 +10,6 @@ class CompanyController extends Controller
     public function index(Request $request)
     {
     	$company = Company::all();
-    	return $company;
+    	return ['company' =>$company];
     }
 }

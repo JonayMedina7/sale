@@ -114,25 +114,22 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                    <label >Razon Social(*):</label>
-                                    <h4><span v-text="name" style="text-transform: uppercase;"> </span></h4>
+                                        <label >Razon Social(*):</label>
+                                        <h4><span v-text="name" style="text-transform: uppercase;"> </span></h4>
+                                    </div>
                                 </div>
-                            </div>
-                              <div  class="col-md-3">
+                                <div  class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Rif o C.I(*)</label>
-                                        
-                                          <h4><span v-text="type + '-' + rif" style="text-transform: uppercase;"></span> </h4> 
-                                          
-                                        
+                                        <h4><span v-text="type + '-' + rif" style="text-transform: uppercase;"></span> </h4>
                                     </div>
                                 </div>
                                 <div class="col-md-9">
                                     <div class="form-group">
-                                    <label >Direcciòn(*):</label>
-                                    <h4><span v-text="address" style="text-transform: uppercase;"> </span></h4>
+                                        <label >Direcciòn(*):</label>
+                                        <h4><span v-text="address" style="text-transform: uppercase;"> </span></h4>
+                                    </div>
                                 </div>
-                            </div>
 
 
                                

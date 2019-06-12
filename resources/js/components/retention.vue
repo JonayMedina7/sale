@@ -233,7 +233,10 @@
                                                     <input v-model="detail.tax_mount" disabled type="number"  class="form-control" name="">
                                                 </td>
 
+<<<<<<< HEAD
                                         
+=======
+>>>>>>> 8f6615b7f942feef575bfe49154fb62ed034e1a3
                                                 <td>Bs.:
                                                     {{ ret_amount = (detail.tax_mount*ret_val) }}
 
@@ -242,8 +245,11 @@
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="6" align="right"><strong>Total Retenido: </strong></td>
 
+<<<<<<< HEAD
                                                
 
+=======
+>>>>>>> 8f6615b7f942feef575bfe49154fb62ed034e1a3
                                                 <td>Bs.: {{ totalPartial=(calculateTotalPartial) }}</td>
 
                                             </tr>
