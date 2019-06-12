@@ -89,13 +89,10 @@
     
 
     <footer class="app-footer">
-<<<<<<< HEAD
+
         <span><img src="img/dsl.png" width="30px" height="30px">&nbsp;&nbsp;Dilia Software</a> &copy; 2019</span>
         <span class="ml-auto">Desarrollado por <a href="http://www.dilia.com.ve/">Dilia Soluciones</a>&nbsp;&nbsp;<img src="img/logo.png" width="30px" height="20px"></span>
-=======
-        <span>Desarrollado por:<a href="http://www.dilia.com.ve/">Dilia Solucciones c.a.</a> &copy; 2019</span>
-        <span class="ml-auto"><a href="http://www.dilia.com.ve/">Dilia Software</a></span>
->>>>>>> e8783293765e3c6842fa2cb442d59890decdd520
+
     </footer>
 
     <!-- Bootstrap and necessary plugins -->

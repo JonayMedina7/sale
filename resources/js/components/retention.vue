@@ -232,22 +232,17 @@
                                                 <td>
                                                     <input v-model="detail.tax_mount" disabled type="number"  class="form-control" name="">
                                                 </td>
-<<<<<<< HEAD
-                                                <td>
-                                                   Bs {{  detail.tax_mount*ret_val }}
-=======
+
                                                 <td>Bs.:
                                                     {{ ret_amount = (detail.tax_mount*ret_val) }}
->>>>>>> e8783293765e3c6842fa2cb442d59890decdd520
+
                                                 </td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="6" align="right"><strong>Total Retenido: </strong></td>
-<<<<<<< HEAD
-                                                <td>Bs {{ totalPartial=(calculateTotalPartial) }}</td>
-=======
+
                                                 <td>Bs.: {{ totalPartial=(calculateTotalPartial) }}</td>
->>>>>>> e8783293765e3c6842fa2cb442d59890decdd520
+
                                             </tr>
                                             <!-- <tr style="background-color: #CEECFS;">
                                                 <td colspan="5" align="right"><strong>Total Impuesto: </strong></td>
