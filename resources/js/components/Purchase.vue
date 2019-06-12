@@ -320,10 +320,8 @@
                                 <div class="col-md-12">
                                     <button type="button" class="btn btn-secondary" @click="hideDetail()">Cerrar</button>
                                     <template  v-if="status=='Registrado'">
-                                                    <button type="button" @click="desactivePurchase(purchase_id)" class="btn btn-danger btn-sm" >
-                                                      Anular
-                                                    </button>
-                                                </template>
+                                        <button type="button" @click="desactivePurchase(purchase_id)" class="btn btn-danger btn-sm" >Anular</button>
+                                    </template>
                                 </div>
                             </div>
                         </div>

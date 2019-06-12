@@ -171,6 +171,8 @@ Route::group(['middleware' =>['auth']], function()
 		route::get('/retention/pdfw/{id}', 'RetentionController@pdfw')->name('venta'); 
 		
 		route::get('/company', 'CompanyController@index');
+		route::post('/company/register', 'CompanyController@store');
+		route::put('/company/update', 'CompanyController@update');
 	});
 	
 

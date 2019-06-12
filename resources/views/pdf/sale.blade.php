@@ -6,7 +6,8 @@
     <title>Reporte de venta</title>
     <style>
         @page {
-            margin: 150px 10px 40px auto 10px;
+            margin: 50px 20px 40px 20px !important;
+            padding: 0px 0px 0px 0px !important;
         }
         body {
         /*position: relative;*/
@@ -116,8 +117,8 @@
             height: 20px
         }
         footer {
-            margin-top: 5px;
-            height: 150px;
+            /*margin-top: 5px;
+            height: 150px;*/
             /*position: absolute;*/
             left: 0;
             bottom:0;
@@ -130,7 +131,7 @@
             text-align: right;
             border: #000 1px solid;
             font-size: 12px;
-            width: 20%;
+            min-width: auto;
             
         }
         #footer2 {
@@ -155,7 +156,7 @@
     <body  >
         @foreach ($sale as $s)
         <nav>
-            
+
         </nav>
         {{-- Inicio Header --}}
         <header class="clearfix">
@@ -232,16 +233,11 @@
                             <td style="text-align: right;">{{ $d->price }}</td>
                             <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
                         </tr>
-                        <tr>
-                            <td style="text-align: center;">{{ $d->quantity }}</td>
-                            <td style="text-align: center;">{{ strtoupper($d->product) }}</td>
-                            <td style="text-align: right;">{{ $d->price }}</td>
-                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
-                        </tr>
+                        
 
                         @endforeach
 
-                        @for ($i =20; $i > count($details); $i--)
+                        @for ($i =18; $i > count($details); $i--)
                         <tr class="trfill">
                             <td style="text-align: center;"></td>
                             <td style="text-align: center;"></td>
@@ -259,7 +255,7 @@
 
        {{-- Inicio totales factura --}}
         <footer class="">
-            <div id="footer" >
+            <div id="footer">
 
                     @foreach ($sale as $s)
                     <p>SUBTOTAL Bs:&nbsp;&nbsp;{{ round($s->total-($s->total*$s->tax),2) }}</p>

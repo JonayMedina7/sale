@@ -109,7 +109,7 @@ class SaleController extends Controller
         $details=strtoupper($details);*/
 
         $pdf = \PDF::loadView('pdf.sale',['sale'=>$sale,'details'=>$details]);
-        return $pdf->download('Factura-'.$numsale[0]->voucher_num.'.txt');
+        return $pdf->stream('Factura-'.$numsale[0]->voucher_num.'.pdf');
     }
 
     public function pdfw(Request $request, $id)
