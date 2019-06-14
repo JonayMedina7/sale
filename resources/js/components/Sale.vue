@@ -180,6 +180,7 @@
                                             <tr>
                                                 <th>Opciones</th>
                                                 <th>Artículo</th>
+                                                <th>Descripción</th>
                                                 <th>Precio</th>
                                                 <th>Cantidad</th>
                                                 <th>Stock</th>
@@ -193,6 +194,9 @@
                                                     </button>
                                                 </td>
                                                 <td v-text="detail.product"></td>
+                                                <td>
+                                                    <input v-model="description" type="text" placeholder="Ingrede descripción">
+                                                </td>
                                                 <td>
                                                     <input v-model="detail.price" type="number" class="form-control" name="">
                                                 </td>
@@ -208,19 +212,19 @@
                                                 </td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
-                                                <td colspan="5" align="right"><strong>Sub-total: </strong></td>
+                                                <td colspan="6" align="right"><strong>Sub-total: </strong></td>
                                                 <td>Bs {{ totalPartial=(calculateTotalPartial).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
-                                                <td colspan="5" align="right"><strong>Impuesto: </strong></td>
-                                                <td>Bs {{ totalTax=(((totalPartial)*tax)).toFixed(2) }}</td>
+                                                <td colspan="6" align="right"><strong> Total Impuesto: </strong></td>
+                                                <td>Bs {{ totalTax=(calcTax).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
-
-                                                <td colspan="5" align="right"><strong>Total: </strong></td>
-                                                <td>Bs {{ total=(calculateTotal) }}</td>
-
-                                                <td colspan="5" align="right"><strong>Total a Pagar: </strong></td>
+                                                <td colspan="6" align="right"><strong>Exento: </strong></td>
+                                                <td>Bs {{ totalExent=(calcExent).toFixed(2) }}</td>
+                                            </tr>
+                                            <tr style="background-color: #CEECFS;">
+                                                <td colspan="6" align="right"><strong>Total a Pagar: </strong></td>
                                                 <td>$ {{ total=(calculateTotal).toFixed(2) }}</td>
 
                                             </tr>
@@ -295,6 +299,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Artículo</th>
+                                                <th>Descripción</th>
                                                 <th>Precio</th>
                                                 <th>Cantidad</th>
                                                 <th>Sub-total</th> 
@@ -304,23 +309,24 @@
                                             <tr v-for="detail in arrayDetail" :key="detail.id">
                                                 
                                                 <td v-text="detail.product" ></td>
+                                                <td v-text="detail.description"></td>
                                                 <td v-text="detail.price" ></td>
                                                 <td v-text="detail.quantity" ></td>
                                                 <td>
-                                                    Bs {{ detail.price*detail.quantity }}
+                                                    Bs: {{ detail.price*detail.quantity }}
                                                 </td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
-                                                <td colspan="3" align="right"><strong>Sub-total: </strong></td>
-                                                <td>Bs {{ totalPartial=(calculateTotalPartial).toFixed(2) }}</td>
+                                                <td colspan="4" align="right"><strong>Sub-total: </strong></td>
+                                                <td>Bs: {{ totalPartial=(calculateTotalPartial).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
-                                                <td colspan="3" align="right"><strong>Impuesto: </strong></td>
+                                                <td colspan="4" align="right"><strong>Impuesto: </strong></td>
                                                 <td v-text="'Bs ' + tax_mount"> <!-- {{ totalTax=(detail.tax_mount).toFixed(2) }} --></td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
-                                                <td colspan="3" align="right"><strong>Total: </strong></td>
-                                                <td>Bs {{ total }}</td>
+                                                <td colspan="4" align="right"><strong>Total: </strong></td>
+                                                <td>Bs: {{ total }}</td>
                                             </tr>
                                         </tbody>
                                         <tbody v-else>
@@ -467,7 +473,7 @@
                 voucher_num : '',
                 voucher_serie : '',
                 date : '',
-                tax : 0.16,
+                tax : 0.0,
                 tax_mount: 0.0,
                 arraySale : [],
                 arrayId : [],
@@ -478,7 +484,8 @@
                 stock: 0,
                 code : '',
                 product : '',
-                price : 0,
+                description:'',
+                price : 1,
                 quantity : 0,
                 dispo:'',
                  total: 0.0,
@@ -544,6 +551,26 @@
                 }
                 // console.log(result);
                 return result;
+            },
+            calcTax: function (){
+                var result2 = 0.0;
+                for (var i = 0; i < this.arrayDetail.length; i++) {
+                    if (this.arrayDetail[i].tax > 0) {
+                        result2 = result2 +(this.arrayDetail[i].price*this.tax)
+                    }
+                }
+                console.log(result2);
+                return result2;
+            },
+            calcExent: function (){
+                var result3 = 0.0;
+                for (var i = 0; i < this.arrayDetail.length; i++) {
+                    if (this.arrayDetail[i].tax <= 0) {
+                        result3 = result3 +(this.arrayDetail[i].price*this.tax)
+                    }
+                }
+                console.log(result3);
+                return result3;
             },
             calculateTotal: function (){
                 return parseFloat(this.totalTax) + parseFloat(this.totalPartial);
@@ -724,6 +751,7 @@
                             me.arrayDetail.push({
                         product_id: me.product_id,
                             product: me.product,
+                            description: me.description,
                             quantity: me.quantity,
                             price: me.price,
                             stock: me.stock
@@ -732,7 +760,7 @@
                             me.product_id=0;
                             me.product="";
                             me.quantity=0;
-                            me.price=0;
+                            me.price=1;
                             me.stock=0; 
                         }
                     }
@@ -817,7 +845,8 @@
                     me.total=0.0;
                     me.product='';
                     me.quantity=0;
-                    me.price=0;
+                    me.description='';
+                    me.price=1;
                     me.stock=0;
                     me.code='';
                     me.arrayDetail=[];

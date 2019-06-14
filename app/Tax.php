@@ -19,5 +19,9 @@ class Tax extends Model
     {
     	return $this->belongsTo(Purchase::class);
     }
+    public function retention()
+    {
+        return $this->belongsTo(Retention::class);
+    }
 
 }

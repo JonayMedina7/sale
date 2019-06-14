@@ -119,26 +119,33 @@
         footer {
             /*margin-top: 5px;
             height: 150px;*/
-            position: absolute;
+            /*position: absolute;*/
             left: 0;
             bottom:0;
             width: 100%;
             /*display: table;*/
         }
         #footer {
-            /*position: relative;
-            padding: 2px 7px 0 22px;*/
-            float: right;
+            position: relative;
+            display: block;
+            padding: 2px 7px 0 22px;
+            /*float: right;*/
             text-align: right;
-            border:1px solid black;
+            background-color:#cecece;
+            color: #000;
+            border: #000 1px solid;
             font-size: 12px;
-            /*width: auto;*/
+            width: max-content;
+            margin-left: auto;
             
         }
         #footer2 {
-            float: left;
+            /*float: left;*/
+            position: relative;
+            display: block;
             padding: 6px 0px 0 12px;
             font-size: 13px;
+            width: 60%;
             
         }
         #footer2 p {
@@ -220,8 +227,9 @@
                         <tr>
                             
                             <th style="text-align: center; width: 5%;">CANT</th>
-                            <th style="text-align: center; width: 65%;">DESCRIPCION</th>
-                            <th style="text-align: right; width: 15%;">PRECIO UNIT</th>
+                            <th style="text-align: center; width: 30%;">PRODUCTO</th>
+                            <th style="text-align: center; width: 43%;">DESCRIPCIÓN</th>
+                            <th style="text-align: right; width: 12%;">PRECIO UNIT</th>
                             <th style="text-align: right; width: 15%;">PRECIO TOTAL</th>
                         </tr>
                     </thead>
@@ -231,6 +239,7 @@
                         <tr>
                             <td style="text-align: center;">{{ $d->quantity }}</td>
                             <td style="text-align: center;">{{ strtoupper($d->product) }}</td>
+                            <td style="text-align: center;">{{ strtoupper($d->description) }}</td>
                             <td style="text-align: right;">{{ $d->price }}</td>
                             <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
                         </tr>
@@ -240,6 +249,7 @@
 
                         @for ($i =18; $i > count($details); $i--)
                         <tr class="trfill">
+                            <td style="text-align: center;"></td>
                             <td style="text-align: center;"></td>
                             <td style="text-align: center;"></td>
                             <td style="text-align: right;"></td>
@@ -255,18 +265,19 @@
        {{-- Fin Seccion detalles factura --}}
 
        {{-- Inicio totales factura --}}
-        <footer class="clearfix">
-            <div id="footer">
-
-                    @foreach ($sale as $s)
-                    <p>SUBTOTAL Bs:&nbsp;&nbsp;{{ round($s->total-($s->total*$s->tax),2) }}</p>
-                    <p>IVA Bs:&nbsp;&nbsp;{{ round($s->total*$s->tax,2) }}</p>
-                    <p id="total">TOTAL Bs:&nbsp;&nbsp; {{ $s->total }}</p>
-                    @endforeach
-            </div>
+        <footer class="">
+            
             <div id="footer2">
                 <p>Recibido por: ____________________________</p>
                 <p><b>Observaciones:</b></p>
+            </div>
+            <div id="footer">
+
+                    @foreach ($sale as $s)
+                    <p>SUBTOTAL Bs: {{ ' '.round($s->total-($s->total*$s->tax),2) }}</p>
+                    <p>IVA Bs: {{ ' '.round($s->total*$s->tax,2) }}</p>
+                    <p id="total">TOTAL Bs: {{ ' '.$s->total }}</p>
+                    @endforeach
             </div>
         </footer>
         {{-- Fin totales factura --}}

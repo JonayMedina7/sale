@@ -350,17 +350,11 @@
                                           <option value="code">Codigo</option>
                                         </select>
 
-<<<<<<< HEAD
                                         <input type="text" v-model="search" @keyup.enter="listProduct(searchP,criteryP)" class="form-control" placeholder="Ingrese datos a Buscar">
                                         <button type="submit" @click="listProduct(searchP,criteryP)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
 
                                         <input type="text" v-model="search" @keyup.enter="listProduct(1,searchP,criteryP)" class="form-control" placeholder="Ingrese datos a Buscar">
                                         <button type="submit" @click="listProduct(1,searchP,criteryP)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
-
-=======
-                                        <input type="text" v-model="search" @keyup.enter="listProduct(1,searchP,criteryP)" class="form-control" placeholder="Ingrese datos a Buscar">
-                                        <button type="submit" @click="listProduct(1,searchP,criteryP)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
->>>>>>> 8f6615b7f942feef575bfe49154fb62ed034e1a3
                                     </div>
                                 </div>
                             </div>

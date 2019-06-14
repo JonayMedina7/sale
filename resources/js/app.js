@@ -48,12 +48,11 @@ Vue.component('dash', require('./components/Dashboard.vue').default);
 
 Vue.component('ret', require('./components/retention.vue').default);
 
-<<<<<<< HEAD
 Vue.component('quota', require('./components/Quota.vue').default);
-=======
-Vue.component('company', require('./components/Company.vue').default);
->>>>>>> 8f6615b7f942feef575bfe49154fb62ed034e1a3
 
+Vue.component('company', require('./components/Company.vue').default);
+
+Vue.component('tax', require('./components/Tax.vue').default);
 
 
 /**

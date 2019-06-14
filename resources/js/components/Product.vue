@@ -123,6 +123,10 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="categoria">Impuesto</label>
+                                    
+                                </div>
+                                <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Código</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="code" class="form-control" placeholder="Codigo del producto o servicio">
@@ -223,7 +227,10 @@
                 stock: 0,
                 description : '',
                 condition : '',
+                tax_id: 0,
+                tax:0,
                 arrayProduct : [],
+                arrayTax:[],
                 modal1 : 0,
                 modal : 0,
                 titleModal : '',
@@ -308,6 +315,17 @@
                     console.log(error);
                 });
             },
+            searchTax(){
+                let me = this;
+
+                var url='tax/searchTax';
+                axios.get(url).then(function(response) {
+                    me.arrayTax = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
             changePage(page, search, critery){
                 let me = this;
                 // actualiza la pagina 
@@ -329,7 +347,8 @@
                     'name': this.name,
                     'stock': this.stock,
                     'price_buy': this.price_buy,
-                    'description': this.description
+                    'description': this.description,
+                    'tax_id': this.tax_id
                     
                 }).then(function(response) {
                     me.closeModal();
@@ -423,6 +442,8 @@
                 this.titleModal= '';
                 this.name='';
                 this.description='';
+                this.tax_id=0;
+                this.tax=0;
             },
             openModal(modelo, accion, data = []){
                 switch(modelo) {
@@ -475,6 +496,7 @@
                     }
                 }
                 this.categorySelect();
+                this.searchTax();
             }
         },
         mounted() {

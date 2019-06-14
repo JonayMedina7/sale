@@ -12,7 +12,8 @@ class CreateSalesTable extends Migration
      * @return void
      */
     public function up()
-    {
+    {   
+        Schema::dropIfExists('sales');
         Schema::create('sales', function (Blueprint $table) {
             
             $table->bigIncrements('id');
@@ -23,9 +24,9 @@ class CreateSalesTable extends Migration
             $table->string('voucher_num', 10);
             $table->string('ret_num', 20);
             $table->dateTime('date');
-            $table->decimal('tax', 4, 2);
-            $table->decimal('tax_mount', 4, 2);
-            $table->decimal('total', 15, 2);
+            $table->decimal('tax', 15, 2);
+            $table->decimal('tax_mount', 15, 2);
+            $table->decimal('total', 20, 2);
             $table->string('status', 20);
             $table->timestamps();
         });
