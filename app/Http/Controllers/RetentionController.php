@@ -131,8 +131,7 @@ class RetentionController extends Controller
     
      foreach ($usuarios as $log) {
       $content = $log->id;
-       $content .= $log->voucher_num;
-       echo $content;
+      echo $content;
     }
 
     // file name that will be used in the download
@@ -140,7 +139,7 @@ class RetentionController extends Controller
     $headers = [
       'Content-type' => 'text/plain', 
       'Content-Disposition' => sprintf('attachment; filename="%s"', $fileName),
-      'Content-Length' => sizeof($content)
+      'Content-Length' => $content
     ];
     
     $user = 'hola';
