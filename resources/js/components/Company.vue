@@ -174,8 +174,8 @@
             modal : 0,
             titleModal : '',
             actionType : 0,
-            errorSms : 0,
-            errorSmsList : [],
+            errorCompany : 0,
+            errorCompanyList : [],
             offset : 3,
             criterion : 'name',
             search : ''
@@ -247,26 +247,26 @@
                     console.log(error);
                 });
             },
-            validateCategory(){
-            	this.errorCategory=0;
-                this.errorCategoryList =[];
+            validateCompany(){
+            	this.errorCompany=0;
+                this.errorCompanyList =[];
 
-                if(!this.name) this.errorCategoryList.push("El Nombre de la Categoria no Puede estar vacio");
-                if(!this.rif) this.errorCategoryList.push("Por favor ingresar un Rif Valido");
+                if(!this.name) this.errorCompanyList.push("El Nombre de la Categoria no Puede estar vacio");
+                if(!this.rif) this.errorCompanyList.push("Por favor ingresar un Rif Valido");
 
-                if(!this.address) this.errorCategoryList.push("Por Favor ingresar la dirección registrada bajo su Rif");
+                if(!this.address) this.errorCompanyList.push("Por Favor ingresar la dirección registrada bajo su Rif");
 
-                if (this.errorCategoryList.length) this.errorCategory = 1;
-                    if (this.errorCategoryList.length >= 1) {
+                if (this.errorCompanyList.length) this.errorCompany = 1;
+                    if (this.errorCompanyList.length >= 1) {
                         Swal.fire({
                     confirmButtonText: 'Aceptar!',
                     confirmButtonClass: 'btn btn-danger',
                     confirmButtonColor: '#3085d6',
-                    html: `${this.errorCategoryList.map( er =>`<br><br>${er}`)}`,
+                    html: `${this.errorCompanyList.map( er =>`<br><br>${er}`)}`,
                     showCancelButton: false
                     });
                 };
-                return this.errorCategory;
+                return this.errorCompany;
             },
             desactiveCategory(){
                 let me = this;

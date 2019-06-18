@@ -19,6 +19,9 @@
                         <button type="button" class="btn btn-success" @click="showInsert()">
                             <i class="fa fa-file"></i>&nbsp;&nbsp;Crear Retencion
                         </button>
+                        <button type="button" class="btn btn-success" @click="showTxt()">
+                            <i class="fa fa-file"></i>&nbsp;&nbsp;Generar TXT
+                        </button>
                     </div>
                     <!-- litado registros -->
                     <template v-if="list==1">
@@ -103,6 +106,29 @@
                                     </li>
                                 </ul>
                             </nav>
+                        </div>
+                    </template>
+
+                    <template v-if="list==6">
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                       <!--  <select class="form-control col-md-3" v-model="criterion">
+                                          <option value="voucher">Tipo de Comprobante</option>
+                                          <option value="voucher_num">Numero de comprobante</option>
+                                          <option value="date">Fecha-hora</option> 
+                                        </select> -->
+                                        <input type="date" v-model="fecha1" class="form-control">
+                                        <input type="date" v-model="fecha2" class="form-control">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            
+
+                           <button type="button" class="btn btn-secondary" @click="hideRet()">Cerrar</button>
+                           <button type="button" class="btn btn-primary" @click="txt(fecha1,fecha2)">Registrar Retención</button>
                         </div>
                     </template>
                     <!-- Fin Listado -->
@@ -511,6 +537,8 @@
                 offset : 3,
                 criterion : 'voucher_num',
                 search : '',
+                fecha1 : '',
+                fecha2: '',
                 criteryR: 'name',
                 searchR: ''
             }
@@ -573,6 +601,13 @@
                 .catch(function (error) {
                     console.log(error);
                 });
+            },
+            txt (fecha1,fecha2){
+                
+                let me=this;
+                 var url = 'retention/getDownload?fecha1='+ fecha1 + '&fecha2=' + fecha2;
+                 console.log(fecha1);
+                axios.put(url);
             },
             retId(){
                 let me=this;
@@ -660,6 +695,15 @@
                 me.voucher='bill';
                 me.purchase_num='';
                 me.arrayDetailr=[];
+
+            },
+            showTxt(){
+
+                let me=this;
+                
+                me.list=6;
+
+               
 
             },
             providerSelectr(search,loading){
