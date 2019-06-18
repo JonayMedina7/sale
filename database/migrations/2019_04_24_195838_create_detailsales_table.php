@@ -21,6 +21,7 @@ class CreateDetailsalesTable extends Migration
             $table->integer('product_id')->unsigned();
             $table->integer('quantity');
             $table->decimal('price', 11, 2);
+            $table->integer('tax');
         });
     }
 

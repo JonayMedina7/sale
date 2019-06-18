@@ -6,24 +6,28 @@
 		            </ol>
 		            <div class="container-fluid">
 		                <!-- Ejemplo de tabla Listado -->
-		                <div style="width: fit-content" class=" card">
+		                <div class=" card"  style="width: fit-content">
 		                    <div  class="card-header">
 		                        <h5>I.v.a. Actual para ventas, compras y retenciones</h5>
 		                    </div>
 		                    <div class="card-body" >
-                                <div class="form-group row ">
-                                    <div class="col-12" v-for="taxes in arrayTax" :key="taxes.id" v-if="arrayTax.length">
-
-                                        <div class="form-group">
-                                            <h3 for="tax">I.V.A. Actual</h3>
-                                            <h4 class="upper" v-text="taxes.tax"></h4>
+                                <div class="form-group row float-left">
+                                    <div class="col-12" >
+                                        <h3 for="tax">I.V.A. Registrado</h3>
+                                        <div class="form-group" v-for="taxes in arrayTax" :key="taxes.id" v-if="arrayTax.length">
+                                            <div class="form-group center border"  style="width: fit-content">
+                                                <h4 class="upper form-text " v-text="taxes.tax + '   '"></h4> 
+                                            <button type="button" class="btn btn-primary " @click="updateTax(taxes)">Actualizar</button>
+                                                <br>    
+                                            </div>
+                                            
                                         </div>
 
                                     </div>
                                     <hr>
                                     
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body float-right">
                                     <div class="col-12" >
 
                                         <div class="form-group row col-md-6">
@@ -33,8 +37,8 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-6">
-                                                <button type="button" v-if="arrayTax.length" class="btn btn-primary" @click="updateTax()">Actualizar I.v.a.</button>
-                                                <button type="button" v-else class="btn btn-primary" @click="registerTax()">Guardar</button>
+
+                                                <button type="button" class="btn btn-primary" @click="registerTax()">Guardar</button>
                                             </div>
                                         </div>
                                     </div>
@@ -55,7 +59,7 @@
 		data (){
 			return{
 			id: 0,
-			tax: 0,
+			tax: '',
             arrayTax: [],
             errorTax: 0,
             
@@ -72,7 +76,7 @@
 				var url='tax';
                 axios.get(url).then(function(response) {
                     me.arrayTax = response.data; 
-                    console.log(me.arrayTax);
+                    
                     
                 })
                 .catch(function (error) {
@@ -94,15 +98,15 @@
                 });
             },
             
-            updateTax(){
+            updateTax(data = []){
             	if (this.validateTax()){
             		return;
             	}
             	let me = this;
 
             	axios.put('tax/update', {
-            		'id':this.id,
-            		'tax': this.tax
+            		'id': data['id'],
+            		'tax': data['tax']
 
             	}).then(function(response) {
                     me.listTax();
@@ -112,12 +116,19 @@
                 });
             },
             validateTax(){
+                
             	this.errorTax=0;
                 this.errorTaxList =[];
 
-                if(!this.tax) this.errorTaxList.push("Ingrese un impuesto valido");
+                if(this.tax=='') this.errorTaxList.push("Ingrese un impuesto valido");
                 
-
+                var sw;
+                for(var i=0;i<this.arrayTax.length;i++){
+                    if (this.arrayTax[i].tax == this.tax) {
+                        this.errorTaxList.push("Ya este monto de impuesto se encuentra registrado");
+                    }
+                }
+                
                 if (this.errorTaxList.length) this.errorTax = 1;
                     if (this.errorTaxList.length >= 1) {
                         Swal.fire({
@@ -139,29 +150,3 @@
 	};
 </script>
 
-<style type="text/css">
-    .modal-content{
-        margin-top: 11vh;
-        width: 100% !important;
-        position: absolute !important;
-    }
-    .show {
-        display: list-item !important;
-        opacity: 1 !important;
-        position: absolute;
-        background-color: #3c29297a !important; 
-    }
-    .div-error{
-        display: flex;
-        justify-content: center;
-
-    }
-    .text-error{
-        color: red !important;
-        font-weight: bold;
-    }
-    .upper{
-        text-transform: uppercase;
-    }
-
-</style>

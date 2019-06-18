@@ -195,7 +195,7 @@
                                                 </td>
                                                 <td v-text="detail.product"></td>
                                                 <td>
-                                                    <input v-model="description" type="text" placeholder="Ingrede descripción">
+                                                    <input v-model="detail.description" type="text" placeholder="Ingrede descripción">
                                                 </td>
                                                 <td>
                                                     <input v-model="detail.price" type="number" class="form-control" name="">
@@ -221,7 +221,7 @@
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="6" align="right"><strong>Exento: </strong></td>
-                                                <td>Bs {{ totalExent=(calcExent).toFixed(2) }}</td>
+                                                <td>Bs {{ totalExempt=(calcExempt).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="6" align="right"><strong>Total a Pagar: </strong></td>
@@ -323,6 +323,10 @@
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="4" align="right"><strong>Impuesto: </strong></td>
                                                 <td v-text="'Bs ' + tax_mount"> <!-- {{ totalTax=(detail.tax_mount).toFixed(2) }} --></td>
+                                            </tr>
+                                            <tr style="background-color: #CEECFS;">
+                                                <td colspan="4" align="right"><strong>Total: </strong></td>
+                                                <td>Bs: {{ exempt }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="4" align="right"><strong>Total: </strong></td>
@@ -473,8 +477,9 @@
                 voucher_num : '',
                 voucher_serie : '',
                 date : '',
-                tax : 0.0,
+                tax : '',
                 tax_mount: 0.0,
+                exempt: 0.0,
                 arraySale : [],
                 arrayId : [],
                 arrayDetail : [],
@@ -485,12 +490,13 @@
                 code : '',
                 product : '',
                 description:'',
-                price : 1,
+                price : 0.0,
                 quantity : 0,
                 dispo:'',
                  total: 0.0,
                 totalTax: 0.0,
                 totalPartial: 0.0,
+                totalExempt: 0.0,
                 modal1 : 0,
                 modal : 0,
                 envId: 0,
@@ -544,6 +550,7 @@
                 }
                 return pagesArray;
             },
+            // CALCULA EL TOTAL DEL MONTO DE LA FACTURA
             calculateTotalPartial: function(){
                 var result=0.0;
                 for (var i = 0; i <this.arrayDetail.length; i++) {
@@ -552,26 +559,31 @@
                 // console.log(result);
                 return result;
             },
+            // FUNCIÓN PARA CALCULAR EL IVA
             calcTax: function (){
                 var result2 = 0.0;
+                var divisor = 0.0;
                 for (var i = 0; i < this.arrayDetail.length; i++) {
                     if (this.arrayDetail[i].tax > 0) {
-                        result2 = result2 +(this.arrayDetail[i].price*this.tax)
+                        divisor = (this.arrayDetail[i].tax/100)
+                        
+                        result2 = result2 +((this.arrayDetail[i].price*this.arrayDetail[i].quantity)*divisor)
                     }
                 }
-                console.log(result2);
+                console.log(divisor);
                 return result2;
             },
-            calcExent: function (){
+            // FUNCIÓN PARA CALCULAR EL MONTO EXENTO
+            calcExempt: function (){
                 var result3 = 0.0;
                 for (var i = 0; i < this.arrayDetail.length; i++) {
                     if (this.arrayDetail[i].tax <= 0) {
-                        result3 = result3 +(this.arrayDetail[i].price*this.tax)
+                        result3 = result3 +(this.arrayDetail[i].price*this.arrayDetail[i].quantity)
                     }
                 }
-                console.log(result3);
                 return result3;
             },
+            // CALCULAR EL TOTAL DE LA FACTURA
             calculateTotal: function (){
                 return parseFloat(this.totalTax) + parseFloat(this.totalPartial);
             }
@@ -604,7 +616,6 @@
                     var response = response.data; 
                     me.arraySaleTemp = response.sale;
                     me.sale_id = id;
-                    console.log(me.sale_id);
                     me.client = me.arraySaleTemp[0]['name'];
                     me.user = me.arraySaleTemp[0]['user'];
                     me.voucher = me.arraySaleTemp[0]['voucher'];
@@ -612,9 +623,9 @@
                     me.voucher_num = me.arraySaleTemp[0]['voucher_num'];
                     me.tax = me.arraySaleTemp[0]['tax'];
                     me.tax_mount = me.arraySaleTemp[0]['tax_mount'];
+                    me.totalExempt = me.arraySaleTemp[0]['exempt'];
                     me.total = me.arraySaleTemp[0]['total'];
                     me.status = me.arraySaleTemp[0]['status'];
-                    console.log(me.status);
 
                 })
                 .catch(function (error) {
@@ -640,7 +651,6 @@
                 var url= 'client/clientSelect?filter='+search;
                 axios.get(url).then(function(response) {
                     var response = response.data; 
-                    /*console.log(response);*/
 
                     me.arrayClient = response.clients;
                     loading(false)
@@ -667,11 +677,7 @@
                 var url= 'sale/saleId';
                 axios.get(url).then(function(response) {
                     var response = response.data; 
-                    // console.log(response);
-
                     me.arrayId = response.saleid;
-                    /*me.voucher_num = me.arrayId[0]['id'];
-                    console.log(me.voucher_num);*/
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -688,6 +694,7 @@
                         me.product_id= me.arrayProduct[0]['id'];
                         me.stock= me.arrayProduct[0]['stock'];
                         me.price= me.arrayProduct[0]['price_sell'];
+                        me.tax= me.arrayProduct[0]['tax'];
                     }else {
                         me.product = 'No existe el Producto';
                         me.product_id =0;
@@ -731,7 +738,7 @@
             addDetail(){
                 let me = this;
 
-                if ( me.product_id==0 || me.quantity==0 || me.price==0 ) {
+                if ( me.product_id==0 || me.quantity==0 || me.price==0.0 ) {
                 }else {
                     if (me.find(me.product_id)) {
                         Swal.fire({
@@ -749,19 +756,21 @@
                             })
                         }else{
                             me.arrayDetail.push({
-                        product_id: me.product_id,
+                            product_id: me.product_id,
                             product: me.product,
                             description: me.description,
                             quantity: me.quantity,
                             price: me.price,
-                            stock: me.stock
+                            stock: me.stock,
+                            tax:me.taxp
                             });
                             me.code='';
                             me.product_id=0;
                             me.product="";
                             me.quantity=0;
-                            me.price=1;
-                            me.stock=0; 
+                            me.price=0.0;
+                            me.stock=0;
+                            me.tax=''; 
                         }
                     }
                 } 
@@ -781,8 +790,10 @@
                         product_id: data['id'],
                         product: data['name'],
                         quantity: 1,
+                        description: data['description'],
                         price: data['price_sell'],
-                        stock: data['stock']
+                        stock: data['stock'],
+                        tax: data['tax']
                     });
                 }
                 
@@ -816,6 +827,7 @@
                     'voucher_num': this.voucher_num,
                     'voucher_serie': this.voucher_serie,
                     'tax': this.tax,
+                    'exempt': this.totalExempt,
                     'tax_mount': this.totalTax,
                     'total': this.total,
                     'data': this.arrayDetail
@@ -840,13 +852,15 @@
                     me.voucher_num='';
                     me.voucher_serie='';
                     me.totalTax= 0.0;
-                    me.tax=0.16;
+                    me.tax='';
+                    me.exempt:0.0;
                     me.tax_mount=0.0;
+                    me.totalExempt=0.0;
                     me.total=0.0;
                     me.product='';
                     me.quantity=0;
                     me.description='';
-                    me.price=1;
+                    me.price=0.0;
                     me.stock=0;
                     me.code='';
                     me.arrayDetail=[];
@@ -878,8 +892,6 @@
 
                 if (me.arrayDetail.length<=0) me.errorSmsListS.push("Por favor ingrese productos a la compra");
 
-                if (!me.tax) me.errorSmsListS.push("Ingrese un impuesto valido");
-
                 if (me.arrayDetail.length<=0) me.errorSmsListS.push("Ingrese productos");
 
                 if (me.errorSmsListS.length) me.errorSmsS = 1;
@@ -904,12 +916,13 @@
                 me.product_id=0;
                 me.voucher_num='';
                 me.voucher_serie='';
-                me.tax=0.16;
+                me.tax='';
                 me.tax_mount=0.0;
+                me.totalExempt=0.0;
                 me.total=0.0;
                 me.product='';
                 me.quantity=0;
-                me.price=0;
+                me.price=0.0;
                 me.arrayDetail=[];
 
             },
@@ -968,33 +981,3 @@
         }
     };
 </script>
-
-<style type="text/css">
-    .modal-content{
-        margin-top: 1vh;
-        width: 100% !important;
-        position: absolute !important;
-    }
-    .show {
-        display: list-item !important;
-        opacity: 1 !important;
-        position: absolute;
-        background-color: #3c29297a !important; 
-    }
-    .div-error{
-        display: flex;
-        justify-content: center;
-
-    }
-    .text-error{
-        color: red !important;
-        font-weight: bold;
-    }
-    @media (min-width: 600px) {
-        .btn-add {
-            margin-top: 2rem;
-        }    
-    }
-    
-
-</style> 

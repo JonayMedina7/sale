@@ -10,9 +10,9 @@ class Tax extends Model
 
     protected $guarded = ['id'];
 
-    public function sale ()
+    public function product ()
     {
-    	return $this->belongsTo(Sale::class);
+    	return $this->belongsTo(Product::class);
     }
 
     public function purchase()

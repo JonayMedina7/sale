@@ -45,6 +45,7 @@
                                     <th>Nombre</th>
                                     <th>Categoría</th>
                                     <th>Precio Compra</th>
+                                    <th>I.v.a.</th>
                                     <th>Stock</th>
                                     <th>Descripción</th>
                                     <th>Estado</th>
@@ -67,6 +68,7 @@
                                     <td v-text="product.name"></td>
                                     <td v-text="product.category_name"></td>
                                     <td v-text="product.price_buy"></td>
+                                    <td v-text="product.tax + '%'"></td>
                                     <td v-text="product.stock"></td>
                                     <td v-text="product.description"></td> 
 
@@ -122,9 +124,14 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="categoria">Impuesto</label>
-                                    
+                                <div class="form-group row" v-for="">
+                                    <label class="col-md-3 form-control-label" for="categoria">I.v.a.</label>
+                                    <div class="col-md-9">
+                                        <select name="tax_id" class="form-control" v-model="tax_id">
+                                            <option value="">Seleccione</option>
+                                            <option v-for="taxes in arrayTax" :key="taxes.id" :value="taxes.id" v-text="taxes.tax + '%'"></option>
+                                        </select>
+                                    </div>  
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Código</label>
@@ -228,7 +235,7 @@
                 description : '',
                 condition : '',
                 tax_id: 0,
-                tax:0,
+                tax:'',
                 arrayProduct : [],
                 arrayTax:[],
                 modal1 : 0,
@@ -340,13 +347,13 @@
                     return;
                 };
                 let me=this;
-                console.log(this.name);
                 axios.post('product/register', {
                     'category_id': this.category_id,
                     'code':this.code,
                     'name': this.name,
                     'stock': this.stock,
                     'price_buy': this.price_buy,
+                    'tax_id': this.tax_id,
                     'description': this.description,
                     'tax_id': this.tax_id
                     
@@ -372,6 +379,7 @@
                     'name': this.name,
                     'stock': this.stock,
                     'price_buy': this.price_buy,
+                    'tax_id': this.tax_id,
                     'description': this.description
                 }).then(function (response){
                     me.closeModal();
@@ -391,6 +399,8 @@
                 if (!this.stock) this.errorSmsProduct.push(" Stock del producto debe ser un Numero y no puede estar vacio");
 
                 if (!this.price_buy) this.errorSmsProduct.push("Precio de Compra del producto debe ser un Numero y no puede estar vacio");
+
+                if (this.tax_id == 0) this.errorSmsProduct.push("Seleccione valor de impuesto para el producto");
 
                 if (this.errorSmsProduct.length) this.errorProduct = 1;
                     if (this.errorSmsProduct.length >= 1) {
@@ -443,7 +453,7 @@
                 this.name='';
                 this.description='';
                 this.tax_id=0;
-                this.tax=0;
+                this.tax='';
             },
             openModal(modelo, accion, data = []){
                 switch(modelo) {
@@ -462,6 +472,8 @@
                                 this.stock=0;
                                 this.description    = '';
                                 this.actionType     = 1;
+                                this.tax_id=0;
+                                this.tax='';
                                 break;
                             }
                             case 'update':
@@ -476,6 +488,8 @@
                                 this.price_buy   = data['price_buy'];
                                 this.stock        = data['stock'];
                                 this.description  = data['description'];
+                                this.tax_id= data['tax_id'];
+                                this.tax= data['tax'];
                                 this.actionType   = 2;
                                 break;
                             }
@@ -504,27 +518,3 @@
         }
     };
 </script>
-
-<style type="text/css">
-    .modal-content{
-        margin-top: 11vh;
-        width: 100% !important;
-        position: absolute !important;
-    }
-    .show {
-        display: list-item !important;
-        opacity: 1 !important;
-        position: absolute;
-        background-color: #3c29297a !important; 
-    }
-    .div-error{
-        display: flex;
-        justify-content: center;
-
-    }
-    .text-error{
-        color: red !important;
-        font-weight: bold;
-    }
-
-</style>

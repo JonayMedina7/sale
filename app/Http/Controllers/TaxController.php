@@ -31,7 +31,7 @@ class TaxController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $tax = Tax::select('id','tax')
-        ->orderBy('id', 'desc')->take(1)->get();
+        ->orderBy('id', 'desc')->get();
 
         return $tax;
         

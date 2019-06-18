@@ -19,12 +19,12 @@ class SaleController extends Controller
         if ($search=='') {
             $sales = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
             ->join('users', 'sales.user_id', '=', 'users.id')
-            ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
+            ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'sales.exempt', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
             ->orderBy('sales.id', 'desc')->paginate(10);
         } else {
             $sales = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
             ->join('users', 'sales.user_id', '=', 'users.id')
-            ->select('sales.id', 'sales.voucher', 'sales.voucher_serial', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
+            ->select('sales.id', 'sales.voucher', 'sales.voucher_serial', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'sales.exempt', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
             ->where('sales.'.$criterion, 'like', '%'. $search . '%')->orderBy('sales.id', 'desc')->paginate(10);
         }
 
@@ -42,7 +42,7 @@ class SaleController extends Controller
         ];
     }
 
-    public function saleId ()
+    public function saleId (Request $request)
     {
         if (!$request->ajax()) return redirect('/');
 
@@ -59,7 +59,7 @@ class SaleController extends Controller
         $filter = $request->filter;
         $id = $request->id;
         $sales = Sale::where('voucher_num','=', $filter)
-        ->select('id','voucher', 'voucher_num as sale_num', 'total as totals', 'tax', 'tax_mount')
+        ->select('id','voucher', 'voucher_num as sale_num', 'total as totals', 'tax', 'tax_mount', 'exempt')
         ->orderBy('id', 'desc')->take(1)->get();
 
         return ['sales' => $sales];
@@ -72,7 +72,7 @@ class SaleController extends Controller
         
         $sale = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
         ->join('users', 'sales.user_id', '=', 'users.id')
-        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
+        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'sales.exempt', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
         ->where('sales.id','=',$id)
         ->orderBy('sales.id', 'desc')->take(1)->get();
         
@@ -96,7 +96,7 @@ class SaleController extends Controller
     {
         $sale = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
         ->join('users', 'sales.user_id', '=', 'users.id')
-        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
+        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'sales.exempt', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
         ->where('sales.id','=',$id)->take(1)->get();
 
          $details = Detailsale::join('products', 'detailsales.product_id', '=', 'products.id')
@@ -116,7 +116,7 @@ class SaleController extends Controller
     {
         $sale = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
         ->join('users', 'sales.user_id', '=', 'users.id')
-        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
+        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'sales.exempt', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
         ->where('sales.id','=',$id)->take(1)->get();
 
          $details = Detailsale::join('products', 'detailsales.product_id', '=', 'products.id')
@@ -157,6 +157,7 @@ class SaleController extends Controller
         
         $sale->tax = $request->tax;
         $sale->tax_mount = $request->tax_mount;
+        $sale->exempt = $request->exempt;
         $sale->ret_num = 0;
         $sale->total = $request->total;
         $sale->status = 'Registrado';
@@ -169,8 +170,9 @@ class SaleController extends Controller
             $detailsale = new Detailsale();
             $detailsale->sale_id = $sale->id;
             $detailsale->product_id = $det['product_id'];
-            $detailsale->descirption = $det['description'];
+            $detailsale->description = $det['description'];
             $detailsale->quantity = $det['quantity'];
+            $detailsale->tax = $det['tax'];
             $detailsale->price = $det['price'];
             $detailsale->save();
         }

@@ -3386,7 +3386,7 @@ button.close {
   left: 0;
   z-index: 1050;
   display: none;
-  overflow: hidden;
+  overflow: visible;
   outline: 0; }
   .modal.fade .modal-dialog {
     transition: -webkit-transform 0.3s ease-out;
@@ -3408,7 +3408,7 @@ button.close {
   margin: 10px; }
 
 .modal-content {
-  position: relative;
+  
   display: -ms-flexbox;
   display: flex;
   -ms-flex-direction: column;
@@ -3416,7 +3416,11 @@ button.close {
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  outline: 0; }
+  outline: 0;
+  margin-top: 3vh;
+  width: 100% !important;
+  position: relative !important;
+   }
 
 .modal-backdrop {
   position: fixed;
@@ -3475,7 +3479,7 @@ button.close {
 @media (min-width: 576px) {
   .modal-dialog {
     max-width: 500px;
-    margin: 30px auto; }
+    margin: 3px auto; }
   .modal-sm {
     max-width: 300px; } }
 
@@ -9051,7 +9055,29 @@ app-root {
 
 hr.transparent {
   border-top: 1px solid transparent; }
+.show {
+        display: list-item !important;
+        opacity: 1 !important;
+        position: absolute;
+        background-color: #3c29297a !important; 
+    }
 
+.div-error{
+        display: flex;
+        justify-content: center;
+    }
+.text-error{
+        color: red !important;
+        font-weight: bold;
+    }
+.upper{
+        text-transform: uppercase;
+    }
+@media (min-width: 600px) {
+        .btn-add {
+            margin-top: 2rem;
+        }    
+    }
 .bg-primary,
 .bg-success,
 .bg-info,

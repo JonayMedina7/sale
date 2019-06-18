@@ -940,33 +940,3 @@
         }
     };
 </script>
-
-<style type="text/css">
-    .modal-content{
-        margin-top: 1vh;
-        width: 100% !important;
-        position: absolute !important;
-    }
-    .show {
-        display: list-item !important;
-        opacity: 1 !important;
-        position: absolute;
-        background-color: #3c29297a !important; 
-    }
-    .div-error{
-        display: flex;
-        justify-content: center;
-
-    }
-    .text-error{
-        color: red !important;
-        font-weight: bold;
-    }
-    @media (min-width: 600px) {
-        .btn-add {
-            margin-top: 2rem;
-        }    
-    }
-    
-
-</style> 

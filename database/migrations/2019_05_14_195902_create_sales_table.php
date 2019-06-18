@@ -26,6 +26,7 @@ class CreateSalesTable extends Migration
             $table->dateTime('date');
             $table->decimal('tax', 15, 2);
             $table->decimal('tax_mount', 15, 2);
+            $table->decimal('exempt', 20, 2);
             $table->decimal('total', 20, 2);
             $table->string('status', 20);
             $table->timestamps();
