@@ -853,7 +853,7 @@
                     me.voucher_serie='';
                     me.totalTax= 0.0;
                     me.tax='';
-                    me.exempt:0.0;
+                    me.exempt=0.0;
                     me.tax_mount=0.0;
                     me.totalExempt=0.0;
                     me.total=0.0;

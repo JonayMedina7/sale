@@ -53,17 +53,9 @@
                     <ret></ret>
                   </template>
 
-<<<<<<< HEAD
-
                   <template v-if="menu==14">
                     <quota></quota>
                   </template>
-
-=======
-                  <template v-if="menu==14">
-                    <quota></quota>
-                  </template>
->>>>>>> ce4c7efdeb3a07b221449e951e39405b67ec470a
 
                   <template v-if="menu==12">
                     <h1> contenido ayuda de sistema</h1>

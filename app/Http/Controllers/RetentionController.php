@@ -7,9 +7,10 @@ use App\Purchase;
 use App\Company;
 use Carbon\Carbon;
 use \Illuminate\Http\Response;
-use \Illuminate\Http\Storage;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
 
 class RetentionController extends Controller
 {
@@ -119,32 +120,32 @@ class RetentionController extends Controller
     }
 
      public function getDownload(Request $request){
-
+        
          $usuarios = Retention::all();
          $fecha1 = $request->fecha1;
          $fecha2 = $request->fecha2;
          $retentions = Retention::join('purchases', 'retentions.id', '=', 'purchases.ret_id')
             ->join('users', 'purchases.user_id', '=', 'users.id')
             ->join('clients', 'purchases.provider_id', '=', 'clients.id')
-            ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.status', 'purchases.user_id', 'purchases.provider_id', 'purchases.voucher', 'purchases.voucher_num as purchase_num', 'purchases.total as totalp', 'users.user', 'clients.name', 'clients.type', 'clients.rif')->where('retentions.date', '>=',$fecha1)->where('retentions.date', '<=',$fecha2)->get();
-    $content = "Logs \n";
-    // foreach ($logs as $log) {
-    //   $content .= 'hola';
-    //   $content .= "\n";
-    // }
+            ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.status', 'purchases.user_id', 'purchases.provider_id', 'purchases.voucher', 'purchases.voucher_num as purchase_num', 'purchases.total as totalp', 'users.user', 'clients.name', 'clients.type', 'clients.rif')->whereBetween('retentions.date', [$fecha1, $fecha2])->get();
+    
+     foreach ($usuarios as $log) {
+      $content = $log->id;
+       $content .= $log->voucher_num;
+       echo $content;
+    }
 
     // file name that will be used in the download
     $fileName = "logs.txt";
-
-    // use headers in order to generate the download
     $headers = [
       'Content-type' => 'text/plain', 
-      'Content-Disposition' => sprintf('attachment; filename="%s"', $fileName)
+      'Content-Disposition' => sprintf('attachment; filename="%s"', $fileName),
+      'Content-Length' => sizeof($content)
     ];
-
-    // make a response, with the content, a 200 response code and the headers
-    $content = \View::make('pdf.ret')->with('fileName', $fileName);
-    return \Response::make($content, '200')->header('Content-type', 'text/plain');
+    
+    $user = 'hola';
+    
+    return Storage::download('logs.txt', $fileName, $headers);
 
     }
   
