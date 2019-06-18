@@ -48,9 +48,17 @@ Vue.component('dash', require('./components/Dashboard.vue').default);
 
 Vue.component('ret', require('./components/retention.vue').default);
 
+<<<<<<< HEAD
+
 Vue.component('quota', require('./components/Quota.vue').default);
 
 Vue.component('company', require('./components/Company.vue').default);
+
+=======
+Vue.component('quota', require('./components/Quota.vue').default);
+
+Vue.component('company', require('./components/Company.vue').default);
+>>>>>>> ce4c7efdeb3a07b221449e951e39405b67ec470a
 
 Vue.component('tax', require('./components/Tax.vue').default);
 
