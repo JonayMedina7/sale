@@ -93,10 +93,13 @@
         <span><img src="img/dsl.png" width="30px" height="30px">&nbsp;&nbsp;Dilia Software</a> &copy; 2019</span>
         <span class="ml-auto">Desarrollado por <a href="http://www.dilia.com.ve/">Dilia Soluciones</a>&nbsp;&nbsp;<img src="img/logo.png" width="30px" height="20px"></span>
 
+<<<<<<< HEAD
 
         
 
 
+=======
+>>>>>>> ce4c7efdeb3a07b221449e951e39405b67ec470a
     </footer>
 
     <!-- Bootstrap and necessary plugins -->

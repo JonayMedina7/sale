@@ -44,7 +44,7 @@ class SaleController extends Controller
 
     public function saleId ()
     {
-        /*if (!$request->ajax()) return redirect('/');*/
+        if (!$request->ajax()) return redirect('/');
 
         
         $saleid = Sale::select('sales.id as saleid')->orderBy('sales.id', 'desc')->take(1)->get();
@@ -54,7 +54,7 @@ class SaleController extends Controller
 
     public function saleSearchRet(Request $request)
     {
-        // if (!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) return redirect('/');
 
         $filter = $request->filter;
         $id = $request->id;
@@ -85,7 +85,7 @@ class SaleController extends Controller
         $id = $request->id;
         
         $details = Detailsale::join('products', 'detailsales.product_id', '=', 'products.id')
-        ->select('detailsales.quantity', 'detailsales.price', 'products.name as product')
+        ->select('detailsales.quantity', 'detailsales.price', 'detailsales.description', 'products.name as product')
         ->where('detailsales.sale_id','=',$id)
         ->orderBy('detailsales.id', 'desc')->get();
         
@@ -100,7 +100,7 @@ class SaleController extends Controller
         ->where('sales.id','=',$id)->take(1)->get();
 
          $details = Detailsale::join('products', 'detailsales.product_id', '=', 'products.id')
-        ->select('detailsales.quantity', 'detailsales.price', 'products.name as product')
+        ->select('detailsales.quantity', 'detailsales.price', 'detailsales.description', 'products.name as product')
         ->where('detailsales.sale_id','=',$id)
         ->orderBy('detailsales.id', 'desc')->get();
 
@@ -109,7 +109,7 @@ class SaleController extends Controller
         $details=strtoupper($details);*/
 
         $pdf = \PDF::loadView('pdf.sale',['sale'=>$sale,'details'=>$details]);
-        return $pdf->download('Factura-'.$numsale[0]->voucher_num.'.txt');
+        return $pdf->stream('Factura-'.$numsale[0]->voucher_num.'.pdf');
     }
 
     public function pdfw(Request $request, $id)
@@ -120,7 +120,7 @@ class SaleController extends Controller
         ->where('sales.id','=',$id)->take(1)->get();
 
          $details = Detailsale::join('products', 'detailsales.product_id', '=', 'products.id')
-        ->select('detailsales.quantity', 'detailsales.price', 'products.name as product')
+        ->select('detailsales.quantity', 'detailsales.price', 'detailsales.description', 'products.name as product')
         ->where('detailsales.sale_id','=',$id)
         ->orderBy('detailsales.id', 'desc')->get();
 
@@ -169,6 +169,7 @@ class SaleController extends Controller
             $detailsale = new Detailsale();
             $detailsale->sale_id = $sale->id;
             $detailsale->product_id = $det['product_id'];
+            $detailsale->descirption = $det['description'];
             $detailsale->quantity = $det['quantity'];
             $detailsale->price = $det['price'];
             $detailsale->save();

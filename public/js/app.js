@@ -4170,6 +4170,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -4181,7 +4185,10 @@ __webpack_require__.r(__webpack_exports__);
       stock: 0,
       description: '',
       condition: '',
+      tax_id: 0,
+      tax: 0,
       arrayProduct: [],
+      arrayTax: [],
       modal1: 0,
       modal: 0,
       titleModal: '',
@@ -4262,6 +4269,15 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
+    searchTax: function searchTax() {
+      var me = this;
+      var url = 'tax/searchTax';
+      axios.get(url).then(function (response) {
+        me.arrayTax = response.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
     changePage: function changePage(page, search, critery) {
       var me = this; // actualiza la pagina 
 
@@ -4283,7 +4299,8 @@ __webpack_require__.r(__webpack_exports__);
         'name': this.name,
         'stock': this.stock,
         'price_buy': this.price_buy,
-        'description': this.description
+        'description': this.description,
+        'tax_id': this.tax_id
       }).then(function (response) {
         me.closeModal();
         me.listProduct(1, '', 'name');
@@ -4371,6 +4388,8 @@ __webpack_require__.r(__webpack_exports__);
       this.titleModal = '';
       this.name = '';
       this.description = '';
+      this.tax_id = 0;
+      this.tax = 0;
     },
     openModal: function openModal(modelo, accion) {
       var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
@@ -4429,6 +4448,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       this.categorySelect();
+      this.searchTax();
     }
   },
   mounted: function mounted() {
@@ -4954,14 +4974,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1__);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -7320,6 +7332,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -7339,7 +7357,7 @@ __webpack_require__.r(__webpack_exports__);
       voucher_num: '',
       voucher_serie: '',
       date: '',
-      tax: 0.16,
+      tax: 0.0,
       tax_mount: 0.0,
       arraySale: [],
       arrayId: [],
@@ -7350,7 +7368,8 @@ __webpack_require__.r(__webpack_exports__);
       stock: 0,
       code: '',
       product: '',
-      price: 0,
+      description: '',
+      price: 1,
       quantity: 0,
       dispo: '',
       total: 0.0,
@@ -7422,6 +7441,30 @@ __webpack_require__.r(__webpack_exports__);
 
 
       return result;
+    },
+    calcTax: function calcTax() {
+      var result2 = 0.0;
+
+      for (var i = 0; i < this.arrayDetail.length; i++) {
+        if (this.arrayDetail[i].tax > 0) {
+          result2 = result2 + this.arrayDetail[i].price * this.tax;
+        }
+      }
+
+      console.log(result2);
+      return result2;
+    },
+    calcExent: function calcExent() {
+      var result3 = 0.0;
+
+      for (var i = 0; i < this.arrayDetail.length; i++) {
+        if (this.arrayDetail[i].tax <= 0) {
+          result3 = result3 + this.arrayDetail[i].price * this.tax;
+        }
+      }
+
+      console.log(result3);
+      return result3;
     },
     calculateTotal: function calculateTotal() {
       return parseFloat(this.totalTax) + parseFloat(this.totalPartial);
@@ -7584,6 +7627,7 @@ __webpack_require__.r(__webpack_exports__);
             me.arrayDetail.push({
               product_id: me.product_id,
               product: me.product,
+              description: me.description,
               quantity: me.quantity,
               price: me.price,
               stock: me.stock
@@ -7592,7 +7636,7 @@ __webpack_require__.r(__webpack_exports__);
             me.product_id = 0;
             me.product = "";
             me.quantity = 0;
-            me.price = 0;
+            me.price = 1;
             me.stock = 0;
           }
         }
@@ -7669,7 +7713,8 @@ __webpack_require__.r(__webpack_exports__);
           me.total = 0.0;
           me.product = '';
           me.quantity = 0;
-          me.price = 0;
+          me.description = '';
+          me.price = 1;
           me.stock = 0;
           me.code = '';
           me.arrayDetail = [];
@@ -60138,6 +60183,8 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
+                    _vm._m(2),
+                    _vm._v(" "),
                     _c("div", { staticClass: "form-group row" }, [
                       _c(
                         "label",
@@ -60401,9 +60448,9 @@ var render = function() {
           [
             _vm.condition
               ? _c("div", { staticClass: "modal-content" }, [
-                  _vm._m(2),
-                  _vm._v(" "),
                   _vm._m(3),
+                  _vm._v(" "),
+                  _vm._m(4),
                   _vm._v(" "),
                   _c("div", { staticClass: "modal-footer" }, [
                     _c(
@@ -60436,9 +60483,9 @@ var render = function() {
                   ])
                 ])
               : _c("div", { staticClass: "modal-content" }, [
-                  _vm._m(4),
-                  _vm._v(" "),
                   _vm._m(5),
+                  _vm._v(" "),
+                  _vm._m(6),
                   _vm._v(" "),
                   _c("div", { staticClass: "modal-footer" }, [
                     _c(
@@ -60518,6 +60565,21 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Estado")])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group row" }, [
+      _c(
+        "label",
+        {
+          staticClass: "col-md-3 form-control-label",
+          attrs: { for: "categoria" }
+        },
+        [_vm._v("Impuesto")]
+      )
     ])
   },
   function() {
@@ -61628,7 +61690,7 @@ var render = function() {
               },
               [
                 _c("i", { staticClass: "fa fa-cart-plus" }),
-                _vm._v("  Ingresar Compra\n                        ")
+                _vm._v("  Ingresar Compra\n                ")
               ]
             )
           ]),
@@ -61794,12 +61856,12 @@ var render = function() {
                                   },
                                   [
                                     _vm._v(
-                                      "\n                                                  Detalles\n                                                "
+                                      "\n                                          Detalles\n                                        "
                                     )
                                   ]
                                 ),
                                 _vm._v(
-                                  "  \n\n                                                \n                                                \n                                            "
+                                  "  \n\n                                        \n                                        \n                                    "
                                 )
                               ]),
                               _vm._v(" "),
@@ -62422,11 +62484,11 @@ var render = function() {
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
-                                          "\n                                                   Bs " +
+                                          "\n                                           Bs " +
                                             _vm._s(
                                               detail.price * detail.quantity
                                             ) +
-                                            "\n                                                "
+                                            "\n                                        "
                                         )
                                       ])
                                     ])
@@ -62644,11 +62706,11 @@ var render = function() {
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
-                                          "\n                                                    " +
+                                          "\n                                            " +
                                             _vm._s(
                                               detail.price * detail.quantity
                                             ) +
-                                            "\n                                                "
+                                            "\n                                        "
                                         )
                                       ])
                                     ])
@@ -62758,11 +62820,7 @@ var render = function() {
                                     }
                                   }
                                 },
-                                [
-                                  _vm._v(
-                                    "\n                                                      Anular\n                                                    "
-                                  )
-                                ]
+                                [_vm._v("Anular")]
                               )
                             ]
                           : _vm._e()
@@ -62867,9 +62925,7 @@ var render = function() {
                           ])
                         ]
                       ),
-                      _vm._v(
-                        "\n\n<<<<<<< HEAD\n                                        "
-                      ),
+                      _vm._v(" "),
                       _c("input", {
                         directives: [
                           {
@@ -62986,72 +63042,6 @@ var render = function() {
                           _c("i", { staticClass: "fa fa-search" }),
                           _vm._v(" search")
                         ]
-                      ),
-                      _vm._v(
-                        "\n\n=======\n                                        "
-                      ),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.search,
-                            expression: "search"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: {
-                          type: "text",
-                          placeholder: "Ingrese datos a Buscar"
-                        },
-                        domProps: { value: _vm.search },
-                        on: {
-                          keyup: function($event) {
-                            if (
-                              !$event.type.indexOf("key") &&
-                              _vm._k(
-                                $event.keyCode,
-                                "enter",
-                                13,
-                                $event.key,
-                                "Enter"
-                              )
-                            ) {
-                              return null
-                            }
-                            return _vm.listProduct(1, _vm.searchP, _vm.criteryP)
-                          },
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.search = $event.target.value
-                          }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-primary",
-                          attrs: { type: "submit" },
-                          on: {
-                            click: function($event) {
-                              return _vm.listProduct(
-                                1,
-                                _vm.searchP,
-                                _vm.criteryP
-                              )
-                            }
-                          }
-                        },
-                        [
-                          _c("i", { staticClass: "fa fa-search" }),
-                          _vm._v(" search")
-                        ]
-                      ),
-                      _vm._v(
-                        "\n>>>>>>> 8f6615b7f942feef575bfe49154fb62ed034e1a3\n                                    "
                       )
                     ])
                   ])
@@ -63366,7 +63356,7 @@ var staticRenderFns = [
     return _c("tr", [
       _c("td", [
         _vm._v(
-          "\n                                                    No hay articulos agredados\n                                                "
+          "\n                                            No hay articulos agredados\n                                        "
         )
       ])
     ])
@@ -63450,7 +63440,7 @@ var staticRenderFns = [
     return _c("tr", [
       _c("td", [
         _vm._v(
-          "\n                                                    No hay articulos agredados\n                                                "
+          "\n                                            No hay articulos agredados\n                                        "
         )
       ])
     ])
@@ -66048,6 +66038,33 @@ var render = function() {
                                             {
                                               name: "model",
                                               rawName: "v-model",
+                                              value: _vm.description,
+                                              expression: "description"
+                                            }
+                                          ],
+                                          attrs: {
+                                            type: "text",
+                                            placeholder: "Ingrede descripción"
+                                          },
+                                          domProps: { value: _vm.description },
+                                          on: {
+                                            input: function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.description =
+                                                $event.target.value
+                                            }
+                                          }
+                                        })
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("td", [
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
                                               value: detail.price,
                                               expression: "detail.price"
                                             }
@@ -66185,9 +66202,9 @@ var render = function() {
                                         _vm._v(
                                           "Bs " +
                                             _vm._s(
-                                              (_vm.totalTax = (
-                                                _vm.totalPartial * _vm.tax
-                                              ).toFixed(2))
+                                              (_vm.totalTax = _vm.calcTax.toFixed(
+                                                2
+                                              ))
                                             )
                                         )
                                       ])
@@ -66208,11 +66225,23 @@ var render = function() {
                                         _vm._v(
                                           "Bs " +
                                             _vm._s(
-                                              (_vm.total = _vm.calculateTotal)
+                                              (_vm.totalExent = _vm.calcExent.toFixed(
+                                                2
+                                              ))
                                             )
                                         )
-                                      ]),
-                                      _vm._v(" "),
+                                      ])
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "tr",
+                                    {
+                                      staticStyle: {
+                                        "background-color": "#CEECFS"
+                                      }
+                                    },
+                                    [
                                       _vm._m(6),
                                       _vm._v(" "),
                                       _c("td", [
@@ -66371,6 +66400,14 @@ var render = function() {
                                       _vm._v(" "),
                                       _c("td", {
                                         domProps: {
+                                          textContent: _vm._s(
+                                            detail.description
+                                          )
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c("td", {
+                                        domProps: {
                                           textContent: _vm._s(detail.price)
                                         }
                                       }),
@@ -66383,7 +66420,7 @@ var render = function() {
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
-                                          "\n                                            Bs " +
+                                          "\n                                            Bs: " +
                                             _vm._s(
                                               detail.price * detail.quantity
                                             ) +
@@ -66405,7 +66442,7 @@ var render = function() {
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
-                                          "Bs " +
+                                          "Bs: " +
                                             _vm._s(
                                               (_vm.totalPartial = _vm.calculateTotalPartial.toFixed(
                                                 2
@@ -66447,7 +66484,7 @@ var render = function() {
                                       _vm._m(17),
                                       _vm._v(" "),
                                       _c("td", [
-                                        _vm._v("Bs " + _vm._s(_vm.total))
+                                        _vm._v("Bs: " + _vm._s(_vm.total))
                                       ])
                                     ]
                                   )
@@ -66963,6 +67000,8 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Artículo")]),
         _vm._v(" "),
+        _c("th", [_vm._v("Descripción")]),
+        _vm._v(" "),
         _c("th", [_vm._v("Precio")]),
         _vm._v(" "),
         _c("th", [_vm._v("Cantidad")]),
@@ -66977,7 +67016,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "5", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "6", align: "right" } }, [
       _c("strong", [_vm._v("Sub-total: ")])
     ])
   },
@@ -66985,23 +67024,23 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "5", align: "right" } }, [
-      _c("strong", [_vm._v("Impuesto: ")])
+    return _c("td", { attrs: { colspan: "6", align: "right" } }, [
+      _c("strong", [_vm._v(" Total Impuesto: ")])
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "5", align: "right" } }, [
-      _c("strong", [_vm._v("Total: ")])
+    return _c("td", { attrs: { colspan: "6", align: "right" } }, [
+      _c("strong", [_vm._v("Exento: ")])
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "5", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "6", align: "right" } }, [
       _c("strong", [_vm._v("Total a Pagar: ")])
     ])
   },
@@ -67067,6 +67106,8 @@ var staticRenderFns = [
       _c("tr", [
         _c("th", [_vm._v("Artículo")]),
         _vm._v(" "),
+        _c("th", [_vm._v("Descripción")]),
+        _vm._v(" "),
         _c("th", [_vm._v("Precio")]),
         _vm._v(" "),
         _c("th", [_vm._v("Cantidad")]),
@@ -67079,7 +67120,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "3", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "4", align: "right" } }, [
       _c("strong", [_vm._v("Sub-total: ")])
     ])
   },
@@ -67087,7 +67128,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "3", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "4", align: "right" } }, [
       _c("strong", [_vm._v("Impuesto: ")])
     ])
   },
@@ -67095,7 +67136,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "3", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "4", align: "right" } }, [
       _c("strong", [_vm._v("Total: ")])
     ])
   },

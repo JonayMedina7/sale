@@ -17,7 +17,7 @@ class CreateDetailsalesTable extends Migration
             
             $table->bigIncrements('id');
             $table->integer('sale_id')->unsigned();
-            
+            $table->string('description', 256)->nullable();
             $table->integer('product_id')->unsigned();
             $table->integer('quantity');
             $table->decimal('price', 11, 2);

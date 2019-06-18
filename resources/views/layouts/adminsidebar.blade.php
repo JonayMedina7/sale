@@ -82,6 +82,9 @@
                     <li @click="menu=15" class="nav-item">
                         <a class="nav-link" href="#"><i class="icon-info"></i> Datos Empresa</a>
                     </li>
+                    <li @click="menu=16" class="nav-item">
+                        <a class="nav-link" href="#"><i class="icon-info"></i> I.v.a.</a>
+                    </li>
 
                     
                    

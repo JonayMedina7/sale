@@ -84,7 +84,7 @@ Route::group(['middleware' =>['auth']], function()
 		route::get('/sale/getHeader', 'SaleController@getHeader');
 		route::get('/sale/getDetail', 'SaleController@getDetail'); 
 		route::get('/sale/pdf/{id}', 'SaleController@pdf')->name('venta_pdf');
-		route::get('/sale/pdfw/{id}', 'SaleController@pdfw')->name('venta'); 
+		route::get('/sale/pdfw/{id}', 'SaleController@pdfw')->name('venta');
 
 		route::get('/product/listProductSale', 'ProductController@listProductSale');
 		route::get('/product/productSearchSale', 'ProductController@productSearchSale');
@@ -159,6 +159,8 @@ Route::group(['middleware' =>['auth']], function()
 		route::get('/sale/getDetail', 'SaleController@getDetail');
 		route::get('/sale/saleId', 'SaleController@saleId');
 		route::get('/sale/saleSearchRet', 'SaleController@saleSearchRet');
+		route::get('/sale/pdf/{id}', 'SaleController@pdf')->name('venta_pdf');
+		route::get('/sale/pdfw/{id}', 'SaleController@pdfw')->name('venta');
 
 		route::get('/quota', 'QuotaController@index');
 		route::post('/quota/register', 'QuotaController@store');
@@ -176,12 +178,26 @@ Route::group(['middleware' =>['auth']], function()
 		route::get('/retention/getDetail', 'RetentionController@getDetail');
 		route::put('/retention/update', 'RetentionController@update');
 		route::put('/retention/desactive', 'RetentionController@desactive');
+<<<<<<< HEAD
 		route::put('/retention/getDownload', 'RetentionController@getDownload');
 		route::get('/retention/pdf/{id}', 'RetentionController@pdf')->name('ventar');
 		route::get('/retention/pdfw/{id}', 'RetentionController@pdfw')->name('venta'); 
 		
 		route::get('/company', 'CompanyController@index');
 		route::get('/company', 'CompanyController@index');
+=======
+		route::get('/retention/pdf/{id}', 'RetentionController@pdf')->name('retencion');
+		route::get('/retention/pdfw/{id}', 'RetentionController@pdfw')->name('retencion'); 
+		
+		route::get('/company', 'CompanyController@index');
+		route::post('/company/register', 'CompanyController@store');
+		route::put('/company/update', 'CompanyController@update');
+
+		route::get('/tax', 'TaxController@index');
+		route::post('/tax/register', 'TaxController@store');
+		route::put('/tax/update', 'TaxController@update');
+		route::get('tax/searchTax', 'TaxController@searchTax');
+>>>>>>> ce4c7efdeb3a07b221449e951e39405b67ec470a
 	});
 	
 

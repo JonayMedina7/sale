@@ -2,18 +2,18 @@
 	<main class="main">
 		            <!-- Breadcrumb -->
 		            <ol class="breadcrumb">
-		                <li class="breadcrumb-item"><a href="/dashboard">Escritorio</a></li>
+		                <li class="breadcrumb-item"><a href="./dashboard">Escritorio</a></li>
 		            </ol>
 		            <div class="container-fluid">
 		                <!-- Ejemplo de tabla Listado -->
-		                <div class="card" v-if="arrayCompany.length">
+		                <div class="card" v-for="det in arrayCompany" :key="det.id" v-if="arrayCompany.length">
 		                    <div class="card-header">
 		                        
-		                        <button type="button" class="btn btn-success" @click="openModal('company','update')">
+		                        <button type="button" class="btn btn-success" @click="openModal('company','update', det)">
 		                            <i class="icon-plus"></i>&nbsp;&nbsp;Editar Datos de la Empresa
 		                        </button>
 		                    </div>
-		                    <div class="card-body" v-for="det in arrayCompany" :key="det.id">
+		                    <div class="card-body" >
                                 <div class="form-group row border">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -72,34 +72,50 @@
 		                        </div>
 		                        <div class="modal-body">
 		                            <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-		                                <div class="col-6">
-		                                    <label class=" form-control-label" for="name">Nombre de la Empresa</label>
-		                                    <input type="text" v-model="name" class="form-control" placeholder="Nombre de la Empresa">
-		                                </div>
-                                        <div class=" col-6">
-                                            <label class=" form-control-label" for="rif">Rif.:</label>
-                                            <div class="form-group">
-                                                <select name="type" v-model="type">
-                                                    <option value="j">J</option>
-                                                    <option value="g">G</option>
-                                                    <option value="c">V</option>
-                                                    <option value="c">Cedula</option>
-                                                </select>
-                                            </div>
+                                        <div v-if="actionType==1">
                                             <div class="col-6">
-                                                <input type="number" name="rif" class="form-control" placeholder="Ingrese Rif." v-model="rif" maxlength="9" minlength="6">
+                                                <label class=" form-control-label" for="name">Nombre de la Empresa</label>
+                                                <input type="text" v-model="name" class="form-control" placeholder="Nombre de la Empresa">
+                                            </div>
+                                            <div class=" col-12">
+                                                <label class=" form-control-label" for="rif">Rif.:</label>
+                                                <div class="form-group">
+
+                                                    <select name="type" v-model="type" class="form-group">
+                                                        <option value="j" selected>J</option>
+                                                        <option value="g">G</option>
+                                                        <option value="c">V</option>
+                                                        <option value="c">Cedula</option>
+                                                    </select>
+                                                    <input type="number" name="rif" class=" form-group" placeholder="Ingrese Rif." v-model="rif" maxlength="9" minlength="6">
+                                                </div>
+                                            </div>    
+                                        </div>
+		                                
+                                        <div  v-if="actionType==2">
+                                            <div class="col-6">
+                                                <label class=" form-control-label" for="name">Nombre de la Empresa</label>
+                                                <input type="text" readonly v-model="name" class="form-control" placeholder="Nombre de la Empresa">
+                                            </div>
+                                            <div class=" col-12">
+                                                <label class=" form-control-label" for="rif">Rif.:</label>
+                                                <div class="form-group">
+
+                                                    <span class="upper" v-text="type"></span>
+                                                    <input type="number" name="rif" class=" form-group" readonly v-model="rif">
+                                                </div>
                                             </div>
                                         </div>
-		                                <div class="form-group row">
-		                                    <label class="col-md-12 form-control-label" for="address">Dirección</label>
+		                                <div class="col-md-12">
+		                                    <label class="form-control-label" for="address">Dirección</label>
 		                                    <input type="text" v-model="address" class="form-control" placeholder="Ingrese dirección de la empresa">
 		                                </div>
-                                        <div class="form-group row">
-                                            <label class="col-md-3 form-control-label" for="email">Correo Electronico</label>
+                                        <div class="form-group col-md-6">
+                                            <label class=" form-control-label" for="email">Correo Electronico</label>
                                             <input type="text" v-model="email" class="form-control" placeholder="Ingrese Email de la empresa">
                                         </div>
-                                        <div class="form-group row">
-                                            <label class="col-md-3 form-control-label" for="phone">Telefono</label>
+                                        <div class="form-group col-md-6">
+                                            <label class="form-control-label" for="phone">Telefono</label>
                                             <input type="text" v-model="phone" class="form-control" placeholder="Ingrese Telefono de la empresa">
                                         </div>
 		                            </form>
@@ -134,7 +150,7 @@
 		                            
 		                        </div>
 		                    </div>
-		                    <div v-else class="modal-content">
+		                    <div  class="modal-content">
 		                        <div class="modal-header">
 		                            <h4 class="modal-title">Activar</h4>
 		                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -218,7 +234,7 @@
 
             	}).then(function(response) {
                     me.closeModal();
-                    me.listCompany(1,'','name');
+                    me.listCompany();
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -241,7 +257,7 @@
 
             	}).then(function(response) {
                     me.closeModal();
-                    me.listCompany(1,'','name');
+                    me.listCompany();
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -275,7 +291,7 @@
                     'id': this.id,
                 }).then(function (response) {
                     me.closeModal();
-                    me.listCompany(1,'', 'name');
+                    me.listCompany();
                 })
                 .catch(function (error) {
                    console.log(error); 
@@ -288,7 +304,7 @@
                     'id': this.id,
                 }).then(function (response) {
                     me.closeModal();
-                    me.listCompany(1,'', 'name');
+                    me.listCompany();
                 }).catch(function (error) {
                     console.log(error); 
                 });
@@ -315,7 +331,7 @@
                         switch(accion){
                             case 'register':
                             {
-                                this.titleModal    = 'Registrar Categoria';
+                                this.titleModal    = 'Registrar Empresa';
                                 this.modal          = 1;
                                 this.actionType     = 1;
 
@@ -329,7 +345,7 @@
                             }
                             case 'update':
                             {
-                                this.titleModal ='Actualizar Cliente';
+                                this.titleModal ='Actualizar Datos';
                                 this.modal      = 1;
                                 this.actionType     = 2;
                                 this.id  = data['id'];
@@ -361,7 +377,7 @@
             }
 		},
 		mounted(){
-			this.listCompany(1,this.search,this.name);
+			this.listCompany();
 		}
 
 	};
