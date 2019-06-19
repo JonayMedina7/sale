@@ -96,7 +96,7 @@ class SaleController extends Controller
     {
         $sale = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
         ->join('users', 'sales.user_id', '=', 'users.id')
-        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'sales.exempt', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
+        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.exempt', 'sales.total', 'sales.status', 'sales.exempt', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
         ->where('sales.id','=',$id)->take(1)->get();
 
          $details = Detailsale::join('products', 'detailsales.product_id', '=', 'products.id')

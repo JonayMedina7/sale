@@ -6,7 +6,7 @@ use App\Retention;
 use App\Purchase;
 use App\Company;
 use Carbon\Carbon;
-use \Illuminate\Http\Response;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -128,11 +128,16 @@ class RetentionController extends Controller
             ->join('users', 'purchases.user_id', '=', 'users.id')
             ->join('clients', 'purchases.provider_id', '=', 'clients.id')
             ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.status', 'purchases.user_id', 'purchases.provider_id', 'purchases.voucher', 'purchases.voucher_num as purchase_num', 'purchases.total as totalp', 'users.user', 'clients.name', 'clients.type', 'clients.rif')->whereBetween('retentions.date', [$fecha1, $fecha2])->get();
-    
-     foreach ($usuarios as $log) {
-      $content = $log->id;
-      echo $content;
-    }
+    // $content = '';
+    //  foreach ($usuarios as $log) {
+    //   $content .= $log->id;
+    //   // echo $content;
+    // }
+    // for ($i=0; $i < count($usuarios) ; $i++) { 
+    //     $content = implode(",", $usuarios);
+        
+    // }
+    $content = implode(",", $usuarios);
 
     // file name that will be used in the download
     $fileName = "logs.txt";
@@ -142,9 +147,7 @@ class RetentionController extends Controller
       'Content-Length' => $content
     ];
     
-    $user = 'hola';
-    
-    return Storage::download('logs.txt', $fileName, $headers);
+    return Storage::download('logs.txt', 'logs.txt', $headers);
 
     }
   

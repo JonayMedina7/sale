@@ -195,7 +195,7 @@
                                                 </td>
                                                 <td v-text="detail.product"></td>
                                                 <td>
-                                                    <input v-model="detail.description" type="text" placeholder="Ingrede descripción">
+                                                    <input v-model="detail.description" type="text">
                                                 </td>
                                                 <td>
                                                     <input v-model="detail.price" type="number" class="form-control" name="">
@@ -570,7 +570,7 @@
                         result2 = result2 +((this.arrayDetail[i].price*this.arrayDetail[i].quantity)*divisor)
                     }
                 }
-                console.log(divisor);
+                // console.log(divisor);
                 return result2;
             },
             // FUNCIÓN PARA CALCULAR EL MONTO EXENTO
@@ -770,7 +770,8 @@
                             me.quantity=0;
                             me.price=0.0;
                             me.stock=0;
-                            me.tax=''; 
+                            me.tax='';
+                            me.description= ''; 
                         }
                     }
                 } 
@@ -790,7 +791,7 @@
                         product_id: data['id'],
                         product: data['name'],
                         quantity: 1,
-                        description: data['description'],
+                        description: '',
                         price: data['price_sell'],
                         stock: data['stock'],
                         tax: data['tax']
@@ -892,8 +893,6 @@
 
                 if (me.arrayDetail.length<=0) me.errorSmsListS.push("Por favor ingrese productos a la compra");
 
-                if (me.arrayDetail.length<=0) me.errorSmsListS.push("Ingrese productos");
-
                 if (me.errorSmsListS.length) me.errorSmsS = 1;
                     if (me.errorSmsListS.length >= 1) {
                         Swal.fire({
@@ -923,6 +922,7 @@
                 me.product='';
                 me.quantity=0;
                 me.price=0.0;
+                me.description='';
                 me.arrayDetail=[];
 
             },
