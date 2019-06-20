@@ -47,11 +47,9 @@
                                             <th>Nombre Usuario</th>
                                             <th>Proveedor</th>
                                             <th>Tipo de comprobante</th>
-                                            
                                             <th>Número comprobante</th>
                                             <th>Fecha Hora</th>
                                             <th>Total</th>
-                                            
                                             <th>Estado</th>
                                         </tr>
                                     </thead>
@@ -61,20 +59,17 @@
                                                 <button type="button" class="btn btn-success btn-sm" @click="showPurchase(purchase.id)">
                                                   Detalles
                                                 </button> &nbsp;
-
-                                                
-                                                
                                             </td>
                                             <td v-text="purchase.user"></td>
                                             <td v-text="purchase.name"></td>
+
                                             <td v-if="purchase.voucher=='bill'">Factura</td>
                                             <td v-else-if="purchase.voucher=='note'">Vale</td>
                                             <td v-else-if="purchase.voucher=='credit'">Nota de Credito</td>
-                                           
+
                                             <td v-text="purchase.voucher_num"></td>
                                             <td v-text="purchase.date"></td>
                                             <td v-text="purchase.total"></td>
-                                         
                                             <td v-text="purchase.status"></td>                                     
                                         </tr>
                                         
@@ -114,10 +109,6 @@
                                             
                                         </v-select>
                                     </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="">Impuesto(*)</label>
-                                    <input type="text" class="form-control" v-model="tax" name="" >
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
@@ -208,7 +199,11 @@
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="4" align="right"><strong>Total Impuesto: </strong></td>
-                                                <td>Bs {{ totalTax=((totalPartial)*tax).toFixed(2) }}</td>
+                                                <td>Bs {{ totalTax=(calcTax).toFixed(2) }}</td>
+                                            </tr>
+                                            <tr style="background-color: #CEECFS;">
+                                                <td colspan="4" align="right"><strong>Exento: </strong></td>
+                                                <td>Bs {{ exempt=(calcExempt).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="4" align="right"><strong>Total a Pagar: </strong></td>
@@ -295,11 +290,15 @@
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="3" align="right"><strong>Total Parcial: </strong></td>
-                                                <td>Bs {{ totalPartial=(total-totalTax).toFixed(2) }}</td>
+                                                <td>Bs {{ totalPartial=(total-tax_mount).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="3" align="right"><strong>Total Impuesto: </strong></td>
-                                                <td>Bs {{ totalTax=((total*tax)).toFixed(2) }}</td>
+                                                <td>Bs {{ tax_mount }}</td>
+                                            </tr>
+                                            <tr style="background-color: #CEECFS;">
+                                                <td colspan="3" align="right"><strong>Total Exento: </strong></td>
+                                                <td>Bs {{ exempt }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="3" align="right"><strong>Total a Pagar: </strong></td>
@@ -331,7 +330,7 @@
                 </div>
                 <!-- Fin ejemplo de tabla Listado -->
             </div>
-            <!--Inicio del modal agregar/actualizar-->
+            <!--Inicio del modal agregar Productos-->
             <div class="modal fade" tabindex="-1" :class="{'show' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog modal-primary modal-lg" role="document">
                     <div class="modal-content">
@@ -350,9 +349,6 @@
                                           <option value="code">Codigo</option>
                                         </select>
 
-                                        <input type="text" v-model="search" @keyup.enter="listProduct(searchP,criteryP)" class="form-control" placeholder="Ingrese datos a Buscar">
-                                        <button type="submit" @click="listProduct(searchP,criteryP)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
-
                                         <input type="text" v-model="search" @keyup.enter="listProduct(1,searchP,criteryP)" class="form-control" placeholder="Ingrese datos a Buscar">
                                         <button type="submit" @click="listProduct(1,searchP,criteryP)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
                                     </div>
@@ -366,9 +362,7 @@
                                             <th>Código</th>
                                             <th>Nombre</th>
                                             <th>Categoría</th>
-                                            <th>Precio Venta</th>
                                             <th>Stock</th>
-                                            
                                             <th>Estado</th>
                                         </tr>
                                     </thead>
@@ -382,7 +376,6 @@
                                             <td v-text="product.code"></td>
                                             <td v-text="product.name"></td>
                                             <td v-text="product.category_name"></td>
-                                            <td v-text="product.price_sell"></td>
                                             <td v-text="product.stock"></td>
                                             <td>
                                                 <div v-if="product.condition">
@@ -445,7 +438,7 @@
                 voucher_num : '',
                 voucher_serie : '',
                 date : '',
-                tax : 0.16,
+                tax : 0.0,
                 tax_mount:0.0,
                 arrayPurchase : [],
                 arrayDetail : [],
@@ -460,6 +453,7 @@
                 total: 0.0,
                 totalTax: 0.0,
                 totalPartial: 0.0,
+                totalExempt: 0.0,
                 modal1 : 0,
                 modal : 0,
                 titleModal : '',
@@ -511,7 +505,7 @@
                 }
                 return pagesArray;
             },
-
+            // CALCULA EL TOTAL DEL MONTO DE LA FACTURA
             calculateTotalPartial: function(){
                 var result=0.0;
                 for (var i = 0; i <this.arrayDetail.length; i++) {
@@ -519,6 +513,31 @@
                 }
                 return result;
             },
+            // FUNCIÓN PARA CALCULAR EL IVA
+            calcTax: function (){
+                var result2 = 0.0;
+                var divisor = 0.0;
+                for (var i = 0; i < this.arrayDetail.length; i++) {
+                    if (this.arrayDetail[i].tax > 0) {
+                        divisor = (this.arrayDetail[i].tax/100)
+                        
+                        result2 = result2 +((this.arrayDetail[i].price*this.arrayDetail[i].quantity)*divisor)
+                    }
+                }
+                // console.log(divisor);
+                return result2;
+            },
+            // FUNCIÓN PARA CALCULAR EL MONTO EXENTO
+            calcExempt: function (){
+                var result3 = 0.0;
+                for (var i = 0; i < this.arrayDetail.length; i++) {
+                    if (this.arrayDetail[i].tax <= 0) {
+                        result3 = result3 +(this.arrayDetail[i].price*this.arrayDetail[i].quantity)
+                    }
+                }
+                return result3;
+            },
+            // CALCULAR EL TOTAL DE LA FACTURA
             calculateTotal: function(){
                 return parseFloat(this.totalTax) + parseFloat(this.totalPartial);
             }
@@ -551,15 +570,14 @@
                     var response = response.data; 
                     me.arrayPurchaseTemp = response.purchase;
                     me.purchase_id =id;
-                    console.log(me.purchase_id);
                     me.provider = me.arrayPurchaseTemp[0]['name'];
                     me.voucher = me.arrayPurchaseTemp[0]['voucher'];
                     me.voucher_serie = me.arrayPurchaseTemp[0]['voucher_serie'];
                     me.voucher_num = me.arrayPurchaseTemp[0]['voucher_num'];
-                    me.tax = me.arrayPurchaseTemp[0]['tax'];
+                    me.tax_mount = me.arrayPurchaseTemp[0]['tax_mount'];
                     me.total = me.arrayPurchaseTemp[0]['total'];
+                    me.exempt = me.arrayPurchaseTemp[0]['exempt'];
                     me.status = me.arrayPurchaseTemp[0]['status'];
-                    console.log(me.status);
 
                 })
                 .catch(function (error) {
@@ -584,9 +602,7 @@
 
                 var url= 'provider/providerSelect?filter='+search;
                 axios.get(url).then(function(response) {
-                    var response = response.data; 
-                    /*console.log(response);*/
-
+                    var response = response.data;
                     me.arrayProvider = response.providers;
                     loading(false)
                 })
@@ -663,13 +679,15 @@
                         product_id: me.product_id,
                         product: me.product,
                         quantity: me.quantity,
-                        price: me.price
+                        price: me.price,
+                        tax: me.tax
                         });
                         me.code='';
                         me.product_id=0;
                         me.product="";
                         me.quantity=0;
                         me.price=0; 
+                        me.tax=0.0;
                     }
                 }
             },
@@ -688,6 +706,7 @@
                     me.arrayDetail.push({
                         product_id: data['id'],
                         product: data['name'],
+                        tax: data['tax'],
                         quantity: 1,
                         price: 1
                     });
@@ -724,6 +743,7 @@
                     'voucher_serie': this.voucher_serie,
                     'tax': this.tax,
                     'tax_mount': this.totalTax,
+                    'exempt': this.exempt,
                     'total': this.total,
                     'data': this.arrayDetail
                     
@@ -736,11 +756,12 @@
                     me.product_id=0;
                     me.voucher_num='';
                     me.voucher_serie='';
-                    me.tax=0.16;
+                    me.tax=0.0;
                     me.totalTax=0.0;
                     me.tax_mount=0.0;
                     me.total=0.0;
                     me.product='';
+                    me.exempt = 0.0;
                     me.quantity=0;
                     me.price=0;
                     me.arrayDetail=[];
@@ -761,8 +782,6 @@
                 if (this.voucher_num == 0) this.errorSmsListP.push("Ingrese un numero de Factura o nota de credito");
 
                 if (this.arrayDetail.length<=0) this.errorSmsListP.push("Por favor ingrese productos a la compra");
-
-                if (!this.tax) this.errorSmsListP.push("ingrese un impuesto valido");
 
                 if (this.errorSmsListP.length) this.errorSmsP = 1;
                 /*console.log(this.errorSmsListP);*/
@@ -790,13 +809,14 @@
                 me.product_id=0;
                 me.voucher_num='';
                 me.voucher_serie='';
-                me.tax=0.16;
+                me.tax=0.0;
                 me.total=0.0;
                 me.product='';
                 me.quantity=0;
                 me.price=0;
+                me.totalTax = 0.0;
+                me.exempt = 0.0;
                 me.arrayDetail=[];
-
             },
             hideDetail(){
                 this.list=1;

@@ -19,12 +19,12 @@ class PurchaseController extends Controller
         if ($search=='') {
             $purchases = Purchase::join('clients', 'purchases.provider_id', '=', 'clients.id')
             ->join('users', 'purchases.user_id', '=', 'users.id')
-            ->select('purchases.id', 'purchases.voucher', 'purchases.voucher_serie', 'purchases.voucher_num', 'purchases.date', 'purchases.tax', 'purchases.tax_mount', 'purchases.total', 'purchases.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
+            ->select('purchases.id', 'purchases.voucher', 'purchases.voucher_serie', 'purchases.voucher_num', 'purchases.date', 'purchases.tax_mount', 'purchases.exempt', 'purchases.total', 'purchases.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
             ->orderBy('purchases.id', 'desc')->paginate(10);
         } else {
             $purchases = Purchase::join('clients', 'purchases.provider_id', '=', 'clients.id')
             ->join('users', 'purchases.user_id', '=', 'users.id')
-            ->select('purchases.id', 'purchases.voucher', 'purchases.voucher_serie', 'purchases.voucher_num', 'purchases.date', 'purchases.tax', 'purchases.tax_mount', 'purchases.total', 'purchases.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
+            ->select('purchases.id', 'purchases.voucher', 'purchases.voucher_serie', 'purchases.voucher_num', 'purchases.date', 'purchases.tax_mount', 'purchases.exempt', 'purchases.total', 'purchases.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
             ->where('purchases.'.$criterion, 'like', '%'. $search . '%')->orderBy('purchases.id', 'desc')->paginate(10);
         }
 
@@ -49,7 +49,7 @@ class PurchaseController extends Controller
         
         $purchase = Purchase::join('clients', 'purchases.provider_id', '=', 'clients.id')
         ->join('users', 'purchases.user_id', '=', 'users.id')
-        ->select('purchases.id', 'purchases.voucher', 'purchases.voucher_serie', 'purchases.voucher_num', 'purchases.date', 'purchases.tax', 'purchases.tax_mount', 'purchases.total', 'purchases.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
+        ->select('purchases.id', 'purchases.voucher', 'purchases.voucher_serie', 'purchases.voucher_num', 'purchases.date', 'purchases.exempt', 'purchases.tax_mount', 'purchases.total', 'purchases.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
         ->where('purchases.id','=',$id)
         ->orderBy('purchases.id', 'desc')->take(1)->get();
         
@@ -92,13 +92,11 @@ class PurchaseController extends Controller
         $purchase->voucher_serie = $request->voucher_serie;
         $purchase->voucher_num = $request->voucher_num;
         $purchase->date = $mytime->toDateString();
-        
-        $purchase->tax = $request->tax;
+        $purchase->exempt = $request->exempt;
         $purchase->tax_mount = $request->tax_mount;
         $purchase->total = $request->total;
         $purchase->status = 'Registrado';
         $purchase->ret_id = 0;
-        $purchase->ret_num = 0;
         $purchase->save();            
 
         $details = $request->data; // Array de detalles de compra
@@ -144,7 +142,7 @@ class PurchaseController extends Controller
         $filter = $request->filter;
         $id = $request->id;
         $purchases = Purchase::where('voucher_num','=', $filter)
-        ->select('id','voucher', 'voucher_num as purchase_num', 'total as totalp', 'tax', 'tax_mount',)
+        ->select('id','voucher', 'voucher_num as purchase_num', 'total as totalp', 'exempt', 'tax_mount')
         ->where('ret_id','=', '0' )
         ->where('provider_id', '=', $id)
         
@@ -160,13 +158,13 @@ class PurchaseController extends Controller
         $search = $request->search;
         $id = $request->id;
         if ($search=='') {
-            $purchases = Purchase::select('id','voucher', 'voucher_num as purchase_num', 'total as totalp', 'tax', 'tax_mount', 'date as datep')
+            $purchases = Purchase::select('id','voucher', 'voucher_num as purchase_num', 'total as totalp', 'exempt', 'tax_mount', 'date as datep')
             ->where('ret_id','=', '0' )
             ->where('provider_id', '=', $id)
             ->where('status', '=', 'Registrado')
             ->orderBy('id', 'desc')->paginate(5);
         } else {
-            $purchases = Purchase::select('id','voucher', 'voucher_num as purchase_num', 'total as totalp', 'tax', 'tax_mount',)
+            $purchases = Purchase::select('id','voucher', 'voucher_num as purchase_num', 'total as totalp', 'exempt', 'tax_mount',)
             ->where('voucher_num', 'like', '%'.$search. '%')
             ->where('ret_id','=', '0' )
             ->where('provider_id', '=', $id)

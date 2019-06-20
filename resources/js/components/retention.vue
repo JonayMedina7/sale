@@ -54,7 +54,6 @@
                                             <th>Fecha Hora</th>
                                             <th>Total Retención</th>
                                             <th>Total Factura</th>
-                                            <th>Impuesto</th>
                                             <th>Estado</th>
                                         </tr>
                                     </thead>
@@ -84,7 +83,6 @@
                                             <td v-text="ret.date"></td>
                                             <td v-text="ret.total"></td>
                                             <td v-text="ret.totalp"></td>
-                                            <td v-text="ret.tax"></td>
                                             <td v-text="ret.status"></td>                                     
                                         </tr>
                                         
@@ -170,10 +168,6 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="">Impuesto(*)</label>
-                                    <input type="text" class="form-control" v-model="tax" name="" >
-                                </div>
-                                <div class="col-md-3">
                                     <label for=""> % Retenido</label>
                                     <input type="text" class="form-control" v-model="retention" name="" >
                                 </div>
@@ -229,9 +223,9 @@
                                                 <th>Opciones</th>
                                                 <th>Numero de documento</th>
                                                 <th>Documento</th>
-                                                <th>I.V.A</th>
                                                 <th>Base Imponible</th>
                                                 <th>Total I.V.A</th>
+                                                <th>Total Exento</th>
                                                 <th>Monto Retenido</th>
                                             </tr>
                                         </thead>
@@ -258,6 +252,10 @@
                                                 <td>
                                                     <input v-model="detail.tax_mount" disabled type="number"  class="form-control" name="">
                                                 </td>
+                                                <td>
+                                                    <input v-model="detail.exempt" disabled type="number"  class="form-control" name="">
+                                                </td>
+
                                                 <td>Bs.:
                                                     {{ ret_amount = (detail.tax_mount*ret_val) }}
 
@@ -488,7 +486,7 @@
                 voucher: '',
                 date : '',
                 datep: '',
-                tax : 0.16,
+                exempt : 0.0,
                 tax_mount: 0.0,
                 ret_amount: 0.0,
                 total : 0.0,
@@ -633,7 +631,7 @@
 
                     me.voucher_num = me.arrayRetTemp[0]['voucher_num'];
                     me.date = me.arrayRetTemp[0]['date'];
-                    me.tax = me.arrayRetTemp[0]['tax'];
+                    me.exempt = me.arrayRetTemp[0]['exempt'];
                     me.tax_mount = me.arrayRetTemp[0]['tax_mount'];
                     me.total = me.arrayRetTemp[0]['total'];
                     me.status = me.arrayRetTemp[0]['status'];
@@ -671,7 +669,7 @@
                 me.datep='';
                 me.total=0;
                 me.totalp=0;
-                me.tax='';
+                me.exempt=0.0;
                 me.ret_val=0;
                 me.tax_mount=0.0;
                 me.provider_id=0;
@@ -741,7 +739,7 @@
                         me.purchase_num = me.arrayPurchase[0]['purchase_num'];
                         me.voucher = me.arrayPurchase[0]['voucher'];
                         me.totalp = me.arrayPurchase[0]['totalp'];
-                        me.tax = me.arrayPurchase[0]['tax'];
+                        me.exempt = me.arrayPurchase[0]['exempt'];
                         me.tax_mount = me.arrayPurchase[0]['tax_mount'];
                         me.datep = me.arrayPurchase[0]['datep'];
                     } else {
@@ -784,14 +782,14 @@
                         purchase_num: me.purchase_num,
                         voucher: me.voucher,
                         totalp: me.totalp,
-                        tax: me.tax,
+                        exempt: me.exempt,
                         tax_mount: me.tax_mount
                     });
                     me.purchase_id=0;
                     me.purchase_num='';
                     me.voucher='';
                     me.totalp=0;
-                    me.tax=0.16;
+                    me.exempt=0.0;
                     me.tax_mount= 0.0;
                 }
             },
@@ -810,7 +808,7 @@
                         purchase_num: data['purchase_num'],
                         voucher: data['voucher'],
                         totalp: data['totalp'],
-                        tax: data['tax'],
+                        exempt: data['exempt'],
                         tax_mount: data['tax_mount'],
                         datep: data['datep']
                     });
@@ -851,7 +849,7 @@
                 let me = this;
                 axios.post('retention/register', {
                     'voucher_num':this.voucher_num,
-                    'tax':this.tax,
+                    'exempt':this.exempt,
                     'total': this.totalPartial,
                     'data': this.arrayDetailr
                 }).then(function(response){
@@ -861,7 +859,7 @@
                     me.datep='';
                     me.total=0;
                     me.totalp=0;
-                    me.tax=0.16;
+                    me.exempt=0.0;
                     me.ret_val=0;
                     me.tax_mount=0.0;
                     me.provider_id=0;
@@ -903,9 +901,6 @@
                 // if (me.voucher_num == 0) me.errorSmsListR.push("Ingrese un numero de Factura o nota de crédito");
 
                 if (me.arrayDetailr.length<=0) me.errorSmsListR.push("Por favor ingrese Facturas a retener");
-
-                if (!me.tax) me.errorSmsListR.push("ingrese un impuesto valido");
-
 
                 if (me.errorSmsListR.length) me.errorSmsR = 1;
                 if (this.errorSmsListR.length >= 1) {
