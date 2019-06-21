@@ -6,7 +6,7 @@
     <title>Reporte de venta</title>
     <style>
         @page {
-            margin: 50px 20px 40px 20px !important;
+            margin: 50px 40px 40px 20px !important;
             padding: 0px 0px 0px 0px !important;
         }
         body {
@@ -92,7 +92,7 @@
         /*height: 60%;*/
         /*overflow: auto;*/
         }
-        #facarticulo td{
+        #facarticulo th, #facarticulo td{
              border-left: 1px solid black;
              font-size: 11px;
         }
@@ -128,7 +128,7 @@
         #footer {
             
             /*display: inline-block;*/
-            padding: 2px 10px 0 22px;
+            padding: 0px 10px 0 22px;
             float: right;
             text-align: right;
             /*background-color:#cecece;*/
@@ -142,7 +142,7 @@
         #footer2 {
             float: left;
             /*display: inline-block;*/
-            padding: 6px 0px 0 12px;
+            padding: 0px 0px 0 12px;
             font-size: 13px;
             width: 60%;
             
@@ -211,7 +211,7 @@
                            
                         </tr>
                         <tr>
-                            <td colspan="2" ><p ><b>Rif/C.I.: </b>{{ $s->rif }}</p></td>
+                            <td colspan="2" ><p ><b>Rif/C.I.: </b>{{ strtoupper($s->type.$s->rif) }}</p></td>
                             <td colspan="2" ><p ><b>Telefono: </b>{{ $s->phone }}</p></td>
                             <td colspan="2" ><p ><b>Email: </b>{{ strtoupper($s->email) }}</p></td>
                         </tr>
@@ -231,10 +231,10 @@
                         <tr>
                             
                             <th style="text-align: center; width: 5%;">CANT</th>
-                            <th style="text-align: center; width: 30%;">PRODUCTO</th>
-                            <th style="text-align: center; width: 43%;">DESCRIPCIÓN</th>
-                            <th style="text-align: right; width: 12%;">PRECIO UNIT</th>
-                            <th style="text-align: right; width: 15%;">PRECIO TOTAL</th>
+                            <th style="text-align: center; width: 65%;">PRODUCTO</th>
+                            
+                            <th style="text-align: center; width: 16%;">PRECIO UNITARIO</th>
+                            <th style="text-align: center; width: 14%;">PRECIO TOTAL</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -242,10 +242,15 @@
                             
                         <tr>
                             <td style="text-align: center;">{{ $d->quantity }}</td>
+
+                            @if ($d->description=='')
                             <td style="text-align: center;">{{ strtoupper($d->product) }}</td>
-                            <td style="text-align: center;">{{ strtoupper($d->description) }}</td>
-                            <td style="text-align: right;">{{ $d->price }}</td>
-                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                            @elseif ($d->description!='')
+                            <td style="text-align: center;">{{ strtoupper($d->product) }}&nbsp;<b>({{ strtoupper($d->description) }})<b></td>
+                             @endif
+
+                            <td style="text-align: right;">{{ number_format($d->price, 2, ',', '.') }}</td>
+                            <td style="text-align: right;">{{ number_format($d->quantity*$d->price, 2, ',', '.') }}</td>
                         </tr>
                         
 
@@ -255,7 +260,7 @@
                         <tr class="trfill">
                             <td style="text-align: center;">I</td>
                             <td style="text-align: center;">I</td>
-                            <td style="text-align: center;">I</td>
+
                             <td style="text-align: right;">I</td>
                             <td style="text-align: right;">I</td>
                         </tr>
@@ -278,10 +283,11 @@
             <div id="footer">
                 <div class="totals">
                     @foreach ($sale as $s)
-                    <p>SUBTOTAL Bs: {{ ' '.round($s->total-$s->tax_mount,2) }}</p>
-                    <p>EXENTO Bs: {{ ' '.round($s->exempt) }}</p>
-                    <p>IVA Bs: {{ ' '.round($s->tax_mount,2) }}</p>
-                    <p id="total">TOTAL Bs: {{ ' '.$s->total }}</p>
+                    <p>SUBTOTAL Bs: {{ number_format($s->total-$s->tax_mount, 2, ',', '.') }}</p>
+                    <p>EXENTO Bs: {{ number_format($s->exempt, 2, ',', '.') }}</p>
+                    <p>BASE IMPONIBLE BS: {{ number_format(($s->total-$s->tax_mount)-$s->exempt, 2, ',', '.') }} </p>
+                    <p>I.V.A. 16% Bs: {{ number_format($s->tax_mount, 2, ',', '.') }}</p>
+                    <p id="total">TOTAL Bs: {{ ' '.number_format($s->total), 2, ',', '.' }}</p>
                     @endforeach
                 </div>
             </div>
