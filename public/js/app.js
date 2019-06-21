@@ -8987,6 +8987,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -9002,7 +9006,7 @@ __webpack_require__.r(__webpack_exports__);
       voucher: '',
       date: '',
       datep: '',
-      tax: 0.16,
+      exempt: 0.0,
       tax_mount: 0.0,
       ret_amount: 0.0,
       total: 0.0,
@@ -9140,7 +9144,7 @@ __webpack_require__.r(__webpack_exports__);
         me.arrayRetTemp = responseR.retention;
         me.voucher_num = me.arrayRetTemp[0]['voucher_num'];
         me.date = me.arrayRetTemp[0]['date'];
-        me.tax = me.arrayRetTemp[0]['tax'];
+        me.exempt = me.arrayRetTemp[0]['exempt'];
         me.tax_mount = me.arrayRetTemp[0]['tax_mount'];
         me.total = me.arrayRetTemp[0]['total'];
         me.status = me.arrayRetTemp[0]['status'];
@@ -9172,7 +9176,7 @@ __webpack_require__.r(__webpack_exports__);
       me.datep = '';
       me.total = 0;
       me.totalp = 0;
-      me.tax = '';
+      me.exempt = 0.0;
       me.ret_val = 0;
       me.tax_mount = 0.0;
       me.provider_id = 0;
@@ -9236,7 +9240,7 @@ __webpack_require__.r(__webpack_exports__);
           me.purchase_num = me.arrayPurchase[0]['purchase_num'];
           me.voucher = me.arrayPurchase[0]['voucher'];
           me.totalp = me.arrayPurchase[0]['totalp'];
-          me.tax = me.arrayPurchase[0]['tax'];
+          me.exempt = me.arrayPurchase[0]['exempt'];
           me.tax_mount = me.arrayPurchase[0]['tax_mount'];
           me.datep = me.arrayPurchase[0]['datep'];
         } else {
@@ -9277,14 +9281,14 @@ __webpack_require__.r(__webpack_exports__);
           purchase_num: me.purchase_num,
           voucher: me.voucher,
           totalp: me.totalp,
-          tax: me.tax,
+          exempt: me.exempt,
           tax_mount: me.tax_mount
         });
         me.purchase_id = 0;
         me.purchase_num = '';
         me.voucher = '';
         me.totalp = 0;
-        me.tax = 0.16;
+        me.exempt = 0.0;
         me.tax_mount = 0.0;
       }
     },
@@ -9304,7 +9308,7 @@ __webpack_require__.r(__webpack_exports__);
           purchase_num: data['purchase_num'],
           voucher: data['voucher'],
           totalp: data['totalp'],
-          tax: data['tax'],
+          exempt: data['exempt'],
           tax_mount: data['tax_mount'],
           datep: data['datep']
         });
@@ -9348,7 +9352,7 @@ __webpack_require__.r(__webpack_exports__);
       var me = this;
       axios.post('retention/register', {
         'voucher_num': this.voucher_num,
-        'tax': this.tax,
+        'exempt': this.exempt,
         'total': this.totalPartial,
         'data': this.arrayDetailr
       }).then(function (response) {
@@ -9358,7 +9362,7 @@ __webpack_require__.r(__webpack_exports__);
         me.datep = '';
         me.total = 0;
         me.totalp = 0;
-        me.tax = 0.16;
+        me.exempt = 0.0;
         me.ret_val = 0;
         me.tax_mount = 0.0;
         me.provider_id = 0;
@@ -9390,7 +9394,6 @@ __webpack_require__.r(__webpack_exports__);
       if (me.provider_id == 0) me.errorSmsListR.push("Por favor Seleccione un cliente"); // if (me.voucher_num == 0) me.errorSmsListR.push("Ingrese un numero de Factura o nota de crédito");
 
       if (me.arrayDetailr.length <= 0) me.errorSmsListR.push("Por favor ingrese Facturas a retener");
-      if (!me.tax) me.errorSmsListR.push("ingrese un impuesto valido");
       if (me.errorSmsListR.length) me.errorSmsR = 1;
 
       if (this.errorSmsListR.length >= 1) {
@@ -68947,6 +68950,38 @@ var render = function() {
                                         ]),
                                         _vm._v(" "),
                                         _c("td", [
+                                          _c("input", {
+                                            directives: [
+                                              {
+                                                name: "model",
+                                                rawName: "v-model",
+                                                value: detail.exempt,
+                                                expression: "detail.exempt"
+                                              }
+                                            ],
+                                            staticClass: "form-control",
+                                            attrs: {
+                                              disabled: "",
+                                              type: "number",
+                                              name: ""
+                                            },
+                                            domProps: { value: detail.exempt },
+                                            on: {
+                                              input: function($event) {
+                                                if ($event.target.composing) {
+                                                  return
+                                                }
+                                                _vm.$set(
+                                                  detail,
+                                                  "exempt",
+                                                  $event.target.value
+                                                )
+                                              }
+                                            }
+                                          })
+                                        ]),
+                                        _vm._v(" "),
+                                        _c("td", [
                                           _vm._v(
                                             "Bs.:\n                                            " +
                                               _vm._s(
@@ -69478,11 +69513,11 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Documento")]),
         _vm._v(" "),
-        _c("th", [_vm._v("I.V.A")]),
-        _vm._v(" "),
         _c("th", [_vm._v("Base Imponible")]),
         _vm._v(" "),
         _c("th", [_vm._v("Total I.V.A")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Total Exento")]),
         _vm._v(" "),
         _c("th", [_vm._v("Monto Retenido")])
       ])
