@@ -54,7 +54,7 @@
                                     <tbody>
                                         <tr v-for="buy in arrayBuy" :key="buy.id">
                                             <td>
-                                                <button type="button" class="btn btn-success btn-sm" @click="showbuy(buy.id)">
+                                                <button type="button" class="btn btn-success btn-sm" @click="showBuy(buy.id)">
                                                   Detalles
                                                 </button> &nbsp;
                                             </td>
@@ -127,7 +127,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Serie Comprobante</label>
+                                        <label>Nro. de Control</label>
                                         <input type="text" class="form-control" v-model="voucher_serie" placeholder="000x" name="">
                                     </div>
                                 </div>
@@ -213,8 +213,8 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for=""><h6>Impuesto</h6></label>
-                                    <h3><p v-text="tax"></p></h3>
+                                    <label for=""><h6>Fecha de Factura</h6></label>
+                                    <h3><p v-text="date"></p></h3>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
@@ -240,48 +240,49 @@
                             </div>
                             
                             <div class="form-group row border">
+                               <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Descripción  de Gastos</label>
+                                        <div class="form-inline">
+                                            <p v-text="description"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>% I.v.a.</label>
+                                        <p v-text="tax"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Base imponible</label>
+                                        <p v-text="total - (tax_mount-exempt)"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label> Exento</label>
+                                        <p v-text="exempt"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row border">
                                 <div class="table-responsive col-md-12">
-                                    <table class="table table-bordered table-striped table-sm">
-                                        <thead>
-                                            <tr>
-                                                <th>Artículo</th>
-                                                <th>Precio</th>
-                                                <th>Cantidad</th>
-                                                <th>Sub-Total</th> 
-                                            </tr>
-                                        </thead>
-                                        <tbody v-if="arrayDetail.length">
-                                            <tr v-for="detail in arrayDetail" :key="detail.id">
-                                                
-                                                <td v-text="detail.product" ></td>
-                                                <td v-text="detail.price" ></td>
-                                                <td v-text="detail.quantity" ></td>
-                                                <td>
-                                                    {{ detail.price*detail.quantity }}
-                                                </td>
+                                    
+                                        <tbody >
+                                          
+                                            <tr style="background-color: #CEECFS;">
+                                                <td colspan="4" align="right"><strong>Total Impuesto: </strong></td>
+                                                <td>Bs: {{ tax_mount }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
-                                                <td colspan="3" align="right"><strong>Total Parcial: </strong></td>
-                                                <td>Bs {{ totalPartial=(total-tax_mount).toFixed(2) }}</td>
+                                                <td colspan="4" align="right"><strong>Exento: </strong></td>
+                                                <td>Bs: {{ exempt }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
-                                                <td colspan="3" align="right"><strong>Total Impuesto: </strong></td>
-                                                <td>Bs {{ tax_mount }}</td>
-                                            </tr>
-                                            <tr style="background-color: #CEECFS;">
-                                                <td colspan="3" align="right"><strong>Total Exento: </strong></td>
-                                                <td>Bs {{ exempt }}</td>
-                                            </tr>
-                                            <tr style="background-color: #CEECFS;">
-                                                <td colspan="3" align="right"><strong>Total a Pagar: </strong></td>
-                                                <td>Bs {{ total }}</td>
-                                            </tr>
-                                        </tbody>
-                                        <tbody v-else>
-                                            <tr>
-                                                <td >
-                                                    No hay articulos agredados
-                                                </td>
+                                                <td colspan="4" align="right"><strong>Total a Pagar: </strong></td>
+                                                <td>Bs: {{ total }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -361,6 +362,7 @@
                 voucher_num : '',
                 voucher_serie : '',
                 date : '',
+                status: '',
                 base: 0.0,
                 tax : 0.0,
                 exempt: 0.0,
@@ -454,7 +456,7 @@
                     console.log(error);
                 });
             },
-            showbuy(id){
+            showBuy(id){
                 let me=this;
                 me.list=2;
 
@@ -472,6 +474,7 @@
                     me.voucher_num = me.arrayBuyTemp[0]['voucher_num'];
                     me.tax_mount = me.arrayBuyTemp[0]['tax_mount'];
                     me.total = me.arrayBuyTemp[0]['total'];
+                    me.tax=me.arrayBuyTemp[0]['tax'];
                     me.exempt = me.arrayBuyTemp[0]['exempt'];
                     me.status = me.arrayBuyTemp[0]['status'];
 
@@ -543,7 +546,6 @@
                     me.total=0.0;
                     me.exempt = 0.0;
                     me.price=0;
-                    me.arrayDetail=[];
 
                 })
                 .catch(function (error) {
@@ -553,8 +555,6 @@
             validatebuy(){
                 this.errorSmsP=0;
                 this.errorSmsListP =[];
-
-                
 
                 if (!this.provider_id) this.errorSmsListP.push("Por favor Selecione un cliente");
 
@@ -596,7 +596,6 @@
                 me.price=0;
                 me.totalTax = 0.0;
                 me.exempt = 0.0;
-                me.arrayDetail=[];
             },
             hideDetail(){
                 this.list=1;

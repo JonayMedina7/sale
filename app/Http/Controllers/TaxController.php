@@ -9,12 +9,14 @@ class TaxController extends Controller
 {
     public function index()
     {
+        if (!$request->ajax()) return redirect('/');
     	$tax = Tax::all();
     	return $tax;
     }
 
     public function store(Request $request)
     {
+        if (!$request->ajax()) return redirect('/');
     	$tax = new Tax();
     	$tax->tax = $request->tax;
     	$tax->save();
@@ -22,6 +24,7 @@ class TaxController extends Controller
 
     public function update(Request $request)
     {
+        if (!$request->ajax()) return redirect('/');
     	$tax = Tax::findOrFail($request->id);
     	$tax->tax = $request->tax;
     	$tax->save();
@@ -31,8 +34,8 @@ class TaxController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $tax = Tax::select('id','tax')
-        ->orderBy('id', 'desc')->get();
-
+        ->where('tax', '>',0)
+        ->orderBy('id', 'asc')->take(1)->get();
         return $tax;
         
     }

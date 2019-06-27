@@ -230,7 +230,7 @@ class PurchaseController extends Controller
         
         $buy = Purchase::join('clients', 'purchases.provider_id', '=', 'clients.id')
         ->join('users', 'purchases.user_id', '=', 'users.id')
-        ->select('purchases.id', 'purchases.voucher', 'purchases.voucher_serie', 'purchases.voucher_num', 'purchases.date', 'purchases.exempt', 'purchases.tax_mount', 'purchases.total', 'purchases.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
+        ->select('purchases.id', 'purchases.voucher', 'purchases.voucher_serie', 'purchases.voucher_num', 'purchases.date', 'purchases.exempt', 'purchases.tax_mount', 'purchases.total', 'purchases.status', 'purchases.description', 'purchases.tax', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
         ->where('purchases.type', '=', 'buy' )
         ->where('purchases.id','=',$id)
         ->orderBy('purchases.id', 'desc')->take(1)->get();

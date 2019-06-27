@@ -68,7 +68,8 @@
                                     <td v-text="product.name"></td>
                                     <td v-text="product.category_name"></td>
                                     <td v-text="product.price_buy"></td>
-                                    <td v-text="product.tax + '%'"></td>
+                                    <td v-if="product.tax==0">Exento</td>
+                                    <td v-else v-text="product.tax + '%'"></td>
                                     <td v-text="product.stock"></td>
                                     <td v-text="product.description"></td> 
 
@@ -124,10 +125,15 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group row" v-for="t in arrayTax" :key="t.id">
-                                    <label class=" form-control-label" >I.v.a.</label>
-                                    <input type="number" name="tax"  v-model="tax">
-
+                                <div class="form-group row" >
+                                    <label class="col-md-3 form-control-label">Seleccione Producto con I.v.a. o Exento</label>
+                                        <div class="col-md-2">
+                                            <select v-for="t in arrayTax" :key="t.id" class=" form-control" v-model="tax_id">
+                                                <option value="0" disabled>Seleccione</option>
+                                                <option :value="t.id"  v-if="t.tax==0" >Exento</option>
+                                                <option v-else :value="t.id" v-text="t.tax + '%'"></option>
+                                            </select>    
+                                        </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Código</label>
@@ -396,7 +402,7 @@
 
                 if (!this.price_buy) this.errorSmsProduct.push("Precio de Compra del producto debe ser un Numero y no puede estar vacio");
 
-                if (this.tax_id == 0) this.errorSmsProduct.push("Seleccione valor de impuesto para el producto");
+                if (this.tax_id == 0) this.errorSmsProduct.push("Seleccione tipo de impuesto para el producto");
 
                 if (this.errorSmsProduct.length) this.errorProduct = 1;
                     if (this.errorSmsProduct.length >= 1) {
