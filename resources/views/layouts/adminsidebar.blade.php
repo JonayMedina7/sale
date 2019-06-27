@@ -85,6 +85,9 @@
                     <li @click="menu=16" class="nav-item">
                         <a class="nav-link" href="#"><i class="icon-info"></i> I.v.a.</a>
                     </li>
+                    <li @click="menu=17" class="nav-item">
+                        <a class="nav-link" href="#"><i class="icon-info"></i> Gastos</a>
+                    </li>
 
                     
                    

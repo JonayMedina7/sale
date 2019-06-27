@@ -6,7 +6,7 @@
     <title>Reporte de venta</title>
     <style>
         @page {
-            margin: 50px 20px 40px 20px !important;
+            margin: 50px 40px 40px 20px !important;
             padding: 0px 0px 0px 0px !important;
         }
         body {
@@ -92,7 +92,7 @@
         /*height: 60%;*/
         /*overflow: auto;*/
         }
-        #facarticulo td{
+        #facarticulo th, #facarticulo td{
              border-left: 1px solid black;
              font-size: 11px;
         }
@@ -114,7 +114,7 @@
         margin-bottom: 12px; 
         }
         .trfill {
-            height: 20px
+            color: #fff;
         }
         footer {
             /*margin-top: 5px;
@@ -126,26 +126,32 @@
             /*display: table;*/
         }
         #footer {
-            position: relative;
-            display: block;
-            padding: 2px 7px 0 22px;
-            /*float: right;*/
-            text-align: right;
-            background-color:#cecece;
+            
+            /*display: inline-block;*/
+            padding: 0px 20px 0 22px;
+            float: right;
+            /*background-color:#cecece;*/
             color: #000;
-            border: #000 1px solid;
             font-size: 12px;
-            width: max-content;
-            margin-left: auto;
+            width: 40%;
+            /*margin: 10px;*/
             
         }
+        #footer th {
+            text-align:left;
+        }
+        #footer td {
+            text-align: right;
+        }
         #footer2 {
-            /*float: left;*/
-            position: relative;
-            display: block;
-            padding: 6px 0px 0 12px;
+            float: left;
+            /*display: inline-block;*/
+            padding: 0px 0px 0 12px;
             font-size: 13px;
             width: 60%;
+            
+        }
+        .totals {
             
         }
         #footer2 p {
@@ -161,7 +167,7 @@
     
     </style>
     
-    <body  >
+    <body >
         @foreach ($sale as $s)
         <nav>
 
@@ -207,7 +213,7 @@
                            
                         </tr>
                         <tr>
-                            <td colspan="2" ><p ><b>Rif/C.I.: </b>{{ $s->rif }}</p></td>
+                            <td colspan="2" ><p ><b>Rif/C.I.: </b>{{ strtoupper($s->type.$s->rif) }}</p></td>
                             <td colspan="2" ><p ><b>Telefono: </b>{{ $s->phone }}</p></td>
                             <td colspan="2" ><p ><b>Email: </b>{{ strtoupper($s->email) }}</p></td>
                         </tr>
@@ -227,10 +233,10 @@
                         <tr>
                             
                             <th style="text-align: center; width: 5%;">CANT</th>
-                            <th style="text-align: center; width: 30%;">PRODUCTO</th>
-                            <th style="text-align: center; width: 43%;">DESCRIPCIÓN</th>
-                            <th style="text-align: right; width: 12%;">PRECIO UNIT</th>
-                            <th style="text-align: right; width: 15%;">PRECIO TOTAL</th>
+                            <th style="text-align: center; width: 65%;">PRODUCTO</th>
+                            
+                            <th style="text-align: center; width: 16%;">PRECIO UNITARIO</th>
+                            <th style="text-align: center; width: 14%;">PRECIO TOTAL</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -238,22 +244,27 @@
                             
                         <tr>
                             <td style="text-align: center;">{{ $d->quantity }}</td>
+
+                            @if ($d->description=='')
                             <td style="text-align: center;">{{ strtoupper($d->product) }}</td>
-                            <td style="text-align: center;">{{ strtoupper($d->description) }}</td>
-                            <td style="text-align: right;">{{ $d->price }}</td>
-                            <td style="text-align: right;">{{ $d->quantity*$d->price }}</td>
+                            @elseif ($d->description!='')
+                            <td style="text-align: center;">{{ strtoupper($d->product) }}&nbsp;<b>({{ strtoupper($d->description) }})<b></td>
+                             @endif
+
+                            <td style="text-align: right;">{{ number_format($d->price, 2, ',', '.') }}</td>
+                            <td style="text-align: right;">{{ number_format($d->quantity*$d->price, 2, ',', '.') }}</td>
                         </tr>
                         
 
                         @endforeach
 
-                        @for ($i =18; $i > count($details); $i--)
+                        @for ($i =16; $i > count($details); $i--)
                         <tr class="trfill">
-                            <td style="text-align: center;"></td>
-                            <td style="text-align: center;"></td>
-                            <td style="text-align: center;"></td>
-                            <td style="text-align: right;"></td>
-                            <td style="text-align: right;"></td>
+                            <td style="text-align: center;">I</td>
+                            <td style="text-align: center;">I</td>
+
+                            <td style="text-align: right;">I</td>
+                            <td style="text-align: right;">I</td>
                         </tr>
                         @endfor
                         
@@ -265,20 +276,46 @@
        {{-- Fin Seccion detalles factura --}}
 
        {{-- Inicio totales factura --}}
-        <footer class="">
+        <footer class="clearfix">
             
             <div id="footer2">
                 <p>Recibido por: ____________________________</p>
                 <p><b>Observaciones:</b></p>
             </div>
-            <div id="footer">
-
+            <table id="footer">
+                
+                <thead>
                     @foreach ($sale as $s)
-                    <p>SUBTOTAL Bs: {{ ' '.round($s->total-($s->total*$s->tax),2) }}</p>
-                    <p>IVA Bs: {{ ' '.round($s->total*$s->tax,2) }}</p>
-                    <p id="total">TOTAL Bs: {{ ' '.$s->total }}</p>
+                    <tr>
+                        <th>SUBTOTAL Bs: </th>
+                        <td>{{ number_format($s->total-$s->tax_mount, 2, ',', '.') }}</td>
+                    </tr>
+                    <tr>
+                        <th>EXENTO Bs: </th>
+                        <td>{{ number_format($s->exempt, 2, ',', '.') }}</td>
+                    </tr>
+                    <tr>
+                        <th>BASE IMPONIBLE BS: </th>
+                        <td>{{ number_format(($s->total-$s->tax_mount)-$s->exempt, 2, ',', '.') }}</td>
+                    </tr>
+                    <tr>
+                        <th>I.V.A. 16% Bs: </th>
+                        <td>{{ number_format($s->tax_mount, 2, ',', '.') }}</td>
+                    </tr>
+                    <tr>
+                        <th>TOTAL Bs: </th>
+                        <td>{{ ' '.number_format($s->total, 2, ',', '.') }}</td>
+                    </tr>
                     @endforeach
-            </div>
+                </thead>
+                
+            </table>
+                    {{-- <p>SUBTOTAL Bs: {{ number_format($s->total-$s->tax_mount, 2, ',', '.') }}</p>
+                    <p>EXENTO Bs: {{ number_format($s->exempt, 2, ',', '.') }}</p>
+                    <p>BASE IMPONIBLE BS: {{ number_format(($s->total-$s->tax_mount)-$s->exempt, 2, ',', '.') }} </p>
+                    <p>I.V.A. 16% Bs: {{ number_format($s->tax_mount, 2, ',', '.') }}</p>
+                    <p id="total">TOTAL Bs: {{ ' '.number_format($s->total), 2, ',', '.' }}</p> --}}
+                    
         </footer>
         {{-- Fin totales factura --}}
     </body>

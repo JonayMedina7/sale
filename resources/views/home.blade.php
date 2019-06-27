@@ -72,6 +72,10 @@
                   <template v-if="menu==16">
                     <tax></tax>
                   </template>
+
+                  <template v-if="menu==17">
+                    <buy></buy>
+                  </template>
                 @elseif (Auth::user()->role_id == 2)
                   <template v-if="menu==0">
                     <dash></dash>

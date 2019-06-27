@@ -54,6 +54,8 @@ Vue.component('company', require('./components/Company.vue').default);
 
 Vue.component('tax', require('./components/Tax.vue').default);
 
+Vue.component('buy', require('./components/Buy.vue').default);
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

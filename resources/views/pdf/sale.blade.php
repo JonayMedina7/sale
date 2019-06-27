@@ -128,29 +128,31 @@
         #footer {
             
             /*display: inline-block;*/
-            padding: 0px 10px 0 22px;
-            float: right;
-            text-align: right;
+            padding: 0px 20px 0 22px;
+            /*float: right;*/
             /*background-color:#cecece;*/
             color: #000;
-            
             font-size: 12px;
             width: 40%;
             /*margin: 10px;*/
             
+        }
+        #footer th {
+            text-align:left;
+        }
+        #footer td {
+            text-align: right;
         }
         #footer2 {
             float: left;
             /*display: inline-block;*/
             padding: 0px 0px 0 12px;
             font-size: 13px;
-            width: 60%;
+            width: 55%;
             
         }
         .totals {
-            padding-right: 10px; 
-            width: max-content;
-            border: #000 1px solid;
+            
         }
         #footer2 p {
             padding-top: 10px;
@@ -274,23 +276,46 @@
        {{-- Fin Seccion detalles factura --}}
 
        {{-- Inicio totales factura --}}
-        <footer class="">
+        <footer class="clearfix">
             
             <div id="footer2">
                 <p>Recibido por: ____________________________</p>
                 <p><b>Observaciones:</b></p>
             </div>
-            <div id="footer">
-                <div class="totals">
-                    @foreach ($sale as $s)
-                    <p>SUBTOTAL Bs: {{ number_format($s->total-$s->tax_mount, 2, ',', '.') }}</p>
+                    <table id="footer">
+                        
+                        <thead>
+                            @foreach ($sale as $s)
+                            <tr>
+                                <th>SUBTOTAL Bs: </th>
+                                <td>{{ number_format($s->total-$s->tax_mount, 2, ',', '.') }}</td>
+                            </tr>
+                            <tr>
+                                <th>EXENTO Bs: </th>
+                                <td>{{ number_format($s->exempt, 2, ',', '.') }}</td>
+                            </tr>
+                            <tr>
+                                <th>BASE IMPONIBLE BS: </th>
+                                <td>{{ number_format(($s->total-$s->tax_mount)-$s->exempt, 2, ',', '.') }}</td>
+                            </tr>
+                            <tr>
+                                <th>I.V.A. 16% Bs: </th>
+                                <td>{{ number_format($s->tax_mount, 2, ',', '.') }}</td>
+                            </tr>
+                            <tr>
+                                <th>TOTAL Bs: </th>
+                                <td>{{ ' '.number_format($s->total), 2, ',', '.' }}</td>
+                            </tr>
+                            @endforeach
+                        </thead>
+                        
+                    </table>
+                    {{-- <p>SUBTOTAL Bs: {{ number_format($s->total-$s->tax_mount, 2, ',', '.') }}</p>
                     <p>EXENTO Bs: {{ number_format($s->exempt, 2, ',', '.') }}</p>
                     <p>BASE IMPONIBLE BS: {{ number_format(($s->total-$s->tax_mount)-$s->exempt, 2, ',', '.') }} </p>
                     <p>I.V.A. 16% Bs: {{ number_format($s->tax_mount, 2, ',', '.') }}</p>
-                    <p id="total">TOTAL Bs: {{ ' '.number_format($s->total), 2, ',', '.' }}</p>
-                    @endforeach
-                </div>
-            </div>
+                    <p id="total">TOTAL Bs: {{ ' '.number_format($s->total), 2, ',', '.' }}</p> --}}
+                    
         </footer>
         {{-- Fin totales factura --}}
     </body>

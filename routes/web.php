@@ -191,6 +191,15 @@ Route::group(['middleware' =>['auth']], function()
 		route::put('/tax/update', 'TaxController@update');
 		route::get('tax/searchTax', 'TaxController@searchTax');
 
+		route::get('buy/indexb', 'PurchaseController@indexb');
+		route::post('/buy/register', 'PurchaseController@storeb');
+		route::put('/buy/update', 'PurchaseController@updateb');
+		route::put('/buy/desactive', 'PurchaseController@desactiveb');
+		route::get('/buy/getHeader', 'PurchaseController@getHeaderb');
+		route::get('/buy/getDetail', 'PurchaseController@getDetail'); 
+		route::get('/buy/purchaseRet', 'PurchaseController@purchaseRet');
+		route::get('/buy/listPurchaseRet', 'PurchaseController@listPurchaseRet');
+
 	});
 	
 

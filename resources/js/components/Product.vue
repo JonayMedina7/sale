@@ -124,14 +124,10 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group row" v-for="">
-                                    <label class="col-md-3 form-control-label" for="categoria">I.v.a.</label>
-                                    <div class="col-md-9">
-                                        <select name="tax_id" class="form-control" v-model="tax_id">
-                                            <option value="">Seleccione</option>
-                                            <option v-for="taxes in arrayTax" :key="taxes.id" :value="taxes.id" v-text="taxes.tax + '%'"></option>
-                                        </select>
-                                    </div>  
+                                <div class="form-group row" v-for="t in arrayTax" :key="t.id">
+                                    <label class=" form-control-label" >I.v.a.</label>
+                                    <input type="number" name="tax"  v-model="tax">
+
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Código</label>

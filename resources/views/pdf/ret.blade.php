@@ -269,8 +269,7 @@
                  </table>
                 @endforeach
                 <table class="art table table-bordered" align="center" width="100%" cellpadding="1" cellspacing="1">
-                    <thead class="thead-light">
-                        
+                    <thead class="thead-light" align="center">
                         <tr>
                             <th scope="col">Oper.</th>
                             <th scope="col">Fecha</th>
@@ -283,7 +282,7 @@
                             <th scope="col">Compras + IVA</th>
                             <th scope="col">Sin Crédito</th>
                             <th scope="col">Base Imponible</th>
-                            <th scope="col">Alic</th>
+                            <th scope="col">Alic.</th>
                             <th scope="col">Impuesto IVA</th>
                             <th scope="col">IVA Retenido</th>
                         </tr>
@@ -300,30 +299,43 @@
                             <td>0</td>
                             <td>01</td>
                             <td>0</td>
-                            <td>{{ $d->totalp }}</td>
-                            <td>0,00</td>
-                            <td>{{ $d->totalp - $d->tax_mount }}</td>
-                            <td>{{ $d->tax }}</td>
-                            <td>{{ $d->tax_mount }}</td>
-                            @foreach ($retention as $r)
-                            <td>{{ $r->total }}</td>    
-                            @endforeach
+                            <td>{{ number_format($d->totalp, 2, ',', '.') }}</td>
+                            <td>{{ number_format($d->exempt, 2, ',', '.') }}</td>
+                            <td>{{ number_format(($d->totalp - $d->tax_mount)-$d->exempt, 2, ',', '.') }}</td>
+                            <td>{{ $d->tax.'%' }}</td>
+                            <td>{{ number_format($t->tax_mount, 2, ',', '.') }}</td>
+                            <td>{{ number_format($t->total_ret, 2, ',', '.') }}</td>
+                            @for ($i = 0; $i <count($detailret) ; $i++)
+                                @php
+                                    $total_exempt = 0.00;
+                                    $total_base = 0.00;
+                                    $total_taxes = 0.00;
+                                    $tot_p = 0.00;
+                                @endphp
+                                    @php ($total_exempt = $total_exempt + $d->exempt)
+                                    @php ($total_base = $total_base + (($d->totalp - $d->tax_mount)-$d->exempt))
+                                    @php ($total_taxes = $total_taxes + $d->tax_mount)
+                                    @php ($tot_p = $tot_p + $d->totalp)
+                            @endfor
+                            
                             
                         </tr>
                         @endforeach
-                    </tbody>
-                    {{-- <tfoot>
                         <tr>
-                            <td style="border-right-color: #fff;" colspan="7">
-                                <hr align="center" noshade="noshade" size="2" width="60%" />
-                                <span>Agente de Retención (Fecha de Entrega)</span>
-                            </td>
-                            <td colspan="7">
-                                <hr align="center" noshade="noshade" size="2" width="60%" />
-                                <span>Sujeto Retenido (Fecha de Recepción)</span>
-                            </td>
+                            <td colspan="8"></td>
+                            {{-- <td>{{  }}</td> --}}
+                            <td>{{ number_format($tot_p, 2, ',', '.') }}</td>
+                            <td>{{ number_format($total_exempt, 2, ',', '.') }}</td>
+                            <td>{{ number_format($total_base, 2, ',', '.') }}</td>
+                            <td></td>
+                            <td>{{ number_format($total_taxes, 2, ',', '.') }}</td>
+                            @foreach ($retention as $r)
+                            <td>{{ number_format($r->total, 2, ',', '.') }}</td>
+                            @endforeach
                         </tr>
-                    </tfoot> --}}
+                        
+                    </tbody>
+                    
                 </table>
                
                 

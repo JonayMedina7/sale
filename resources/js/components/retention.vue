@@ -75,7 +75,7 @@
                                                 
                                             </td>
                                             <td v-text="ret.voucher_num"></td>
-                                            <td v-text="ret.name"></td>
+                                            <td class="upper" v-text="ret.name"></td>
                                             <td v-if="ret.voucher=='bill'">Factura</td>
                                             <td v-else-if="ret.voucher=='note'">Vale</td>
                                             <td v-else-if="ret.voucher=='credit'">Nota de Crédito</td>
@@ -167,6 +167,7 @@
                                         <h4><span v-text="address" class="upper"> </span></h4>
                                     </div>
                                 </div>
+                                
                                 <div class="col-md-3">
                                     <label for=""> % Retenido</label>
                                     <input type="text" class="form-control" v-model="retention" name="" >
@@ -223,7 +224,7 @@
                                                 <th>Opciones</th>
                                                 <th>Numero de documento</th>
                                                 <th>Documento</th>
-                                                <th>Base Imponible</th>
+                                                <th>Monto </th>
                                                 <th>Total I.V.A</th>
                                                 <th>Total Exento</th>
                                                 <th>Monto Retenido</th>
@@ -241,10 +242,7 @@
                                                     <span class="form-control" v-else-if="detail.voucher=='note'">Vale</span>
                                                     <span class="form-control" v-else-if="detail.voucher=='credit'">Nota de Crédito</span>
                                                 </td>
-                                                <td>
-                                                    
-                                                    <input v-model="detail.tax" type="number" disabled class="form-control" name="">
-                                                </td>
+                                                
                                                 <td>
                                                     <input v-model="detail.totalp" disabled="" type="number"  class="form-control" name="">
                                                 </td>
@@ -266,14 +264,6 @@
                                                 <td>Bs.: {{ totalPartial=(calculateTotalPartial) }}</td>
 
                                             </tr>
-                                            <!-- <tr style="background-color: #CEECFS;">
-                                                <td colspan="5" align="right"><strong>Total Impuesto: </strong></td>
-                                                <td>$ {{ totalTax=((totalPartial*ret_val)).toFixed(2) }}</td>
-                                            </tr>
-                                            <tr style="background-color: #CEECFS;">
-                                                <td colspan="5" align="right"><strong>Total a Pagar: </strong></td>
-                                                <td>$ {{ total=calculateTotal }}</td>
-                                            </tr> -->
                                         </tbody>
                                         <tbody v-else>
                                             <tr>
@@ -367,18 +357,6 @@
                                                 <td v-text="detail.datep" ></td>
                                                 <td v-text="detail.totalp"></td>
                                             </tr>
-                                            <!-- <tr style="background-color: #CEECFS;">
-                                                <td colspan="3" align="right"><strong>Total Parcial: </strong></td>
-                                                <td>$ {{ totalPartial=(total-totalTax).toFixed(2) }}</td>
-                                            </tr>
-                                            <tr style="background-color: #CEECFS;">
-                                                <td colspan="3" align="right"><strong>Total Impuesto: </strong></td>
-                                                <td>$ {{ totalTax=((total*tax)).toFixed(2) }}</td>
-                                            </tr>
-                                            <tr style="background-color: #CEECFS;">
-                                                <td colspan="3" align="right"><strong>Total a Pagar: </strong></td>
-                                                <td>$ {{ total }}</td>
-                                            </tr> -->
                                         </tbody>
                                         <tbody v-else>
                                             <tr>
@@ -487,6 +465,7 @@
                 date : '',
                 datep: '',
                 exempt : 0.0,
+                tax: 0.0,
                 tax_mount: 0.0,
                 ret_amount: 0.0,
                 total : 0.0,
@@ -583,27 +562,59 @@
                      me.arrayRet = response.retentions.data;
                      me.pagination = response.pagination;
                      me.mytime = response.mytime;
-                     console.log(me.mytime);
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
             },
+            download(filename, text) {
+              var element = document.createElement('a');
+              element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+              element.setAttribute('download', filename);
+
+              element.style.display = 'none';
+              document.body.appendChild(element);
+
+              element.click();
+
+              document.body.removeChild(element);
+            },
             txt (fecha1,fecha2){
-                
                 let me=this;
-                 var url = 'retention/getDownload?fecha1='+ fecha1 + '&fecha2=' + fecha2;
-                 console.log(fecha1);
-                axios.put(url);
+
+                var texto = '';
+                var comp = '';
+                var tot = '';
+                var arrayTxt = [];
+                var company = [];
+
+                var url = 'retention/getDownload?fecha1='+ fecha1 + '&fecha2=' + fecha2;
+                axios.get(url).then(function(response) {
+                    var response = response.data;
+                    me.arrayTxt = response.txt;
+                    me.company = response.company;
+                    me.company.forEach(function(elemento){
+                         comp = elemento['type']+elemento['rif'];
+                        me.arrayTxt.forEach(function(element){
+                        tot = ((element['totalp']-element['tax_mount'])-element['exempt']);
+                        texto += comp + '\t'  +element['year']+element['month']+ '\t'  +element['datep']+ '\t'  +'C'+ '\t'  +'01'+ '\t'  +element['prov_type']+element['prov_rif'] + '\t'  +element['purchase_num']+ '\t'  +element['voucher_serie']+ '\t'  +element['totalp']+ '\t'  + tot + '\t'  +element['total']+ '\t'  +'0'+ '\t'  +element['voucher_num']+ '\t'  +element['exempt']+ '\t'  +element['tax']+ '\t'  +'0' + '\n'; 
+ 
+                        });
+                    });
+                   me.download("retentions.txt", texto);
+                })
+                .catch(function(error) {
+                    console.log(error);
+                });
+                
             },
             retId(){
                 let me=this;
-                
+                me.voucher_num = '';
                 var arrayRetidTemp = [];
                 var url= 'retention/retId';
                 axios.get(url).then(function(response) {
                     var response = response.data;
-                    console.log(response);
 
                     me.voucher_num = response.retid;
                     
@@ -661,7 +672,6 @@
             showInsert(){
 
                 let me=this;
-                me.voucher_num=0;
                 me.list=0;
 
                 me.retId();
@@ -689,9 +699,6 @@
                 let me=this;
                 
                 me.list=6;
-
-               
-
             },
             providerSelectr(search,loading){
                 let me=this;
@@ -761,7 +768,7 @@
                 axios.get(url).then(function(response){
                     var response = response.data;
                     me.arrayPurchase = response.purchases.data;
-                    console.log(me.arrayPurchase);
+                    // console.log(me.arrayPurchase);
                 })
                 .catch(function (error) {
                         console.log(error);
@@ -783,7 +790,8 @@
                         voucher: me.voucher,
                         totalp: me.totalp,
                         exempt: me.exempt,
-                        tax_mount: me.tax_mount
+                        tax_mount: me.tax_mount,
+                        ret_amount: me.ret_amount
                     });
                     me.purchase_id=0;
                     me.purchase_num='';
@@ -791,6 +799,7 @@
                     me.totalp=0;
                     me.exempt=0.0;
                     me.tax_mount= 0.0;
+                    me.ret_amount = 0.0;
                 }
             },
             addDetailModal(data =[]){
@@ -810,7 +819,8 @@
                         totalp: data['totalp'],
                         exempt: data['exempt'],
                         tax_mount: data['tax_mount'],
-                        datep: data['datep']
+                        datep: data['datep'],
+                        ret_amount: data['ret_amount']
                     });
                 }
             },
@@ -845,11 +855,10 @@
                 if (this.validateRet()){
                     return;
                 }
-                console.log(this.arrayDetailr);
+                // console.log(this.arrayDetailr);
                 let me = this;
                 axios.post('retention/register', {
                     'voucher_num':this.voucher_num,
-                    'exempt':this.exempt,
                     'total': this.totalPartial,
                     'data': this.arrayDetailr
                 }).then(function(response){
@@ -870,7 +879,7 @@
                     me.address='';
                     
                     me.voucher='bill';
-                    me.voucher_num = 0;
+                    me.voucher_num = '';
                     me.purchase_num='';
                     me.arrayDetailr=[];
 
@@ -899,7 +908,7 @@
                 if (me.provider_id==0) me.errorSmsListR.push("Por favor Seleccione un cliente");
 
                 // if (me.voucher_num == 0) me.errorSmsListR.push("Ingrese un numero de Factura o nota de crédito");
-
+                // if (me.date=='') me.errorSmsListR.push("Por favor Selecione una Fecha para la retención");
                 if (me.arrayDetailr.length<=0) me.errorSmsListR.push("Por favor ingrese Facturas a retener");
 
                 if (me.errorSmsListR.length) me.errorSmsR = 1;
@@ -967,7 +976,7 @@
                            me.listRetention(1,'','voucher_num');
                             Swal.fire(
                                 'Anulado!',
-                                'La venta ha sido anulada con éxito.',
+                                'La Retencion ha sido anulada con éxito.',
                                 'Aceptar'
                                 )
                         }) .catch(function (error) {
@@ -982,7 +991,7 @@
             }
         },
         mounted() {
-            this.listRetention(1,this.search,this.name);
+            this.listRetention(1,this.search,this.criterion);
         }
     };
 </script>

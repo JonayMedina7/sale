@@ -478,6 +478,7 @@
                 voucher_serie : '',
                 date : '',
                 tax : '',
+                taxV: '',
                 tax_mount: 0.0,
                 exempt: 0.0,
                 arraySale : [],
@@ -565,9 +566,10 @@
                 var divisor = 0.0;
                 for (var i = 0; i < this.arrayDetail.length; i++) {
                     if (this.arrayDetail[i].tax > 0) {
-                        divisor = (this.arrayDetail[i].tax/100)
+                        divisor = (this.arrayDetail[i].tax/100);
                         
-                        result2 = result2 +((this.arrayDetail[i].price*this.arrayDetail[i].quantity)*divisor)
+                        result2 = result2 +((this.arrayDetail[i].price*this.arrayDetail[i].quantity)*divisor);
+                        me.taxV = this.arrayDetail[i].tax;
                     }
                 }
                 // console.log(divisor);
@@ -827,7 +829,7 @@
                     'voucher': this.voucher,
                     'voucher_num': this.voucher_num,
                     'voucher_serie': this.voucher_serie,
-                    'tax': this.tax,
+                    'tax': this.taxV,
                     'exempt': this.totalExempt,
                     'tax_mount': this.totalTax,
                     'total': this.total,
@@ -854,6 +856,7 @@
                     me.voucher_serie='';
                     me.totalTax= 0.0;
                     me.tax='';
+                    me.taxV='';
                     me.exempt=0.0;
                     me.tax_mount=0.0;
                     me.totalExempt=0.0;
