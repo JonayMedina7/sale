@@ -195,7 +195,7 @@ Route::group(['middleware' =>['auth']], function()
 		route::post('/buy/register', 'PurchaseController@storeb');
 		route::put('/buy/update', 'PurchaseController@updateb');
 		route::put('/buy/desactive', 'PurchaseController@desactiveb');
-		route::get('/buy/getHeader', 'PurchaseController@getHeaderb');
+		route::get('/buy/getHeaderb', 'PurchaseController@getHeaderb');
 		route::get('/buy/getDetail', 'PurchaseController@getDetail'); 
 		route::get('/buy/purchaseRet', 'PurchaseController@purchaseRet');
 		route::get('/buy/listPurchaseRet', 'PurchaseController@listPurchaseRet');

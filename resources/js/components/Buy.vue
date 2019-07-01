@@ -477,6 +477,7 @@
                     me.tax=me.arrayBuyTemp[0]['tax'];
                     me.exempt = me.arrayBuyTemp[0]['exempt'];
                     me.status = me.arrayBuyTemp[0]['status'];
+                    me.date = me.arrayBuyTemp[0]['date'];
 
                 })
                 .catch(function (error) {

@@ -303,8 +303,8 @@
                             <td>{{ number_format($d->exempt, 2, ',', '.') }}</td>
                             <td>{{ number_format(($d->totalp - $d->tax_mount)-$d->exempt, 2, ',', '.') }}</td>
                             <td>{{ $d->tax.'%' }}</td>
-                            <td>{{ number_format($t->tax_mount, 2, ',', '.') }}</td>
-                            <td>{{ number_format($t->total_ret, 2, ',', '.') }}</td>
+                            <td>{{ number_format($d->tax_mount, 2, ',', '.') }}</td>
+                            <td>{{ number_format($d->total_ret, 2, ',', '.') }}</td>
                             @for ($i = 0; $i <count($detailret) ; $i++)
                                 @php
                                     $total_exempt = 0.00;
