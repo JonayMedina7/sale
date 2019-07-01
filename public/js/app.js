@@ -2148,7 +2148,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       me.list = 2; //obtener los detalles de la compra
 
       var arrayBuyTemp = [];
-      var url = 'buy/getHeader?id=' + id;
+      var url = 'buy/getHeaderb?id=' + id;
       axios.get(url).then(function (response) {
         var response = response.data;
         me.arrayBuyTemp = response.buy;
@@ -2162,6 +2162,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         me.tax = me.arrayBuyTemp[0]['tax'];
         me.exempt = me.arrayBuyTemp[0]['exempt'];
         me.status = me.arrayBuyTemp[0]['status'];
+        me.description = me.arrayBuyTemp[0]['description'];
+        me.date = me.arrayBuyTemp[0]['date'];
       })["catch"](function (error) {
         console.log(error);
       });
@@ -9617,11 +9619,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -9631,6 +9628,7 @@ __webpack_require__.r(__webpack_exports__);
       provider_id: 0,
       purchase_id: 0,
       id: 0,
+      address: '',
       ret_id: 0,
       client: '',
       voucher_num: '',
@@ -9652,6 +9650,7 @@ __webpack_require__.r(__webpack_exports__);
       retention: '',
       ret_val: 0,
       arrayRet: [],
+      arrayRetid: [],
       arrayDetailr: [],
       arrayProvider: [],
       arrayPurchase: [],
@@ -9828,6 +9827,7 @@ __webpack_require__.r(__webpack_exports__);
     showInsert: function showInsert() {
       var me = this;
       me.list = 0;
+      me.voucher_num = '';
       me.retId();
       me.date = '';
       me.datep = '';
@@ -9842,6 +9842,7 @@ __webpack_require__.r(__webpack_exports__);
       me.type = '';
       me.rif = '';
       me.address = '';
+      me.provider_id = 0;
       me.voucher = 'bill';
       me.purchase_num = '';
       me.arrayDetailr = [];
@@ -9939,6 +9940,7 @@ __webpack_require__.r(__webpack_exports__);
           totalp: me.totalp,
           exempt: me.exempt,
           tax_mount: me.tax_mount,
+          datep: me.datep,
           ret_amount: me.ret_amount
         });
         me.purchase_id = 0;
@@ -10005,11 +10007,12 @@ __webpack_require__.r(__webpack_exports__);
     registerRet: function registerRet() {
       if (this.validateRet()) {
         return;
-      } // console.log(this.arrayDetailr);
+      }
 
-
+      console.log(this.arrayDetailr);
       var me = this;
       axios.post('retention/register', {
+        'provider_id': this.provider_id,
         'voucher_num': this.voucher_num,
         'total': this.totalPartial,
         'data': this.arrayDetailr
@@ -70011,30 +70014,12 @@ var render = function() {
                                 domProps: { textContent: _vm._s(ret.name) }
                               }),
                               _vm._v(" "),
-                              ret.voucher == "bill"
-                                ? _c("td", [_vm._v("Factura")])
-                                : ret.voucher == "note"
-                                ? _c("td", [_vm._v("Vale")])
-                                : ret.voucher == "credit"
-                                ? _c("td", [_vm._v("Nota de Crédito")])
-                                : _vm._e(),
-                              _vm._v(" "),
-                              _c("td", {
-                                domProps: {
-                                  textContent: _vm._s(ret.purchase_num)
-                                }
-                              }),
-                              _vm._v(" "),
                               _c("td", {
                                 domProps: { textContent: _vm._s(ret.date) }
                               }),
                               _vm._v(" "),
                               _c("td", {
                                 domProps: { textContent: _vm._s(ret.total) }
-                              }),
-                              _vm._v(" "),
-                              _c("td", {
-                                domProps: { textContent: _vm._s(ret.totalp) }
                               }),
                               _vm._v(" "),
                               _c("td", {
@@ -70244,6 +70229,28 @@ var render = function() {
                         1
                       )
                     ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "col-md-3", attrs: { align: "right" } },
+                      [
+                        _c("div", { staticClass: "form-group" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-secondary",
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.hideRet()
+                                }
+                              }
+                            },
+                            [_vm._v("Cerrar")]
+                          )
+                        ])
+                      ]
+                    ),
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-12" }, [
                       _c("div", { staticClass: "form-group" }, [
@@ -70712,7 +70719,7 @@ var render = function() {
                                           _vm._v(
                                             "Bs.:\n                                            " +
                                               _vm._s(
-                                                (_vm.ret_amount =
+                                                (detail.ret_amount =
                                                   detail.tax_mount *
                                                   _vm.ret_val)
                                               ) +
@@ -70737,8 +70744,9 @@ var render = function() {
                                         _vm._v(
                                           "Bs.: " +
                                             _vm._s(
-                                              (_vm.totalPartial =
-                                                _vm.calculateTotalPartial)
+                                              (_vm.totalPartial = _vm.calculateTotalPartial.toFixed(
+                                                2
+                                              ))
                                             )
                                         )
                                       ])
@@ -70832,14 +70840,6 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "col-md-3" }, [
-                      _c("label", { attrs: { for: "tax" } }, [
-                        _vm._v("Impuesto")
-                      ]),
-                      _vm._v(" "),
-                      _c("p", { domProps: { textContent: _vm._s(_vm.tax) } })
-                    ]),
-                    _vm._v(" "),
                     _c("div", { staticClass: "col-md-9" }, [
                       _c("div", { staticClass: "form-group" }, [
                         _c("label", [_vm._v("Direcciòn(*):")]),
@@ -70915,6 +70915,12 @@ var render = function() {
                                     _c("td", {
                                       domProps: {
                                         textContent: _vm._s(detail.totalp)
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("td", {
+                                      domProps: {
+                                        textContent: _vm._s(detail.total_ret)
                                       }
                                     })
                                   ])
@@ -71214,15 +71220,9 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Cliente")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Tipo de comprobante")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Número comprobante")]),
-        _vm._v(" "),
         _c("th", [_vm._v("Fecha Hora")]),
         _vm._v(" "),
         _c("th", [_vm._v("Total Retención")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Total Factura")]),
         _vm._v(" "),
         _c("th", [_vm._v("Estado")])
       ])
@@ -71282,7 +71282,9 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Fecha Documento")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Total")])
+        _c("th", [_vm._v("Monto Documento")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Monto Retenido")])
       ])
     ])
   },

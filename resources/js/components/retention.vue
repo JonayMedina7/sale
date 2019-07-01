@@ -23,7 +23,7 @@
                             <i class="fa fa-file"></i>&nbsp;&nbsp;Generar TXT
                         </button>
                     </div>
-                    <!-- litado registros -->
+                    <!-- litado retenciones registradas -->
                     <template v-if="list==1">
                         <div class="card-body">
                             <div class="form-group row">
@@ -49,11 +49,8 @@
                                             <th>Opciones</th>
                                             <th>Numero retención</th>
                                             <th>Cliente</th>
-                                            <th>Tipo de comprobante</th>
-                                            <th>Número comprobante</th>
                                             <th>Fecha Hora</th>
                                             <th>Total Retención</th>
-                                            <th>Total Factura</th>
                                             <th>Estado</th>
                                         </tr>
                                     </thead>
@@ -76,13 +73,8 @@
                                             </td>
                                             <td v-text="ret.voucher_num"></td>
                                             <td class="upper" v-text="ret.name"></td>
-                                            <td v-if="ret.voucher=='bill'">Factura</td>
-                                            <td v-else-if="ret.voucher=='note'">Vale</td>
-                                            <td v-else-if="ret.voucher=='credit'">Nota de Crédito</td>
-                                            <td v-text="ret.purchase_num"></td>
                                             <td v-text="ret.date"></td>
                                             <td v-text="ret.total"></td>
-                                            <td v-text="ret.totalp"></td>
                                             <td v-text="ret.status"></td>                                     
                                         </tr>
                                         
@@ -131,7 +123,7 @@
                     </template>
                     <!-- Fin Listado -->
 
-                    <!-- Panel de ingreso de productos -->
+                    <!-- Panel de ingreso de retenciones -->
                     <template v-else-if="list==0">
                         <div class="card-body">
                             <div class="form-group row border">
@@ -144,6 +136,11 @@
                                         > 
                                             
                                         </v-select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" align="right">
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-secondary" @click="hideRet()">Cerrar</button>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -255,13 +252,13 @@
                                                 </td>
 
                                                 <td>Bs.:
-                                                    {{ ret_amount = (detail.tax_mount*ret_val) }}
+                                                    {{ detail.ret_amount = (detail.tax_mount*ret_val) }}
 
                                                 </td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="6" align="right"><strong>Total Retenido: </strong></td>
-                                                <td>Bs.: {{ totalPartial=(calculateTotalPartial) }}</td>
+                                                <td>Bs.: {{ totalPartial=(calculateTotalPartial).toFixed(2) }}</td>
 
                                             </tr>
                                         </tbody>
@@ -310,10 +307,6 @@
                                         <h5 v-text="user"></h5>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <label for="tax">Impuesto</label>
-                                    <p v-text="tax"></p>
-                                </div>
                                 <div class="col-md-9">
                                     <div class="form-group">
                                     <label >Direcciòn(*):</label>
@@ -345,7 +338,8 @@
                                                 <th>Tipo de Documento</th>
                                                 <th>Nro.</th>
                                                 <th>Fecha Documento</th>
-                                                <th>Total</th>
+                                                <th>Monto Documento</th>
+                                                <th>Monto Retenido</th>
                                                 
                                             </tr>
                                         </thead>
@@ -356,6 +350,7 @@
                                                 <td v-text="detail.purchase_num" ></td>
                                                 <td v-text="detail.datep" ></td>
                                                 <td v-text="detail.totalp"></td>
+                                                <td v-text="detail.total_ret"></td>
                                             </tr>
                                         </tbody>
                                         <tbody v-else>
@@ -457,7 +452,7 @@
                 provider_id : 0,
                 purchase_id: 0,
                 id: 0,
-                
+                address:'',
                 ret_id: 0,
                 client: '',
                 voucher_num : '',
@@ -479,6 +474,7 @@
                 retention: '',
                 ret_val: 0,
                 arrayRet : [],
+                arrayRetid: [],
                 arrayDetailr: [],
                 arrayProvider : [],
                 arrayPurchase: [],
@@ -673,7 +669,7 @@
 
                 let me=this;
                 me.list=0;
-
+                me.voucher_num ='';
                 me.retId();
                 me.date='';
                 me.datep='';
@@ -688,7 +684,7 @@
                 me.type='';
                 me.rif='';
                 me.address='';
-                
+                me.provider_id = 0;
                 me.voucher='bill';
                 me.purchase_num='';
                 me.arrayDetailr=[];
@@ -791,6 +787,7 @@
                         totalp: me.totalp,
                         exempt: me.exempt,
                         tax_mount: me.tax_mount,
+                        datep: me.datep,
                         ret_amount: me.ret_amount
                     });
                     me.purchase_id=0;
@@ -855,12 +852,14 @@
                 if (this.validateRet()){
                     return;
                 }
-                // console.log(this.arrayDetailr);
+                console.log(this.arrayDetailr);
                 let me = this;
                 axios.post('retention/register', {
+                    'provider_id': this.provider_id,
                     'voucher_num':this.voucher_num,
                     'total': this.totalPartial,
-                    'data': this.arrayDetailr
+                    'data': this.arrayDetailr,
+
                 }).then(function(response){
                     me.list=1;
                     me.listRetention(1,'','voucher_num');

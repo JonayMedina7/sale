@@ -23,14 +23,12 @@ class RetentionController extends Controller
         $mytime = Carbon::now('America/Caracas');
         $mytime = $mytime->format('Ym');
         if ($search=='') {
-            $retentions = Retention::join('purchases', 'retentions.id', '=', 'purchases.ret_id')
-            ->join('clients', 'purchases.provider_id', '=', 'clients.id')
-            ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.total', 'retentions.status', 'purchases.voucher', 'purchases.voucher_num as purchase_num', 'purchases.total as totalp', 'clients.name')
+            $retentions = Retention::join('clients', 'retentions.provider_id', '=', 'clients.id')
+            ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.total', 'retentions.status', 'clients.name')
             ->orderBy('retentions.id', 'desc')->paginate(10);
         } else {
-            $retentions = retention::join('purchases', 'retentions.id', '=', 'purchases.ret_id')
-            ->join('clients', 'purchases.provider_id', '=', 'clients.id')
-             ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.total', 'retentions.status', 'purchases.voucher', 'purchases.voucher_num as purchase_num', 'purchases.total as totalp', 'clients.name')
+            $retentions = retention::join('clients', 'retentions.provider_id', '=', 'clients.id')
+            ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.total', 'retentions.status', 'clients.name')
             ->where('retentions.'.$criterion, 'like', '%'. $search . '%')->orderBy('retentions.id', 'desc')->paginate(4);
         }
 
@@ -68,8 +66,8 @@ class RetentionController extends Controller
         
         $retention = Retention::join('purchases', 'retentions.id', '=', 'purchases.ret_id')
             ->join('users', 'purchases.user_id', '=', 'users.id')
-            ->join('clients', 'purchases.provider_id', '=', 'clients.id')
-            ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.status', 'purchases.user_id', 'purchases.provider_id', 'users.user', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.retention')
+            ->join('clients', 'retentions.provider_id', '=', 'clients.id')
+            ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.total', 'retentions.status', 'retentions.provider_id', 'users.user', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.retention')
             ->where('retentions.id','=',$id)
             ->orderBy('retentions.id', 'desc')->take(1)->get();
         
@@ -78,10 +76,10 @@ class RetentionController extends Controller
 
     public function getDetail(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        // if (!$request->ajax()) return redirect('/');
         $id = $request->id;
 
-        $detailp = Purchase::select('purchases.id', 'purchases.voucher', 'purchases.voucher_num as purchase_num', 'purchases.total as totalp', 'purchases.date as dates')
+        $detailp = Purchase::select('purchases.id', 'purchases.voucher', 'purchases.voucher_num as purchase_num', 'purchases.total as totalp', 'purchases.date as datep', 'purchases.tax', 'purchases.total_ret')
                         ->where('purchases.ret_id','=',$id)
                         ->orderBy('purchases.id', 'desc')->get();
         return ['detailp' => $detailp];
@@ -92,7 +90,7 @@ class RetentionController extends Controller
         $company = Company::all();
         $retention = retention::join('purchases', 'retentions.id', '=', 'purchases.ret_id')
         ->join('users', 'purchases.user_id', '=', 'users.id')
-        ->join('clients', 'purchases.provider_id', '=', 'clients.id')
+        ->join('clients', 'retentions.provider_id', '=', 'clients.id')
         ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.total', 'retentions.year', 'retentions.month', 'retentions.status', 'clients.name', 'clients.type', 'clients.rif', 'clients.retention', 'purchases.user_id', 'users.user')
         ->where('retentions.id','=',$id)->take(1)->get();
 
@@ -109,7 +107,7 @@ class RetentionController extends Controller
         $company = Company::all();
         $retention = retention::join('purchases', 'retentions.id', '=', 'purchases.ret_id')
         ->join('users', 'purchases.user_id', '=', 'users.id')
-        ->join('clients', 'purchases.provider_id', '=', 'clients.id')
+        ->join('clients', 'retentions.provider_id', '=', 'clients.id')
         ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.year', 'retentions.month', 'retentions.status', 'clients.name', 'clients.type', 'clients.rif', 'purchases.user_id', 'users.user')
         ->where('retentions.id','=',$id)->take(1)->get();
 
@@ -124,8 +122,8 @@ class RetentionController extends Controller
          $fecha1 = $request->fecha1;
          $fecha2 = $request->fecha2;
          $retentions = Retention::join('purchases', 'retentions.id', '=', 'purchases.ret_id')
-            ->join('clients', 'purchases.provider_id', '=', 'clients.id')
-            ->select('retentions.year', 'retentions.month', 'retentions.date', 'retentions.voucher_num', 'retentions.total', 'purchases.date as datep', 'purchases.provider_id', 'purchases.voucher_serie','purchases.tax_mount', 'purchases.voucher_num as purchase_num', 'purchases.total as totalp','purchases.exempt', 'purchases.tax', 'clients.type as prov_type', 'clients.rif as prov_rif')->whereBetween('retentions.date', [$fecha1, $fecha2])->get();
+            ->join('clients', 'retentions.provider_id', '=', 'clients.id')
+            ->select('retentions.year', 'retentions.month', 'retentions.date', 'retentions.voucher_num', 'retentions.total', 'purchases.date as datep', 'retentions.provider_id', 'purchases.voucher_serie','purchases.tax_mount', 'purchases.voucher_num as purchase_num', 'purchases.total as totalp','purchases.exempt', 'purchases.tax', 'clients.type as prov_type', 'clients.rif as prov_rif')->whereBetween('retentions.date', [$fecha1, $fecha2])->get();
     
     return ['txt' =>$retentions, 'company' => $company];
 
@@ -160,10 +158,10 @@ class RetentionController extends Controller
 
         $details = $request->data; // Array de detalles de venta
         // recorrido del array
-        foreach ($details as $retentions => $det) {
+        foreach ($details as $purchases => $det) {
             $purchase = Purchase::findOrFail($det['purchase_id']);
             $purchase->ret_id = $retention->id;
-            $purchase->total_ret = $retention->ret_amount;
+            $purchase->total_ret = $det['ret_amount'];
             $purchase->save();
         }
 

@@ -463,7 +463,7 @@
                 //obtener los detalles de la compra
                 var arrayBuyTemp=[];
 
-                var url= 'buy/getHeader?id='+id;
+                var url= 'buy/getHeaderb?id='+id;
                 axios.get(url).then(function(response) {
                     var response = response.data; 
                     me.arrayBuyTemp = response.buy;
@@ -477,6 +477,7 @@
                     me.tax=me.arrayBuyTemp[0]['tax'];
                     me.exempt = me.arrayBuyTemp[0]['exempt'];
                     me.status = me.arrayBuyTemp[0]['status'];
+                    me.description = me.arrayBuyTemp[0]['description'];
                     me.date = me.arrayBuyTemp[0]['date'];
 
                 })

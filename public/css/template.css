@@ -9038,7 +9038,7 @@ app-root {
     .sidebar-fixed .sidebar .sidebar-nav,
     .sidebar-fixed .sidebar .nav {
       width: 220px !important;
-      height: calc(100vh - 55px); }
+      /*height: calc(100vh - 55px);*/ }
     .sidebar .sidebar-minimizer,
     .sidebar-fixed .sidebar .sidebar-minimizer {
       display: none; }
@@ -9058,7 +9058,7 @@ hr.transparent {
 .show {
         display: list-item !important;
         opacity: 1 !important;
-        position: absolute;
+        position: fixed;
         background-color: #3c29297a !important; 
     }
 
