@@ -101,7 +101,7 @@ class ProviderController extends Controller
     public function update(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-try {
+        try {
         DB::beginTransaction();
 
         $provider = Provider::findOrFail($request->id);
