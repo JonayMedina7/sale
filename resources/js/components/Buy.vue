@@ -267,6 +267,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="form-group row border">
                                 <div class="table-responsive col-md-12">
                                     
@@ -285,14 +286,15 @@
                                                 <td>Bs: {{ total }}</td>
                                             </tr>
                                         </tbody>
-                                    </table>
+
                                 </div>
                             </div>
+
                             <div class="form-group row">
                                 <div class="col-md-12">
                                     <button type="button" class="btn btn-secondary" @click="hideDetail()">Cerrar</button>
                                     <template  v-if="status=='Registrado'">
-                                        <button type="button" @click="desactivebuy(buy_id)" class="btn btn-danger btn-sm" >Anular</button>
+                                        <button type="button" @click="desactiveBuy(buy_id)" class="btn btn-danger btn-sm" >Anular</button>
                                     </template>
                                 </div>
                             </div>
@@ -303,43 +305,7 @@
                 </div>
                 <!-- Fin ejemplo de tabla Listado -->
             </div>
-            <!--Inicio del modal agregar Productos-->
-            <!-- <div class="modal fade" tabindex="-1" :class="{'show' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
-                <div class="modal-dialog modal-primary modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title" v-text="titleModal"></h4>
-                            <button type="button" class="close" @click="closeModal()" aria-label="Close">
-                              <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <select class="form-control col-md-3" v-model="criteryP">
-                                          <option value="name">Nombre</option>
-                                          <option value="code">Codigo</option>
-                                        </select>
-
-                                        <input type="text" v-model="search" @keyup.enter="listProduct(1,searchP,criteryP)" class="form-control" placeholder="Ingrese datos a Buscar">
-                                        <button type="submit" @click="listProduct(1,searchP,criteryP)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" @click="closeModal()">Cerrar</button>
-                            <button v-if="actionType==1" type="button" class="btn btn-primary" @click="registerBuy()">Guardar</button>
-                            <button v-if="actionType==2" type="button" class="btn btn-primary" @click="updatebuy()">Actualizar</button>
-                        </div>
-                    </div> -->
-
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
-            <!--Fin del modal-->
+            
             
         </main>
 </template>
@@ -610,7 +576,7 @@
                 this.titleModal    = 'Seleccione uno o mas Productos';
                 this.modal         = 1;
             },
-            desactivebuy(purshase_id){
+            desactiveBuy(purshase_id){
                 Swal.fire({
                     title: 'Esta seguro de anular esta factura?',
                     type: 'warning',

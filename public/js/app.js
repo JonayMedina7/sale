@@ -2015,40 +2015,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2282,7 +2248,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.titleModal = 'Seleccione uno o mas Productos';
       this.modal = 1;
     },
-    desactivebuy: function desactivebuy(purshase_id) {
+    desactiveBuy: function desactiveBuy(purshase_id) {
       var _this = this;
 
       Swal.fire({
@@ -7976,6 +7942,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -8188,7 +8167,8 @@ __webpack_require__.r(__webpack_exports__);
       var url = 'sale/saleId';
       axios.get(url).then(function (response) {
         var response = response.data;
-        me.arrayId = response.saleid;
+        me.voucher_num = response.saleid;
+        console.log(me.voucher_num);
       })["catch"](function (error) {
         console.log(error);
       });
@@ -8384,6 +8364,69 @@ __webpack_require__.r(__webpack_exports__);
 
       ;
     },
+    updateSale: function updateSale(sale_id) {
+      if (this.validateSale()) {
+        return;
+      } else {
+        var _me2 = this;
+
+        axios.put('sale/update', {
+          'client_id': this.client_id,
+          'user_id': this.user_id,
+          'product_id': this.product_id,
+          'voucher': this.voucher,
+          'voucher_num': this.voucher_num,
+          'voucher_serie': this.voucher_serie,
+          'tax': this.taxV,
+          'exempt': this.totalExempt,
+          'tax_mount': this.totalTax,
+          'total': this.total,
+          'data': this.arrayDetail
+        }).then(function (response) {
+          _me2.list = 1;
+
+          _me2.listSale(1, '', 'voucher_num');
+
+          _me2.arrayId = [];
+          _me2.saleid = 0;
+
+          _me2.saleId(); // val1=[];
+
+
+          _me2.client_id = 0;
+          _me2.type = '';
+          _me2.rif = '';
+          _me2.address = '';
+          _me2.name = '';
+          _me2.vouche = "bill";
+          _me2.user_id = 0;
+          _me2.product_id = 0;
+          _me2.voucher_num = '';
+          _me2.voucher_serie = '';
+          _me2.totalTax = 0.0;
+          _me2.tax = '';
+          _me2.taxV = '';
+          _me2.exempt = 0.0;
+          _me2.tax_mount = 0.0;
+          _me2.totalExempt = 0.0;
+          _me2.total = 0.0;
+          _me2.product = '';
+          _me2.quantity = 0;
+          _me2.description = '';
+          _me2.price = 0.0;
+          _me2.stock = 0;
+          _me2.code = '';
+          _me2.arrayDetail = [];
+          /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
+
+          window.open('http://localhost/sale/public/sale/pdf/' + response.data.id + ',' + '_blank');
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      }
+
+      ;
+    },
     validateSale: function validateSale() {
       var me = this;
       me.errorSmsS = 0;
@@ -8414,23 +8457,81 @@ __webpack_require__.r(__webpack_exports__);
       ;
       return me.errorSmsS;
     },
-    showDetail: function showDetail() {
+    editSale: function editSale(id) {
       var me = this;
-      me.list = 0;
-      me.voucher = "bill";
-      me.user_id = 0;
-      me.product_id = 0;
-      me.voucher_num = '';
-      me.voucher_serie = '';
-      me.tax = '';
-      me.tax_mount = 0.0;
-      me.totalExempt = 0.0;
-      me.total = 0.0;
-      me.product = '';
-      me.quantity = 0;
-      me.price = 0.0;
-      me.description = '';
-      me.arrayDetail = [];
+      var arraySaleTemp = [];
+      var url = 'sale/getHeader?id=' + id;
+      axios.get(url).then(function (response) {
+        var response = response.data;
+        me.arraySaleTemp = response.sale;
+        console.log(me.arraySaleTemp[0]);
+        me.sale_id = id;
+        me.name = me.arraySaleTemp[0]['name'];
+        me.type = me.arraSaleTemp[0]['type'];
+        me.rif = me.arraySaleTemp[0]['rif'];
+        me.user = me.arraySaleTemp[0]['user'];
+        me.voucher = me.arraySaleTemp[0]['voucher'];
+        me.voucher_serie = me.arraySaleTemp[0]['voucher_serie'];
+        me.voucher_num = me.arraySaleTemp['voucher_num'];
+        me.tax = me.arraySaleTemp[0]['tax'];
+        me.tax_mount = me.arraySaleTemp[0]['tax_mount'];
+        me.totalExempt = me.arraySaleTemp[0]['exempt'];
+        me.total = me.arraySaleTemp[0]['total'];
+        me.status = me.arraySaleTemp[0]['status'];
+      })["catch"](function (error) {
+        console.log(error);
+      }); // obtener los datos de los detalles de la compra
+
+      var urld = 'sale/getDetail?id=' + id;
+      axios.get(urld).then(function (response) {
+        var response = response.data;
+        me.arrayDetail = response.details;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    showDetail: function showDetail(model, action, data) {
+      // console.log(data['id']);
+      var me = this;
+
+      switch (model) {
+        case "sale":
+          {
+            switch (action) {
+              case 'create':
+                {
+                  me.titleSale = 'Registrar Venta';
+                  me.list = 0;
+                  me.actionType = 1;
+                  me.voucher = "bill";
+                  me.user_id = 0;
+                  me.product_id = 0;
+                  me.voucher_num = '';
+                  me.voucher_serie = '';
+                  me.tax = '';
+                  me.tax_mount = 0.0;
+                  me.totalExempt = 0.0;
+                  me.total = 0.0;
+                  me.product = '';
+                  me.quantity = 0;
+                  me.price = 0.0;
+                  me.description = '';
+                  me.arrayDetail = [];
+                  me.saleId();
+                  break;
+                }
+
+              case 'update':
+                {
+                  me.titleSale = 'Actualizar Factura';
+                  me.list = 0;
+                  me.actionType = 2;
+                  me.editSale(data['id']);
+                  break;
+                }
+            }
+          }
+      }
     },
     hideDetail: function hideDetail() {
       this.list = 1;
@@ -8460,13 +8561,13 @@ __webpack_require__.r(__webpack_exports__);
         reverseButtons: true
       }).then(function (result) {
         if (result.value) {
-          var _me2 = _this;
+          var _me3 = _this;
           axios.put('sale/desactive', {
             'id': sale_id
           }).then(function (response) {
-            _me2.list = 1;
+            _me3.list = 1;
 
-            _me2.listSale(1, '', 'voucher_num');
+            _me3.listSale(1, '', 'voucher_num');
 
             Swal.fire('Anulado!', 'La venta ha sido anulada con éxito.', 'success');
           })["catch"](function (error) {
@@ -8478,7 +8579,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     this.listSale(1, this.search, this.name);
-    this.saleId();
   }
 });
 
@@ -9742,6 +9842,10 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     download: function download(filename, text) {
+      if (this.validateTxt()) {
+        return;
+      }
+
       var element = document.createElement('a');
       element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
       element.setAttribute('download', filename);
@@ -10007,9 +10111,9 @@ __webpack_require__.r(__webpack_exports__);
     registerRet: function registerRet() {
       if (this.validateRet()) {
         return;
-      }
+      } // console.log(this.arrayDetailr);
 
-      console.log(this.arrayDetailr);
+
       var me = this;
       axios.post('retention/register', {
         'provider_id': this.provider_id,
@@ -10040,6 +10144,31 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    validateTxt: function validateTxt() {
+      var me = this;
+      me.errorSmsR = 0;
+      me.errorSmsListR = [];
+      if (me.fecha1 == '') me.errorSmsListR.push("Por favor ingrese la Fecha Inicio");
+      if (me.fecha2 == '') me.errorSmsListR.push("Por favor ingrese la Fecha de cierre");
+      if (!me.arrayTxt.length) me.errorSmsListR.push("Periodo Introducido no posee retenciones realizadas");
+      if (me.errorSmsListR.length) me.errorSmsR = 1;
+
+      if (this.errorSmsListR.length >= 1) {
+        Swal.fire({
+          type: 'error',
+          confirmButtonText: 'Aceptar!',
+          confirmButtonClass: 'btn btn-danger',
+          confirmButtonColor: '#3085d6',
+          html: "".concat(this.errorSmsListR.map(function (er) {
+            return "<br><br>".concat(er);
+          })),
+          showCancelButton: false
+        });
+      }
+
+      ;
+      return this.errorSmsR;
     },
     validateRet: function validateRet() {
       var me = this;
@@ -57082,7 +57211,7 @@ var render = function() {
                                   attrs: { type: "button" },
                                   on: {
                                     click: function($event) {
-                                      return _vm.desactivebuy(_vm.buy_id)
+                                      return _vm.desactiveBuy(_vm.buy_id)
                                     }
                                   }
                                 },
@@ -66787,7 +66916,7 @@ var render = function() {
                 attrs: { type: "button" },
                 on: {
                   click: function($event) {
-                    return _vm.showDetail()
+                    return _vm.showDetail("sale", "create")
                   }
                 }
               },
@@ -66960,7 +67089,29 @@ var render = function() {
                                   ]
                                 ),
                                 _vm._v(
-                                  "  \n                                      \n                                        \n                                    "
+                                  "  \n                                        "
+                                ),
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-success",
+                                    attrs: { type: "button" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.showDetail(
+                                          "sale",
+                                          "update",
+                                          sale
+                                        )
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _c("i", { staticClass: "fa fa-file" }),
+                                    _vm._v(
+                                      "  Editar Factura\n                                        "
+                                    )
+                                  ]
                                 )
                               ]),
                               _vm._v(" "),
@@ -67088,6 +67239,31 @@ var render = function() {
             : _vm.list == 0
             ? [
                 _c("div", { staticClass: "card-body" }, [
+                  _c("div", { staticClass: "modal-header" }, [
+                    _c("h4", {
+                      staticClass: "modal-title",
+                      domProps: { textContent: _vm._s(_vm.titleSale) }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "close",
+                        attrs: { type: "button", "aria-label": "Close" },
+                        on: {
+                          click: function($event) {
+                            return _vm.hideDetail()
+                          }
+                        }
+                      },
+                      [
+                        _c("span", { attrs: { "aria-hidden": "true" } }, [
+                          _vm._v("×")
+                        ])
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
                   _c("div", { staticClass: "form-group row border" }, [
                     _c("div", { staticClass: "col-md-12" }, [
                       _c(
@@ -67120,7 +67296,7 @@ var render = function() {
                         _vm._v(" "),
                         _c("h4", [
                           _c("span", {
-                            staticStyle: { "text-transform": "uppercase" },
+                            staticClass: "upper",
                             domProps: { textContent: _vm._s(_vm.name) }
                           })
                         ])
@@ -67243,56 +67419,31 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-4" }, [
-                      _c(
-                        "div",
-                        {
-                          staticClass: "form-group",
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", [_vm._v("N° Factura")]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.voucher_num,
+                              expression: "voucher_num"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { disabled: "", type: "text", name: "" },
+                          domProps: { value: _vm.voucher_num },
                           on: {
-                            search: function($event) {
-                              return _vm.saleId()
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.voucher_num = $event.target.value
                             }
                           }
-                        },
-                        _vm._l(_vm.arrayId, function(sale) {
-                          return _c("div", { key: sale.saleid }, [
-                            _c("label", [_vm._v("N° Factura")]),
-                            _vm._v(" "),
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: (_vm.voucher_num = sale.saleid + 1),
-                                  expression: "voucher_num=sale.saleid+1"
-                                }
-                              ],
-                              staticClass: "form-control",
-                              attrs: {
-                                disabled: "",
-                                type: "text",
-                                placeholder: "000x",
-                                name: ""
-                              },
-                              domProps: {
-                                value: (_vm.voucher_num = sale.saleid + 1)
-                              },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    (_vm.voucher_num = sale),
-                                    "saleid+1",
-                                    $event.target.value
-                                  )
-                                }
-                              }
-                            })
-                          ])
-                        }),
-                        0
-                      )
+                        })
+                      ])
                     ])
                   ]),
                   _vm._v(" "),
@@ -67634,19 +67785,37 @@ var render = function() {
                         [_vm._v("Cerrar")]
                       ),
                       _vm._v(" "),
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-primary",
-                          attrs: { type: "button" },
-                          on: {
-                            click: function($event) {
-                              return _vm.registerSale()
-                            }
-                          }
-                        },
-                        [_vm._v("Registrar Venta")]
-                      )
+                      _vm.actionType == 1
+                        ? _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-primary",
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.registerSale()
+                                }
+                              }
+                            },
+                            [_vm._v("Registrar Venta")]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.actionType == 2
+                        ? _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-primary",
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.updateSale()
+                                }
+                              }
+                            },
+                            [_vm._v("Actualizar Factura")]
+                          )
+                        : _vm._e()
                     ])
                   ])
                 ])
@@ -67661,6 +67830,7 @@ var render = function() {
                         _vm._v(" "),
                         _c("h3", [
                           _c("p", {
+                            staticClass: "upper",
                             domProps: { textContent: _vm._s(_vm.client) }
                           })
                         ])
@@ -67673,6 +67843,7 @@ var render = function() {
                         _vm._v(" "),
                         _c("h3", [
                           _c("p", {
+                            staticClass: "upper",
                             domProps: { textContent: _vm._s(_vm.user) }
                           })
                         ])
@@ -70135,7 +70306,7 @@ var render = function() {
                             }
                           ],
                           staticClass: "form-control",
-                          attrs: { type: "date" },
+                          attrs: { type: "date", required: "" },
                           domProps: { value: _vm.fecha1 },
                           on: {
                             input: function($event) {
@@ -70157,7 +70328,7 @@ var render = function() {
                             }
                           ],
                           staticClass: "form-control",
-                          attrs: { type: "date" },
+                          attrs: { type: "date", required: "" },
                           domProps: { value: _vm.fecha2 },
                           on: {
                             input: function($event) {

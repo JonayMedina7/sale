@@ -109,8 +109,8 @@
                                           <option value="voucher_num">Numero de comprobante</option>
                                           <option value="date">Fecha-hora</option> 
                                         </select> -->
-                                        <input type="date" v-model="fecha1" class="form-control">
-                                        <input type="date" v-model="fecha2" class="form-control">
+                                        <input type="date" v-model="fecha1" class="form-control" required>
+                                        <input type="date" v-model="fecha2" class="form-control" required>
                                         
                                     </div>
                                 </div>
@@ -564,6 +564,9 @@
                 });
             },
             download(filename, text) {
+                if (this.validateTxt()){
+                    return;
+                }
               var element = document.createElement('a');
               element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
               element.setAttribute('download', filename);
@@ -576,6 +579,7 @@
               document.body.removeChild(element);
             },
             txt (fecha1,fecha2){
+                
                 let me=this;
 
                 var texto = '';
@@ -588,6 +592,9 @@
                 axios.get(url).then(function(response) {
                     var response = response.data;
                     me.arrayTxt = response.txt;
+
+                    
+
                     me.company = response.company;
                     me.company.forEach(function(elemento){
                          comp = elemento['type']+elemento['rif'];
@@ -852,7 +859,7 @@
                 if (this.validateRet()){
                     return;
                 }
-                console.log(this.arrayDetailr);
+                // console.log(this.arrayDetailr);
                 let me = this;
                 axios.post('retention/register', {
                     'provider_id': this.provider_id,
@@ -889,6 +896,28 @@
                 .catch(function (error) {
                     console.log(error);
                 });
+            },
+            validateTxt(){
+                let me = this;
+                me.errorSmsR = 0;
+                me.errorSmsListR =[];
+
+                if (me.fecha1=='')me.errorSmsListR.push("Por favor ingrese la Fecha Inicio");
+                if (me.fecha2=='')me.errorSmsListR.push("Por favor ingrese la Fecha de cierre");
+                if (!me.arrayTxt.length)me.errorSmsListR.push("Periodo Introducido no posee retenciones realizadas");
+                if (me.errorSmsListR.length) me.errorSmsR = 1;
+                if (this.errorSmsListR.length >= 1) {
+                        Swal.fire({
+                    type: 'error',
+                    confirmButtonText: 'Aceptar!',
+                    confirmButtonClass: 'btn btn-danger',
+                    confirmButtonColor: '#3085d6',
+                    html: `${this.errorSmsListR.map( er =>`<br><br>${er}`)}`,
+                    showCancelButton: false
+                    });
+                };
+
+                return this.errorSmsR;
             },
             validateRet(){
                 let me=this;

@@ -16,7 +16,7 @@
                 <div class="card">
                     <div class="card-header">
                         
-                        <button type="button" class="btn btn-success" @click="showDetail()">
+                        <button type="button" class="btn btn-success" @click="showDetail('sale', 'create')">
                             <i class="fa fa-file"></i>&nbsp;&nbsp;Crear Factura
                         </button>
                     </div>
@@ -36,9 +36,11 @@
                                     </div>
                                 </div>
                             </div>
-                                <div class="box-header">
-                                    <center><h3 class="box-title">Listado de Facturas</h3></center>
-                                </div>  <br><hr>  
+
+                            <div class="box-header">
+                                <center><h3 class="box-title">Listado de Facturas</h3></center>
+                            </div> 
+                             <br><hr>  
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-sm">
                                     <thead>
@@ -60,7 +62,9 @@
                                                 <button type="button" class="btn btn-success btn-sm" @click="showSale(sale.id)">
                                                   Detalles</i>
                                                 </button> &nbsp;
-                                              
+                                                <button type="button" class="btn btn-success" @click="showDetail('sale', 'update', sale)">
+                                                    <i class="fa fa-file"></i>&nbsp;&nbsp;Editar Factura
+                                                </button>
                                                 
                                             </td>
                                            
@@ -97,9 +101,15 @@
                     </template>
                     <!-- Fin Listado -->
 
-                    <!-- Panel de ingreso de productos -->
+                    <!-- Panel de creacion facturas -->
                     <template v-else-if="list==0">
                         <div class="card-body">
+                            <div class="modal-header">
+                                <h4 class="modal-title" v-text="titleSale"></h4>
+                                <button type="button" class="close" @click="hideDetail()" aria-label="Close">
+                                  <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
                             <div class="form-group row border">
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -115,7 +125,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label >Razon Social(*):</label>
-                                        <h4><span v-text="name" style="text-transform: uppercase;"> </span></h4>
+                                        <h4><span v-text="name" class="upper"> </span></h4>
                                     </div>
                                 </div>
                                 <div  class="col-md-3">
@@ -151,11 +161,9 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div @search="saleId()" class="form-group">
-                                        <div v-for="sale in arrayId" :key="sale.saleid">
+                                    <div class="form-group">
                                         <label>N° Factura</label>
-                                        <input disabled type="text" class="form-control" v-model="voucher_num=sale.saleid+1" placeholder="000x" name="">    
-                                        </div>
+                                        <input disabled type="text" class="form-control" v-model="voucher_num" name="">    
                                     </div>
                                 </div>
                                 
@@ -242,7 +250,8 @@
                             <div class="form-group row">
                                 <div class="col-md-12">
                                     <button type="button" class="btn btn-danger" @click="hideDetail()">Cerrar</button>
-                                    <button type="button" class="btn btn-primary" @click="registerSale()">Registrar Venta</button>
+                                    <button v-if="actionType==1" type="button" class="btn btn-primary" @click="registerSale()">Registrar Venta</button>
+                                    <button v-if="actionType==2" type="button" class="btn btn-primary" @click="updateSale()">Actualizar Factura</button>
                                 </div>
                             </div>
                         </div>
@@ -256,13 +265,13 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="client"><h6>Cliente</h6></label>
-                                        <h3><p v-text="client"></p></h3>
+                                        <h3><p class="upper" v-text="client"></p></h3>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="user"><h6>Vendedor</h6></label>
-                                        <h3><p v-text="user"></p></h3>
+                                        <h3><p class="upper" v-text="user"></p></h3>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -360,6 +369,10 @@
                         </div>
                     </template>
                     <!-- Fin panel vistas ventas -->
+
+                    <!-- Panel modificacion facturas -->
+                    
+                    <!-- Fin panel -->
                 </div>
                 </div>
                 <!-- Fin ejemplo de tabla Listado -->
@@ -679,7 +692,8 @@
                 var url= 'sale/saleId';
                 axios.get(url).then(function(response) {
                     var response = response.data; 
-                    me.arrayId = response.saleid;
+                    me.voucher_num = response.saleid;
+                    console.log(me.voucher_num);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -878,6 +892,70 @@
                 });
                 };
             },
+            updateSale (sale_id){
+                if (this.validateSale()) {
+                    return;
+                }else {
+                let me=this;
+                
+                axios.put('sale/update', {
+
+                    
+                    'client_id':this.client_id,
+                    'user_id': this.user_id,
+                    'product_id': this.product_id,
+                    'voucher': this.voucher,
+                    'voucher_num': this.voucher_num,
+                    'voucher_serie': this.voucher_serie,
+                    'tax': this.taxV,
+                    'exempt': this.totalExempt,
+                    'tax_mount': this.totalTax,
+                    'total': this.total,
+                    'data': this.arrayDetail
+                    
+                    
+                }).then(function(response) {
+                    
+                    me.list=1;
+                    me.listSale(1,'','voucher_num');
+                    me.arrayId=[];
+                    me.saleid=0;
+                    me.saleId();
+                    // val1=[];
+                    me.client_id=0;
+                    me.type='';
+                    me.rif='';
+                    me.address='';
+                    me.name='';
+                    me.vouche="bill";
+                    me.user_id=0;
+                    me.product_id=0;
+                    me.voucher_num='';
+                    me.voucher_serie='';
+                    me.totalTax= 0.0;
+                    me.tax='';
+                    me.taxV='';
+                    me.exempt=0.0;
+                    me.tax_mount=0.0;
+                    me.totalExempt=0.0;
+                    me.total=0.0;
+                    me.product='';
+                    me.quantity=0;
+                    me.description='';
+                    me.price=0.0;
+                    me.stock=0;
+                    me.code='';
+                    me.arrayDetail=[];
+                    
+                    /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
+                    window.open('http://localhost/sale/public/sale/pdf/'+ response.data.id + ','+ '_blank');
+
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+                };
+            },
             validateSale(){
                 let me=this;
                 me.errorSmsS=0;
@@ -909,24 +987,88 @@
                 return me.errorSmsS;  
                 
             },
-           
-            showDetail(){
+            editSale(id){
+                let me = this;
+                var arraySaleTemp=[];
+                                var url= 'sale/getHeader?id='+id;
+                                axios.get(url).then(function(response) {
+                                    var response = response.data; 
+                                    me.arraySaleTemp = response.sale;
+                                    console.log(me.arraySaleTemp[0]);
+                                    me.sale_id = id;
+                                    me.name = me.arraySaleTemp[0]['name'];
+                                    me.type = me.arraSaleTemp[0]['type'];
+                                    me.rif = me.arraySaleTemp[0]['rif'];
+                                    me.user = me.arraySaleTemp[0]['user'];
+                                    me.voucher = me.arraySaleTemp[0]['voucher'];
+                                    me.voucher_serie = me.arraySaleTemp[0]['voucher_serie'];
+                                    me.voucher_num = me.arraySaleTemp['voucher_num'];
+                                    me.tax = me.arraySaleTemp[0]['tax'];
+                                    me.tax_mount = me.arraySaleTemp[0]['tax_mount'];
+                                    me.totalExempt = me.arraySaleTemp[0]['exempt'];
+                                    me.total = me.arraySaleTemp[0]['total'];
+                                    me.status = me.arraySaleTemp[0]['status'];
+
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                });
+                                
+                                // obtener los datos de los detalles de la compra
+
+                                var urld= 'sale/getDetail?id='+id;
+                                axios.get(urld).then(function(response) {
+                                    var response = response.data; 
+                                    me.arrayDetail = response.details;
+                                    
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                });
+            },
+            showDetail(model, action, data){
+                // console.log(data['id']);
                 let me=this;
-                me.list=0;
-                me.voucher="bill";
-                me.user_id=0;
-                me.product_id=0;
-                me.voucher_num='';
-                me.voucher_serie='';
-                me.tax='';
-                me.tax_mount=0.0;
-                me.totalExempt=0.0;
-                me.total=0.0;
-                me.product='';
-                me.quantity=0;
-                me.price=0.0;
-                me.description='';
-                me.arrayDetail=[];
+                switch(model) {
+                   case "sale" :
+                   {
+                        switch(action)
+                        {
+                            case 'create':
+                            {
+                                me.titleSale = 'Registrar Venta';
+                                me.list = 0;
+                                me.actionType = 1;
+
+                                me.voucher="bill";
+                                me.user_id=0;
+                                me.product_id=0;
+                                me.voucher_num='';
+                                me.voucher_serie='';
+                                me.tax='';
+                                me.tax_mount=0.0;
+                                me.totalExempt=0.0;
+                                me.total=0.0;
+                                me.product='';
+                                me.quantity=0;
+                                me.price=0.0;
+                                me.description='';
+                                me.arrayDetail=[];
+                                me.saleId();
+                                break;
+                            }
+                            case'update':
+                            {
+                                me.titleSale = 'Actualizar Factura';
+                                me.list = 0;
+                                me.actionType=2;
+                                me.editSale(data['id']);
+                                break;
+                            }
+                        }
+                   }
+                }
+                
 
             },
             hideDetail(){
@@ -980,7 +1122,6 @@
         },
         mounted() {
             this.listSale(1,this.search,this.name);
-            this.saleId();
         }
     };
 </script>

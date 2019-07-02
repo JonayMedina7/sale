@@ -150,7 +150,7 @@ class PurchaseController extends Controller
         $filter = $request->filter;
         $id = $request->id;
         $purchases = Purchase::where('voucher_num','=', $filter)
-        ->select('id','voucher', 'voucher_num as purchase_num', 'total as totalp', 'exempt', 'tax_mount')
+        ->select('id','voucher', 'voucher_num as purchase_num', 'total as totalp', 'exempt', 'tax_mount', 'tax')
         ->where('ret_id','=', '0' )
         ->where('provider_id', '=', $id)
         
@@ -166,13 +166,13 @@ class PurchaseController extends Controller
         $search = $request->search;
         $id = $request->id;
         if ($search=='') {
-            $purchases = Purchase::select('id','voucher', 'voucher_num as purchase_num', 'total as totalp', 'exempt', 'tax_mount', 'date as datep')
+            $purchases = Purchase::select('id','voucher', 'voucher_num as purchase_num', 'total as totalp', 'exempt', 'tax_mount', 'date as datep', 'tax')
             ->where('ret_id','=', '0' )
             ->where('provider_id', '=', $id)
             ->where('status', '=', 'Registrado')
             ->orderBy('id', 'desc')->paginate(5);
         } else {
-            $purchases = Purchase::select('id','voucher', 'voucher_num as purchase_num', 'total as totalp', 'exempt', 'tax_mount',)
+            $purchases = Purchase::select('id','voucher', 'voucher_num as purchase_num', 'total as totalp', 'exempt', 'tax_mount', 'date as datep', 'tax')
             ->where('voucher_num', 'like', '%'.$search. '%')
             ->where('ret_id','=', '0' )
             ->where('provider_id', '=', $id)
@@ -262,4 +262,5 @@ class PurchaseController extends Controller
         $purchase->save();
 
     }
+
 }

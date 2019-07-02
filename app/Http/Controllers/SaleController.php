@@ -44,10 +44,13 @@ class SaleController extends Controller
 
     public function saleId (Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        // if (!$request->ajax()) return redirect('/');
 
         
         $saleid = Sale::select('sales.id as saleid')->orderBy('sales.id', 'desc')->take(1)->get();
+            $num = 1;
+            $saleid = $saleid[0]->saleid + $num;
+            $saleid = str_pad($saleid, 8, "0", STR_PAD_LEFT);
 
         return ['saleid' => $saleid];
     }
@@ -67,7 +70,7 @@ class SaleController extends Controller
 
     public function getHeader(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        // if (!$request->ajax()) return redirect('/');
         $id = $request->id;
         
         $sale = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
@@ -85,7 +88,7 @@ class SaleController extends Controller
         $id = $request->id;
         
         $details = Detailsale::join('products', 'detailsales.product_id', '=', 'products.id')
-        ->select('detailsales.quantity', 'detailsales.price', 'detailsales.description', 'products.name as product')
+        ->select('detailsales.quantity', 'detailsales.price', 'detailsales.description', 'products.name as product', 'products.stock')
         ->where('detailsales.sale_id','=',$id)
         ->orderBy('detailsales.id', 'desc')->get();
         
