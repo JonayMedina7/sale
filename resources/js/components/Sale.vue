@@ -62,9 +62,9 @@
                                                 <button type="button" class="btn btn-success btn-sm" @click="showSale(sale.id)">
                                                   Detalles</i>
                                                 </button> &nbsp;
-                                                <button type="button" class="btn btn-success" @click="showDetail('sale', 'update', sale)">
+                                                <!-- <button type="button" class="btn btn-success" @click="showDetail('sale', 'update', sale)">
                                                     <i class="fa fa-file"></i>&nbsp;&nbsp;Editar Factura
-                                                </button>
+                                                </button> -->
                                                 
                                             </td>
                                            
@@ -299,7 +299,12 @@
                                         <h3><p v-text="voucher_num"></p></h3>
                                     </div>
                                 </div>
-                                
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label><h6>Fecha</h6></label>
+                                        <h3><p v-text="date"></p></h3>
+                                    </div>
+                                </div>
                             </div>
                             
                             <div class="form-group row border">
@@ -334,7 +339,7 @@
                                                 <td v-text="'Bs ' + tax_mount"> <!-- {{ totalTax=(detail.tax_mount).toFixed(2) }} --></td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
-                                                <td colspan="4" align="right"><strong>Total: </strong></td>
+                                                <td colspan="4" align="right"><strong>Total Exento: </strong></td>
                                                 <td>Bs: {{ exempt }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
@@ -456,8 +461,6 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="closeModal()">Cerrar</button>
-                            <button v-if="actionType==1" type="button" class="btn btn-primary" @click="registerSale()">Guardar</button>
-                            <button v-if="actionType==2" type="button" class="btn btn-primary" @click="updatesale()">Actualizar</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -582,7 +585,8 @@
                         divisor = (this.arrayDetail[i].tax/100);
                         
                         result2 = result2 +((this.arrayDetail[i].price*this.arrayDetail[i].quantity)*divisor);
-                        me.taxV = this.arrayDetail[i].tax;
+                        this.taxV = this.arrayDetail[i].tax;
+                        console.log(this.taxV);
                     }
                 }
                 // console.log(divisor);
@@ -636,9 +640,10 @@
                     me.voucher = me.arraySaleTemp[0]['voucher'];
                     me.voucher_serie = me.arraySaleTemp[0]['voucher_serie'];
                     me.voucher_num = me.arraySaleTemp[0]['voucher_num'];
+                    me.date = me.arraySaleTemp[0]['date'];
                     me.tax = me.arraySaleTemp[0]['tax'];
                     me.tax_mount = me.arraySaleTemp[0]['tax_mount'];
-                    me.totalExempt = me.arraySaleTemp[0]['exempt'];
+                    me.exempt = me.arraySaleTemp[0]['exempt'];
                     me.total = me.arraySaleTemp[0]['total'];
                     me.status = me.arraySaleTemp[0]['status'];
 

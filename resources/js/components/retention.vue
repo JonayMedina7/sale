@@ -577,6 +577,10 @@
               element.click();
 
               document.body.removeChild(element);
+
+              this.listRetention(1,'','voucher_num');
+              this.fecha1='';
+              this.fecha2='';
             },
             txt (fecha1,fecha2){
                 

@@ -7955,6 +7955,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -8072,7 +8075,8 @@ __webpack_require__.r(__webpack_exports__);
         if (this.arrayDetail[i].tax > 0) {
           divisor = this.arrayDetail[i].tax / 100;
           result2 = result2 + this.arrayDetail[i].price * this.arrayDetail[i].quantity * divisor;
-          me.taxV = this.arrayDetail[i].tax;
+          this.taxV = this.arrayDetail[i].tax;
+          console.log(this.taxV);
         }
       } // console.log(divisor);
 
@@ -8123,9 +8127,10 @@ __webpack_require__.r(__webpack_exports__);
         me.voucher = me.arraySaleTemp[0]['voucher'];
         me.voucher_serie = me.arraySaleTemp[0]['voucher_serie'];
         me.voucher_num = me.arraySaleTemp[0]['voucher_num'];
+        me.date = me.arraySaleTemp[0]['date'];
         me.tax = me.arraySaleTemp[0]['tax'];
         me.tax_mount = me.arraySaleTemp[0]['tax_mount'];
-        me.totalExempt = me.arraySaleTemp[0]['exempt'];
+        me.exempt = me.arraySaleTemp[0]['exempt'];
         me.total = me.arraySaleTemp[0]['total'];
         me.status = me.arraySaleTemp[0]['status'];
       })["catch"](function (error) {
@@ -8305,8 +8310,7 @@ __webpack_require__.r(__webpack_exports__);
       if (this.validateSale()) {
         return;
       } else {
-        var _me = this;
-
+        var me = this;
         axios.post('sale/register', {
           'client_id': this.client_id,
           'user_id': this.user_id,
@@ -8320,40 +8324,36 @@ __webpack_require__.r(__webpack_exports__);
           'total': this.total,
           'data': this.arrayDetail
         }).then(function (response) {
-          _me.list = 1;
+          me.list = 1;
+          me.listSale(1, '', 'voucher_num');
+          me.arrayId = [];
+          me.saleid = 0;
+          me.saleId(); // val1=[];
 
-          _me.listSale(1, '', 'voucher_num');
-
-          _me.arrayId = [];
-          _me.saleid = 0;
-
-          _me.saleId(); // val1=[];
-
-
-          _me.client_id = 0;
-          _me.type = '';
-          _me.rif = '';
-          _me.address = '';
-          _me.name = '';
-          _me.vouche = "bill";
-          _me.user_id = 0;
-          _me.product_id = 0;
-          _me.voucher_num = '';
-          _me.voucher_serie = '';
-          _me.totalTax = 0.0;
-          _me.tax = '';
-          _me.taxV = '';
-          _me.exempt = 0.0;
-          _me.tax_mount = 0.0;
-          _me.totalExempt = 0.0;
-          _me.total = 0.0;
-          _me.product = '';
-          _me.quantity = 0;
-          _me.description = '';
-          _me.price = 0.0;
-          _me.stock = 0;
-          _me.code = '';
-          _me.arrayDetail = [];
+          me.client_id = 0;
+          me.type = '';
+          me.rif = '';
+          me.address = '';
+          me.name = '';
+          me.vouche = "bill";
+          me.user_id = 0;
+          me.product_id = 0;
+          me.voucher_num = '';
+          me.voucher_serie = '';
+          me.totalTax = 0.0;
+          me.tax = '';
+          me.taxV = '';
+          me.exempt = 0.0;
+          me.tax_mount = 0.0;
+          me.totalExempt = 0.0;
+          me.total = 0.0;
+          me.product = '';
+          me.quantity = 0;
+          me.description = '';
+          me.price = 0.0;
+          me.stock = 0;
+          me.code = '';
+          me.arrayDetail = [];
           /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
 
           window.open('http://localhost/sale/public/sale/pdf/' + response.data.id + ',' + '_blank');
@@ -8368,8 +8368,7 @@ __webpack_require__.r(__webpack_exports__);
       if (this.validateSale()) {
         return;
       } else {
-        var _me2 = this;
-
+        var me = this;
         axios.put('sale/update', {
           'client_id': this.client_id,
           'user_id': this.user_id,
@@ -8383,40 +8382,36 @@ __webpack_require__.r(__webpack_exports__);
           'total': this.total,
           'data': this.arrayDetail
         }).then(function (response) {
-          _me2.list = 1;
+          me.list = 1;
+          me.listSale(1, '', 'voucher_num');
+          me.arrayId = [];
+          me.saleid = 0;
+          me.saleId(); // val1=[];
 
-          _me2.listSale(1, '', 'voucher_num');
-
-          _me2.arrayId = [];
-          _me2.saleid = 0;
-
-          _me2.saleId(); // val1=[];
-
-
-          _me2.client_id = 0;
-          _me2.type = '';
-          _me2.rif = '';
-          _me2.address = '';
-          _me2.name = '';
-          _me2.vouche = "bill";
-          _me2.user_id = 0;
-          _me2.product_id = 0;
-          _me2.voucher_num = '';
-          _me2.voucher_serie = '';
-          _me2.totalTax = 0.0;
-          _me2.tax = '';
-          _me2.taxV = '';
-          _me2.exempt = 0.0;
-          _me2.tax_mount = 0.0;
-          _me2.totalExempt = 0.0;
-          _me2.total = 0.0;
-          _me2.product = '';
-          _me2.quantity = 0;
-          _me2.description = '';
-          _me2.price = 0.0;
-          _me2.stock = 0;
-          _me2.code = '';
-          _me2.arrayDetail = [];
+          me.client_id = 0;
+          me.type = '';
+          me.rif = '';
+          me.address = '';
+          me.name = '';
+          me.vouche = "bill";
+          me.user_id = 0;
+          me.product_id = 0;
+          me.voucher_num = '';
+          me.voucher_serie = '';
+          me.totalTax = 0.0;
+          me.tax = '';
+          me.taxV = '';
+          me.exempt = 0.0;
+          me.tax_mount = 0.0;
+          me.totalExempt = 0.0;
+          me.total = 0.0;
+          me.product = '';
+          me.quantity = 0;
+          me.description = '';
+          me.price = 0.0;
+          me.stock = 0;
+          me.code = '';
+          me.arrayDetail = [];
           /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
 
           window.open('http://localhost/sale/public/sale/pdf/' + response.data.id + ',' + '_blank');
@@ -8561,14 +8556,12 @@ __webpack_require__.r(__webpack_exports__);
         reverseButtons: true
       }).then(function (result) {
         if (result.value) {
-          var _me3 = _this;
+          var me = _this;
           axios.put('sale/desactive', {
             'id': sale_id
           }).then(function (response) {
-            _me3.list = 1;
-
-            _me3.listSale(1, '', 'voucher_num');
-
+            me.list = 1;
+            me.listSale(1, '', 'voucher_num');
             Swal.fire('Anulado!', 'La venta ha sido anulada con éxito.', 'success');
           })["catch"](function (error) {
             console.log(error);
@@ -9853,6 +9846,9 @@ __webpack_require__.r(__webpack_exports__);
       document.body.appendChild(element);
       element.click();
       document.body.removeChild(element);
+      this.listRetention(1, '', 'voucher_num');
+      this.fecha1 = '';
+      this.fecha2 = '';
     },
     txt: function txt(fecha1, fecha2) {
       var me = this;
@@ -67090,28 +67086,6 @@ var render = function() {
                                 ),
                                 _vm._v(
                                   "  \n                                        "
-                                ),
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass: "btn btn-success",
-                                    attrs: { type: "button" },
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.showDetail(
-                                          "sale",
-                                          "update",
-                                          sale
-                                        )
-                                      }
-                                    }
-                                  },
-                                  [
-                                    _c("i", { staticClass: "fa fa-file" }),
-                                    _vm._v(
-                                      "  Editar Factura\n                                        "
-                                    )
-                                  ]
                                 )
                               ]),
                               _vm._v(" "),
@@ -67896,6 +67870,18 @@ var render = function() {
                           })
                         ])
                       ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-3" }, [
+                      _c("div", { staticClass: "form-group" }, [
+                        _vm._m(14),
+                        _vm._v(" "),
+                        _c("h3", [
+                          _c("p", {
+                            domProps: { textContent: _vm._s(_vm.date) }
+                          })
+                        ])
+                      ])
                     ])
                   ]),
                   _vm._v(" "),
@@ -67908,7 +67894,7 @@ var render = function() {
                             "table table-bordered table-striped table-sm"
                         },
                         [
-                          _vm._m(14),
+                          _vm._m(15),
                           _vm._v(" "),
                           _vm.arrayDetail.length
                             ? _c(
@@ -67962,7 +67948,7 @@ var render = function() {
                                       }
                                     },
                                     [
-                                      _vm._m(15),
+                                      _vm._m(16),
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(
@@ -67985,7 +67971,7 @@ var render = function() {
                                       }
                                     },
                                     [
-                                      _vm._m(16),
+                                      _vm._m(17),
                                       _vm._v(" "),
                                       _c("td", {
                                         domProps: {
@@ -68005,7 +67991,7 @@ var render = function() {
                                       }
                                     },
                                     [
-                                      _vm._m(17),
+                                      _vm._m(18),
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v("Bs: " + _vm._s(_vm.exempt))
@@ -68021,7 +68007,7 @@ var render = function() {
                                       }
                                     },
                                     [
-                                      _vm._m(18),
+                                      _vm._m(19),
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v("Bs: " + _vm._s(_vm.total))
@@ -68031,7 +68017,7 @@ var render = function() {
                                 ],
                                 2
                               )
-                            : _c("tbody", [_vm._m(19)])
+                            : _c("tbody", [_vm._m(20)])
                         ]
                       )
                     ])
@@ -68274,7 +68260,7 @@ var render = function() {
                       staticClass: "table table-bordered table-striped table-sm"
                     },
                     [
-                      _vm._m(20),
+                      _vm._m(21),
                       _vm._v(" "),
                       _c(
                         "tbody",
@@ -68447,39 +68433,7 @@ var render = function() {
                     }
                   },
                   [_vm._v("Cerrar")]
-                ),
-                _vm._v(" "),
-                _vm.actionType == 1
-                  ? _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary",
-                        attrs: { type: "button" },
-                        on: {
-                          click: function($event) {
-                            return _vm.registerSale()
-                          }
-                        }
-                      },
-                      [_vm._v("Guardar")]
-                    )
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm.actionType == 2
-                  ? _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary",
-                        attrs: { type: "button" },
-                        on: {
-                          click: function($event) {
-                            return _vm.updatesale()
-                          }
-                        }
-                      },
-                      [_vm._v("Actualizar")]
-                    )
-                  : _vm._e()
+                )
               ])
             ])
           ]
@@ -68642,6 +68596,12 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("label", [_c("h6", [_vm._v("Fecha")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
         _c("th", [_vm._v("Artículo")]),
@@ -68677,7 +68637,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("td", { attrs: { colspan: "4", align: "right" } }, [
-      _c("strong", [_vm._v("Total: ")])
+      _c("strong", [_vm._v("Total Exento: ")])
     ])
   },
   function() {
