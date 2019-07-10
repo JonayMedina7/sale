@@ -7,6 +7,8 @@ use App\Retention;
 use App\Purchase;
 use App\Company;
 use Carbon\Carbon;
+use App\Mail\RetentionSend;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -97,9 +99,32 @@ class RetentionController extends Controller
         $detailret = Purchase::select('purchases.id', 'purchases.voucher', 'purchases.date as datep', 'purchases.voucher_num as purchase_num', 'purchases.voucher_serie', 'purchases.total as totalp', 'purchases.exempt', 'purchases.tax_mount', 'purchases.total_ret', 'purchases.tax')
             ->where('purchases.ret_id','=',$id)->get();
 
-        $pdf = \PDF::loadView('pdf.ret',['retention'=>$retention, 'detailret'=>$detailret, 'company'=>$company]);
-        $pdf->setPaper('A4', 'landscape');
-        return $pdf->stream('venta-'.$retention[0]->voucher_num.'.pdf');
+        $pdf = \PDF::loadView('pdf.ret',['retention'=>$retention, 'detailret'=>$detailret, 'company'=>$company])->stream('retencion-'.$retention[0]->voucher_num.'.pdf');
+
+        return $pdf;
+    }
+
+    public function email(Request $request)
+    {
+        // dd($request);
+        $company = Company::all();
+        $retention = retention::join('purchases', 'retentions.id', '=', 'purchases.ret_id')
+        ->join('users', 'purchases.user_id', '=', 'users.id')
+        ->join('clients', 'retentions.provider_id', '=', 'clients.id')
+        ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.total', 'retentions.year', 'retentions.month', 'retentions.status', 'clients.name', 'clients.email', 'clients.type', 'clients.rif', 'clients.retention', 'purchases.user_id', 'users.user')
+        ->where('retentions.id','=',$request->id)->take(1)->get();
+
+        $detailret = Purchase::select('purchases.id', 'purchases.voucher', 'purchases.date as datep', 'purchases.voucher_num as purchase_num', 'purchases.voucher_serie', 'purchases.total as totalp', 'purchases.exempt', 'purchases.tax_mount', 'purchases.total_ret', 'purchases.tax')
+            ->where('purchases.ret_id','=',$request->id)->get();
+
+        $pdf = \PDF::loadView('pdf.ret',['retention'=>$retention, 'detailret'=>$detailret, 'company'=>$company])->stream('retencion-'.$retention[0]->voucher_num.'.pdf');
+
+        Mail::send('mails.retention_send', ['pdf'=>$pdf, 'detailret'=>$detailret], function($message) use ($pdf, $retention)
+        {
+            $message->to($retention[0]->email, $retention[0]->name)->subject('Retención n° '.$retention[0]->voucher_num);
+            $message->attachData($pdf, 'retencion-'.$retention[0]->voucher_num.'.pdf');
+        });
+        return;
     }
 
     public function pdfw(Request $request, $id)
@@ -116,7 +141,8 @@ class RetentionController extends Controller
         return view('welcomer', compact('retention', 'detailret', 'company'));
     }
 
-     public function getDownload(Request $request){
+     public function getDownload(Request $request)
+    {
         
          $company = Company::all();
          $fecha1 = $request->fecha1;
@@ -125,7 +151,7 @@ class RetentionController extends Controller
             ->join('clients', 'retentions.provider_id', '=', 'clients.id')
             ->select('retentions.year', 'retentions.month', 'retentions.date', 'retentions.voucher_num', 'retentions.total', 'purchases.date as datep', 'retentions.provider_id', 'purchases.voucher_serie','purchases.tax_mount', 'purchases.voucher_num as purchase_num', 'purchases.total as totalp','purchases.exempt', 'purchases.tax', 'clients.type as prov_type', 'clients.rif as prov_rif')->whereBetween('retentions.date', [$fecha1, $fecha2])->get();
     
-    return ['txt' =>$retentions, 'company' => $company];
+            return ['txt' =>$retentions, 'company' => $company];
 
     }
   
@@ -147,6 +173,7 @@ class RetentionController extends Controller
 
         DB::beginTransaction();
         $retention = new Retention();
+        $retention->provider_id = $request->provider_id;
         $retention->voucher_num = $request->voucher_num;
         $retention->date = $mytime->toDateString();
         $retention->year = $mytime->format('Y');

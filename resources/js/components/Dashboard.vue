@@ -112,7 +112,7 @@
                 me.varPurchase = new Chart(me.varPurchase, {
                     type: 'bar',
                     data: {
-                        labels:  me.varMonthp,
+                        labels:  me.varMonthp, 
                         datasets: [{
                             label:'Ingresos',
                             data: me.varTotalPurchase,
@@ -187,5 +187,5 @@
         mounted() {
             this.getPurchases();
         }
-    }
+    };
 </script>

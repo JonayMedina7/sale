@@ -180,7 +180,8 @@ Route::group(['middleware' =>['auth']], function()
 		route::put('/retention/desactive', 'RetentionController@desactive');
 		route::get('/retention/getDownload', 'RetentionController@getDownload');
 		route::get('/retention/pdf/{id}', 'RetentionController@pdf')->name('retencion');
-		route::get('/retention/pdfw/{id}', 'RetentionController@pdfw')->name('retencion'); 
+		route::get('/retention/pdfw/{id}', 'RetentionController@pdfw')->name('retencion');
+		route::get('retention/email', 'RetentionController@email');
 		
 		route::get('/company', 'CompanyController@index');
 		route::post('/company/register', 'CompanyController@store');

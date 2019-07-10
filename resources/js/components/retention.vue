@@ -63,12 +63,6 @@
                                                 <button type="button" class="btn btn-info btn-sm" @click="pdfRet(ret.id)">
                                                   <i class="icon-doc"></i>
                                                 </button> &nbsp;
-
-                                                <template  v-if="ret.status=='Registrado'">
-                                                    <button type="button" @click="desactiveRet(ret.id)" class="btn btn-danger btn-sm" >
-                                                      <i class="icon-trash"></i>
-                                                    </button>
-                                                </template>
                                                 
                                             </td>
                                             <td v-text="ret.voucher_num"></td>
@@ -364,8 +358,22 @@
                                 </div>
                             </div>  
                             <div class="form-group row">
-                                <div class="col-md-12">
-                                    <button type="button" class="btn btn-secondary" @click="hideRet()">Cerrar</button>
+                                <div class="col-md-6">
+                                    <template  v-if="status=='Registrado'">
+                                        <button type="button" @click="desactiveRet(id)" class="btn btn-danger btn-sm" >
+                                          <i class="icon-trash">&nbsp;</i>
+                                          Anular
+                                        </button>
+                                    </template>
+                                    <template>
+                                        <button type="button" @click="emailRet(id)" class="btn btn-warning btn-sm">
+                                            <i class="icon-envelope">&nbsp; </i>Enviar por Email
+                                        </button>
+                                    </template>
+                                </div>
+                                <div class="col-md-6 float-right">
+                                    <button type="button" class="btn btn-secondary float-right" @click="hideRet()">
+                                        <i class="icon-close"></i>&nbsp;Cerrar</button>
                                 </div>
                             </div>
                         </div>
@@ -646,7 +654,7 @@
                 axios.get(url).then(function(response) {
                     var responseR = response.data;
                     me.arrayRetTemp = responseR.retention;
-
+                    me.id = id;
                     me.voucher_num = me.arrayRetTemp[0]['voucher_num'];
                     me.date = me.arrayRetTemp[0]['date'];
                     me.exempt = me.arrayRetTemp[0]['exempt'];
@@ -677,7 +685,6 @@
                 });
             },
             showInsert(){
-
                 let me=this;
                 me.list=0;
                 me.voucher_num ='';
@@ -702,9 +709,7 @@
 
             },
             showTxt(){
-
                 let me=this;
-                
                 me.list=6;
             },
             providerSelectr(search,loading){
@@ -848,6 +853,41 @@
             hideRet(){
                 this.list=1;
             },
+            emailRet(id){
+
+                Swal.fire({
+                    title: 'Enviar Retención mediante Email?',
+                    type: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Aceptar!',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonClass:'btn btn-success',
+                    cancelButtonClass: 'btn btn-danger',
+                    buttonsStyling: false,
+                    reverseButtons: true
+                    }).then((result) => {
+                        if (result.value) {
+                            let me=this;
+
+                            axios.get('retention/email?id='+id).then(function (response){
+                               me.listRetention(1,'','voucher_num');
+                                Swal.fire(
+                                    'Enviado!',
+                                    'La Retencion ha sido Enviada con Exito.',
+                                    'success'
+                                    )
+                            }) .catch(function (error) {
+                                console.log(error);
+                            });
+                        } else if (
+                            result.dismiss === swal.DismissReason.cancel
+                            ){
+
+                        }
+                    });
+            },
             pdfRet(id){
                 /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
                 window.open('http://localhost/sale/public/retention/pdf/'+ id + ','+ '_blank');
@@ -872,7 +912,6 @@
                     'data': this.arrayDetailr,
 
                 }).then(function(response){
-                    me.list=1;
                     me.listRetention(1,'','voucher_num');
                     me.date='';
                     me.datep='';
@@ -893,9 +932,7 @@
                     me.purchase_num='';
                     me.arrayDetailr=[];
 
-                    window.open('http://localhost/sale/public/retention/pdf/'+ response.data.id + ','+ '_blank');
-
-
+                    me.showRet(response.data.id);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -1002,7 +1039,7 @@
                     if (result.value) {
                         let me=this;
 
-                        axios.put('sale/desactive', {
+                        axios.put('retention/desactive', {
                             'id': id
                         }).then(function (response){
                            me.listRetention(1,'','voucher_num');

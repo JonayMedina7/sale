@@ -9712,6 +9712,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -9899,6 +9907,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.get(url).then(function (response) {
         var responseR = response.data;
         me.arrayRetTemp = responseR.retention;
+        me.id = id;
         me.voucher_num = me.arrayRetTemp[0]['voucher_num'];
         me.date = me.arrayRetTemp[0]['date'];
         me.exempt = me.arrayRetTemp[0]['exempt'];
@@ -10093,6 +10102,33 @@ __webpack_require__.r(__webpack_exports__);
     hideRet: function hideRet() {
       this.list = 1;
     },
+    emailRet: function emailRet(id) {
+      var _this = this;
+
+      Swal.fire({
+        title: 'Enviar Retención mediante Email?',
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Aceptar!',
+        cancelButtonText: 'Cancelar',
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-danger',
+        buttonsStyling: false,
+        reverseButtons: true
+      }).then(function (result) {
+        if (result.value) {
+          var me = _this;
+          axios.get('retention/email?id=' + id).then(function (response) {
+            me.listRetention(1, '', 'voucher_num');
+            Swal.fire('Enviado!', 'La Retencion ha sido Enviada con Exito.', 'success');
+          })["catch"](function (error) {
+            console.log(error);
+          });
+        } else if (result.dismiss === swal.DismissReason.cancel) {}
+      });
+    },
     pdfRet: function pdfRet(id) {
       /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
       window.open('http://localhost/sale/public/retention/pdf/' + id + ',' + '_blank');
@@ -10117,7 +10153,6 @@ __webpack_require__.r(__webpack_exports__);
         'total': this.totalPartial,
         'data': this.arrayDetailr
       }).then(function (response) {
-        me.list = 1;
         me.listRetention(1, '', 'voucher_num');
         me.date = '';
         me.datep = '';
@@ -10136,7 +10171,7 @@ __webpack_require__.r(__webpack_exports__);
         me.voucher_num = '';
         me.purchase_num = '';
         me.arrayDetailr = [];
-        window.open('http://localhost/sale/public/retention/pdf/' + response.data.id + ',' + '_blank');
+        me.showRet(response.data.id);
       })["catch"](function (error) {
         console.log(error);
       });
@@ -10231,7 +10266,7 @@ __webpack_require__.r(__webpack_exports__);
       this.modal = 1;
     },
     desactiveRet: function desactiveRet(id) {
-      var _this = this;
+      var _this2 = this;
 
       Swal.fire({
         title: 'Esta seguro de anular esta venta?',
@@ -10247,8 +10282,8 @@ __webpack_require__.r(__webpack_exports__);
         reverseButtons: true
       }).then(function (result) {
         if (result.value) {
-          var me = _this;
-          axios.put('sale/desactive', {
+          var me = _this2;
+          axios.put('retention/desactive', {
             'id': id
           }).then(function (response) {
             me.listRetention(1, '', 'voucher_num');
@@ -70073,66 +70108,40 @@ var render = function() {
                           "tbody",
                           _vm._l(_vm.arrayRet, function(ret) {
                             return _c("tr", { key: ret.id }, [
-                              _c(
-                                "td",
-                                [
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass: "btn btn-success btn-sm",
-                                      attrs: { type: "button" },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.showRet(ret.id)
-                                        }
+                              _c("td", [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-success btn-sm",
+                                    attrs: { type: "button" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.showRet(ret.id)
                                       }
-                                    },
-                                    [_c("i", { staticClass: "icon-eye" })]
-                                  ),
-                                  _vm._v(
-                                    "  \n                                        "
-                                  ),
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass: "btn btn-info btn-sm",
-                                      attrs: { type: "button" },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.pdfRet(ret.id)
-                                        }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "icon-eye" })]
+                                ),
+                                _vm._v(
+                                  "  \n                                        "
+                                ),
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-info btn-sm",
+                                    attrs: { type: "button" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.pdfRet(ret.id)
                                       }
-                                    },
-                                    [_c("i", { staticClass: "icon-doc" })]
-                                  ),
-                                  _vm._v(
-                                    "  \n\n                                        "
-                                  ),
-                                  ret.status == "Registrado"
-                                    ? [
-                                        _c(
-                                          "button",
-                                          {
-                                            staticClass:
-                                              "btn btn-danger btn-sm",
-                                            attrs: { type: "button" },
-                                            on: {
-                                              click: function($event) {
-                                                return _vm.desactiveRet(ret.id)
-                                              }
-                                            }
-                                          },
-                                          [
-                                            _c("i", {
-                                              staticClass: "icon-trash"
-                                            })
-                                          ]
-                                        )
-                                      ]
-                                    : _vm._e()
-                                ],
-                                2
-                              ),
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "icon-doc" })]
+                                ),
+                                _vm._v(
+                                  "  \n                                        \n                                    "
+                                )
+                              ]),
                               _vm._v(" "),
                               _c("td", {
                                 domProps: {
@@ -71065,11 +71074,66 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group row" }, [
-                    _c("div", { staticClass: "col-md-12" }, [
+                    _c(
+                      "div",
+                      { staticClass: "col-md-6" },
+                      [
+                        _vm.status == "Registrado"
+                          ? [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-danger btn-sm",
+                                  attrs: { type: "button" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.desactiveRet(_vm.id)
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("i", { staticClass: "icon-trash" }, [
+                                    _vm._v(" ")
+                                  ]),
+                                  _vm._v(
+                                    "\n                                  Anular\n                                "
+                                  )
+                                ]
+                              )
+                            ]
+                          : _vm._e(),
+                        _vm._v(" "),
+                        [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-warning btn-sm",
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.emailRet(_vm.id)
+                                }
+                              }
+                            },
+                            [
+                              _c("i", { staticClass: "icon-envelope" }, [
+                                _vm._v("  ")
+                              ]),
+                              _vm._v(
+                                "Enviar por Email\n                                "
+                              )
+                            ]
+                          )
+                        ]
+                      ],
+                      2
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-6 float-right" }, [
                       _c(
                         "button",
                         {
-                          staticClass: "btn btn-secondary",
+                          staticClass: "btn btn-secondary float-right",
                           attrs: { type: "button" },
                           on: {
                             click: function($event) {
@@ -71077,7 +71141,10 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v("Cerrar")]
+                        [
+                          _c("i", { staticClass: "icon-close" }),
+                          _vm._v(" Cerrar")
+                        ]
                       )
                     ])
                   ])
