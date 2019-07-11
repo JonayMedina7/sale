@@ -251,7 +251,6 @@
                                 <div class="col-md-12">
                                     <button type="button" class="btn btn-danger" @click="hideDetail()">Cerrar</button>
                                     <button v-if="actionType==1" type="button" class="btn btn-primary" @click="registerSale()">Registrar Venta</button>
-                                    <button v-if="actionType==2" type="button" class="btn btn-primary" @click="updateSale()">Actualizar Factura</button>
                                 </div>
                             </div>
                         </div>
@@ -358,17 +357,24 @@
                                 </div>
                             </div>  
                             <div class="form-group row">
-                                <div class="col-md-12">
-                                    <button type="button" class="btn btn-secondary" @click="hideDetail()">Cerrar</button>
-                                      <button type="button" class="btn btn-info " @click="pdfSale(sale_id)">
-                                                  Reemprimir</i>
-                                                </button> &nbsp;
+                                <div class="col-md-6">
+                                    
+                                    <button type="button" class="btn btn-info " @click="pdfSale(sale_id)">
+                                      Reemprimir
+                                    </button> &nbsp;
 
-                                                <template  v-if="status=='Registrado'">
-                                                    <button type="button" @click="desactiveSale(sale_id)" class="btn btn-danger" >
-                                                     Anular
-                                                    </button>
-                                                </template>
+                                    <button type="button" class="btn btn-info " @click="editSale(sale_id)"><i class="icon-note"></i>&nbsp;
+                                      Modificar
+                                    </button> &nbsp;
+
+                                    <template  v-if="status=='Registrado'">
+                                        <button type="button" @click="desactiveSale(sale_id)" class="btn btn-danger" >
+                                         Anular
+                                        </button>
+                                    </template>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="button" class="btn btn-secondary float-right" @click="hideDetail()">Cerrar</button>
                                 </div>
                             </div>
                         </div>
@@ -376,7 +382,159 @@
                     <!-- Fin panel vistas ventas -->
 
                     <!-- Panel modificacion facturas -->
-                    
+                    <template v-else-if="list==3">
+                        <div class="card-body">
+                            <div class="modal-header">
+                                <h4 class="modal-title" >Actualizar Factura</h4>
+                                <button type="button" class="close" @click="hideDetail()" aria-label="Close">
+                                  <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="form-group row border">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="">Cliente(*)</label>
+                                        <v-select  @search="clientSelect" label="name" :options="arrayClient"
+                                        placeholder="Buscar Cliente"
+                                        @input="getClientInfo"
+                                        > 
+                                            
+                                        </v-select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label >Razon Social(*):</label>
+                                        <h4><span v-text="name" class="upper"> </span></h4>
+                                    </div>
+                                </div>
+                                <div  class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Rif o C.I(*)</label>
+                                        <h4><span v-text="type + '-' + rif" style="text-transform: uppercase;"></span> </h4>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-group">
+                                        <label >Direcciòn(*):</label>
+                                        <h4><span v-text="address" style="text-transform: uppercase;"> </span></h4>
+                                    </div>
+                                </div>
+
+
+                               
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Tipo comprobante(*)</label>
+                                        <select class="form-control" v-model="voucher">
+                                            <option value="0">Seleccione</option>
+                                            <option value="note">Vale</option>
+                                            <option value="bill">Factura</option>
+                                            <option value="credit">Nota de Credito</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Nº de Control</label>
+                                        <input type="text" class="form-control" v-model="voucher_serie" placeholder="0000-0" name="">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>N° Factura</label>
+                                        <input disabled type="text" class="form-control" v-model="voucher_num" name="">    
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="form-group row border">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><h6>Selecciones los Articulos</h6>  <span style="color:red;" v-show="product_id==0"></span></label>
+                                        <div class="form-inline">
+                                           <!--  <input type="text" class="form-control" v-model="code" @keyup.enter="productSearch()" placeholder="Ingrese Producto" name=""> -->
+                                            <button @click="openModal()" class="btn btn-primary">Buscar&nbsp;&nbsp;<i class="fa fa-search"></i></button>
+                                            <!-- <input type="text" readonly class="form-control" v-model="product" name="" placeholder="ENTER para buscar"> -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="form-group row border">
+                                <div class="table-responsive col-md-12">
+                                    <table class="table table-bordered table-striped table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Opciones</th>
+                                                <th>Artículo</th>
+                                                <th>Descripción</th>
+                                                <th>Precio</th>
+                                                <th>Cantidad</th>
+                                                <th>Stock</th>
+                                                <th>Sub-Total</th> 
+                                            </tr>
+                                        </thead>
+                                        <tbody v-if="arrayDetail.length">
+                                            <tr v-for="(detail, index) in arrayDetail" :key="detail.id">
+                                                <td>
+                                                    <button @click="deleteDetail(index)" type="button" class="btn btn-danger btn-sm"><i class="fa fa-window-close"></i>
+                                                    </button>
+                                                </td>
+                                                <td v-text="detail.product"></td>
+                                                <td>
+                                                    <input v-model="detail.description" type="text">
+                                                </td>
+                                                <td>
+                                                    <input v-model="detail.price" type="number" class="form-control" name="">
+                                                </td>
+                                                <td>
+                                                    <span style="color:red;" v-show="detail.quantity>detail.stock">Disponible: {{ detail.stock }}</span>
+                                                    <input v-model="detail.quantity" type="number"  class="form-control" name="">
+                                                </td>
+                                                <td>
+                                                    <span class="form-control" >{{  detail.stock-detail.quantity }}</span>
+                                                </td>
+                                                <td>
+                                                    {{ detail.price*detail.quantity }}
+                                                </td>
+                                            </tr>
+                                            <tr style="background-color: #CEECFS;">
+                                                <td colspan="6" align="right"><strong>Sub-total: </strong></td>
+                                                <td>Bs {{ totalPartial=(calculateTotalPartial).toFixed(2) }}</td>
+                                            </tr>
+                                            <tr style="background-color: #CEECFS;">
+                                                <td colspan="6" align="right"><strong> Total Impuesto: </strong></td>
+                                                <td>Bs {{ totalTax=(calcTax).toFixed(2) }}</td>
+                                            </tr>
+                                            <tr style="background-color: #CEECFS;">
+                                                <td colspan="6" align="right"><strong>Exento: </strong></td>
+                                                <td>Bs {{ totalExempt=(calcExempt).toFixed(2) }}</td>
+                                            </tr>
+                                            <tr style="background-color: #CEECFS;">
+                                                <td colspan="6" align="right"><strong>Total a Pagar: </strong></td>
+                                                <td>$ {{ total=(calculateTotal).toFixed(2) }}</td>
+
+                                            </tr>
+                                        </tbody>
+                                        <tbody v-else>
+                                            <tr>
+                                                <td >
+                                                    No hay articulos agredados
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <button type="button" class="btn btn-danger" @click="hideDetail()">Cerrar</button>
+                                    <button type="button" class="btn btn-primary" @click="updateSale()">Actualizar Factura</button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                     <!-- Fin panel -->
                 </div>
                 </div>
@@ -673,6 +831,7 @@
                     var response = response.data; 
 
                     me.arrayClient = response.clients;
+                    console.log(me.arrayClient);
                     loading(false)
                 })
                 .catch(function (error) {
@@ -994,6 +1153,7 @@
             },
             editSale(id){
                 let me = this;
+                me.list = 3;
                 var arraySaleTemp=[];
                                 var url= 'sale/getHeader?id='+id;
                                 axios.get(url).then(function(response) {
@@ -1001,9 +1161,11 @@
                                     me.arraySaleTemp = response.sale;
                                     console.log(me.arraySaleTemp[0]);
                                     me.sale_id = id;
+                                    me.client_id = me.arraySaleTemp[0]['name'];
                                     me.name = me.arraySaleTemp[0]['name'];
-                                    me.type = me.arraSaleTemp[0]['type'];
+                                    me.type = me.arraySaleTemp[0]['type'];
                                     me.rif = me.arraySaleTemp[0]['rif'];
+                                    me.address = me.arraySaleTemp[0]['address'];
                                     me.user = me.arraySaleTemp[0]['user'];
                                     me.voucher = me.arraySaleTemp[0]['voucher'];
                                     me.voucher_serie = me.arraySaleTemp[0]['voucher_serie'];
@@ -1013,7 +1175,7 @@
                                     me.totalExempt = me.arraySaleTemp[0]['exempt'];
                                     me.total = me.arraySaleTemp[0]['total'];
                                     me.status = me.arraySaleTemp[0]['status'];
-
+                                    me.clientSelect(me.name);
                                 })
                                 .catch(function (error) {
                                     console.log(error);
