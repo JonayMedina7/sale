@@ -325,11 +325,12 @@
                
                 
             </main>
-        
+            
         
             <footer class="container-fluid">
                 <div class="row clearfix">
                     <div class="signat1">
+                        <img src="{{ url($image) }}" alt="">
                         <hr noshade="noshade" size="3" width="60%" />
                         <p>Agente de Retención (Fecha de Entrega)</p>
                     </div>

@@ -89,6 +89,7 @@ class RetentionController extends Controller
 
     public function pdf(Request $request, $id)
     {
+        $image = '\img\stamps\romaninaStamp.png';
         $company = Company::all();
         $retention = retention::join('purchases', 'retentions.id', '=', 'purchases.ret_id')
         ->join('users', 'purchases.user_id', '=', 'users.id')
@@ -99,7 +100,7 @@ class RetentionController extends Controller
         $detailret = Purchase::select('purchases.id', 'purchases.voucher', 'purchases.date as datep', 'purchases.voucher_num as purchase_num', 'purchases.voucher_serie', 'purchases.total as totalp', 'purchases.exempt', 'purchases.tax_mount', 'purchases.total_ret', 'purchases.tax')
             ->where('purchases.ret_id','=',$id)->get();
 
-        $pdf = \PDF::loadView('pdf.ret',['retention'=>$retention, 'detailret'=>$detailret, 'company'=>$company])->stream('retencion-'.$retention[0]->voucher_num.'.pdf');
+        $pdf = \PDF::loadView('pdf.ret',['retention'=>$retention, 'detailret'=>$detailret, 'company'=>$company, 'image'=>$image])->stream('retencion-'.$retention[0]->voucher_num.'.pdf');
 
         return $pdf;
     }
@@ -129,16 +130,18 @@ class RetentionController extends Controller
 
     public function pdfw(Request $request, $id)
     {
-        $company = Company::all();
+
+        $image = '\img\stamps\romaninaStamp.png';
+         $company = Company::all();
         $retention = retention::join('purchases', 'retentions.id', '=', 'purchases.ret_id')
         ->join('users', 'purchases.user_id', '=', 'users.id')
         ->join('clients', 'retentions.provider_id', '=', 'clients.id')
-        ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.year', 'retentions.month', 'retentions.status', 'clients.name', 'clients.type', 'clients.rif', 'purchases.user_id', 'users.user')
+        ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.total', 'retentions.year', 'retentions.month', 'retentions.status', 'clients.name', 'clients.type', 'clients.rif', 'clients.retention', 'purchases.user_id', 'users.user')
         ->where('retentions.id','=',$id)->take(1)->get();
 
-        $detailret = Purchase::select('purchases.id', 'purchases.voucher', 'purchases.date as datep', 'purchases.voucher_num as purchase_num', 'purchases.voucher_serie', 'purchases.total as totalp', 'purchases.tax', 'purchases.tax_mount')
+        $detailret = Purchase::select('purchases.id', 'purchases.voucher', 'purchases.date as datep', 'purchases.voucher_num as purchase_num', 'purchases.voucher_serie', 'purchases.total as totalp', 'purchases.exempt', 'purchases.tax_mount', 'purchases.total_ret', 'purchases.tax')
             ->where('purchases.ret_id','=',$id)->get();
-        return view('welcomer', compact('retention', 'detailret', 'company'));
+        return view('welcomer', compact('retention', 'detailret', 'company', 'image'));
     }
 
      public function getDownload(Request $request)

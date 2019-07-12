@@ -1061,43 +1061,43 @@
                 let me = this;
                 me.list = 3;
                 var arraySaleTemp=[];
-                                var url= 'sale/getHeader?id='+id;
-                                axios.get(url).then(function(response) {
-                                    var response = response.data; 
-                                    me.arraySaleTemp = response.sale;
-                                    console.log(me.arraySaleTemp[0]);
-                                    me.sale_id = id;
-                                    me.client_id = me.arraySaleTemp[0]['client_id'];
-                                    me.name = me.arraySaleTemp[0]['name'];
-                                    me.type = me.arraySaleTemp[0]['type'];
-                                    me.rif = me.arraySaleTemp[0]['rif'];
-                                    me.address = me.arraySaleTemp[0]['address'];
-                                    me.user = me.arraySaleTemp[0]['user'];
-                                    me.voucher = me.arraySaleTemp[0]['voucher'];
-                                    me.voucher_serie = me.arraySaleTemp[0]['voucher_serie'];
-                                    me.voucher_num = me.arraySaleTemp[0]['voucher_num'];
-                                    me.tax = me.arraySaleTemp[0]['tax'];
-                                    me.tax_mount = me.arraySaleTemp[0]['tax_mount'];
-                                    me.totalExempt = me.arraySaleTemp[0]['exempt'];
-                                    me.total = me.arraySaleTemp[0]['total'];
-                                    me.status = me.arraySaleTemp[0]['status'];
-                                    me.clientSelect(me.name);
-                                })
-                                .catch(function (error) {
-                                    console.log(error);
-                                });
-                                
-                                // obtener los datos de los detalles de la compra
+                var url= 'sale/getHeader?id='+id;
+                axios.get(url).then(function(response) {
+                    var response = response.data; 
+                    me.arraySaleTemp = response.sale;
+                    console.log(me.arraySaleTemp[0]);
+                    me.sale_id = id;
+                    me.client_id = me.arraySaleTemp[0]['client_id'];
+                    me.name = me.arraySaleTemp[0]['name'];
+                    me.type = me.arraySaleTemp[0]['type'];
+                    me.rif = me.arraySaleTemp[0]['rif'];
+                    me.address = me.arraySaleTemp[0]['address'];
+                    me.user = me.arraySaleTemp[0]['user'];
+                    me.voucher = me.arraySaleTemp[0]['voucher'];
+                    me.voucher_serie = me.arraySaleTemp[0]['voucher_serie'] ;
+                    me.voucher_num = me.arraySaleTemp[0]['voucher_num'];
+                    me.tax = me.arraySaleTemp[0]['tax'];
+                    me.tax_mount = me.arraySaleTemp[0]['tax_mount'];
+                    me.totalExempt = me.arraySaleTemp[0]['exempt'];
+                    me.total = me.arraySaleTemp[0]['total'];
+                    me.status = me.arraySaleTemp[0]['status'];
+                    me.clientSelect(me.name);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+                
+                // obtener los datos de los detalles de la compra
 
-                                var urld= 'sale/getDetail?id='+id;
-                                axios.get(urld).then(function(response) {
-                                    var response = response.data; 
-                                    me.arrayDetail = response.details;
-                                    
-                                })
-                                .catch(function (error) {
-                                    console.log(error);
-                                });
+                var urld= 'sale/getDetail?id='+id;
+                axios.get(urld).then(function(response) {
+                    var response = response.data; 
+                    me.arrayDetail = response.details;
+                    
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
             },
             updateSale (){
                 if (this.validateSale()) {
@@ -1189,6 +1189,7 @@
                 };
                 return me.errorSmsS;  
                 
+
             },
             showDetail(model, action, data){
                 // console.log(data['id']);
