@@ -75,7 +75,7 @@ class SaleController extends Controller
         
         $sale = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
         ->join('users', 'sales.user_id', '=', 'users.id')
-        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'sales.exempt', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'users.user')
+        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'sales.exempt', 'sales.client_id', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'users.user')
         ->where('sales.id','=',$id)
         ->orderBy('sales.id', 'desc')->take(1)->get();
         
@@ -88,7 +88,7 @@ class SaleController extends Controller
         $id = $request->id;
         
         $details = Detailsale::join('products', 'detailsales.product_id', '=', 'products.id')
-        ->select('detailsales.quantity', 'detailsales.price', 'detailsales.description', 'products.name as product', 'products.stock')
+        ->select('detailsales.quantity', 'detailsales.product_id', 'detailsales.description', 'detailsales.tax', 'detailsales.price', 'products.name as product', 'products.stock')
         ->where('detailsales.sale_id','=',$id)
         ->orderBy('detailsales.id', 'desc')->get();
         
@@ -113,6 +113,33 @@ class SaleController extends Controller
 
         $pdf = \PDF::loadView('pdf.sale',['sale'=>$sale,'details'=>$details]);
         return $pdf->stream('Factura-'.$numsale[0]->voucher_num.'.pdf');
+    }
+
+    public function email(Request $request, $id)
+    {
+        $sale = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
+        ->join('users', 'sales.user_id', '=', 'users.id')
+        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.exempt', 'sales.total', 'sales.status', 'sales.exempt', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
+        ->where('sales.id','=',$id)->take(1)->get();
+
+         $details = Detailsale::join('products', 'detailsales.product_id', '=', 'products.id')
+        ->select('detailsales.quantity', 'detailsales.price', 'detailsales.description', 'products.name as product')
+        ->where('detailsales.sale_id','=',$id)
+        ->orderBy('detailsales.id', 'desc')->get();
+
+        $numsale = Sale::select('voucher_num')->where('id',$id)->get();
+        /*$sale=strtoupper($sale->name, $sale->address);
+        $details=strtoupper($details);*/
+
+        $pdf = \PDF::loadView('pdf.sale',['sale'=>$sale,'details'=>$details])->stream();
+
+        Mail::send('mails.invoiceSend', ['pdf'=>$pdf, $numsale], function($message) use ($pdf, $sale)
+        {
+            $message->to($sale[0]->email, $sale[0]->name)->subject('Factura n° '.$sale[0]->voucher_num);
+            $message->attachData($pdf, 'factura-'.$sale[0]->voucher_num.'.pdf');
+        });
+
+        return;
     }
 
     public function pdfw(Request $request, $id)
@@ -182,6 +209,53 @@ class SaleController extends Controller
 
         DB::commit();
         return ['id'=>$sale->id];
+        } catch (Exception $e) {
+            DB::rollBack();
+
+        }
+
+    }
+
+    public function update(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+        // dd($request);
+        try {
+
+        DB::beginTransaction();
+        $sale = Sale::findOrFail($request->id);
+        $sale->client_id = $request->client_id;
+        $sale->user_id = \Auth::user()->id;
+        $sale->voucher = $request->voucher;
+        $sale->voucher_serie = $request->voucher_serie;
+        $sale->voucher_num = $request->voucher_num;
+        // $sale->date = $mytime->toDateString();
+        
+        $sale->tax = $request->tax;
+        $sale->tax_mount = $request->tax_mount;
+        $sale->exempt = $request->exempt;
+        $sale->ret_num = 0;
+        $sale->total = $request->total;
+        $sale->status = 'Registrado';
+        $sale->save();
+
+
+        DB::table('detailsales')->where('sale_id', $request->id)->delete();
+        $details = $request->data; // Array de detalles de venta
+        // recorrido del array
+        foreach ($details as $sales => $det) {
+            $detailsale = new Detailsale();
+            $detailsale->sale_id = $request->id;
+            $detailsale->product_id = $det['product_id'];
+            $detailsale->description = $det['description'];
+            $detailsale->quantity = $det['quantity'];
+            $detailsale->tax = $det['tax'];
+            $detailsale->price = $det['price'];
+            $detailsale->save();
+        }
+
+        DB::commit();
+        return ['id'=>$request->id];
         } catch (Exception $e) {
             DB::rollBack();
 

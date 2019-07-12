@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST'),
+    'host' => env('MAIL_HOST', 'smtp.googlemail.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +42,7 @@ return [
     |
     */
 
-    'port' => env('MAIL_PORT', 587),
+    'port' => env('MAIL_PORT', 465),
 
     /*
     |--------------------------------------------------------------------------
@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'jonayjosue@hotmail.com'),
-        'name' => env('MAIL_FROM_NAME', 'jony'),
+        'address' => env('MAIL_FROM_ADDRESS', 'jonayjosue@gmail.com'),
+        'name' => env('MAIL_FROM_NAME', 'Jonay Medina'),
     ],
 
     /*
@@ -71,7 +71,7 @@ return [
     |
     */
 
-    'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+    'encryption' => env('MAIL_ENCRYPTION', 'ssl'),
 
     /*
     |--------------------------------------------------------------------------
@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' => env('jonayjosue@hotmail.com'),
+    'username' => env('MAIL_USERNAME'),
 
-    'password' => env('Jjms182025.'),
+    'password' => env('MAIL_PASSWORD'),
 
     /*
     |--------------------------------------------------------------------------
