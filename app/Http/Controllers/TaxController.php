@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class TaxController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
     	$tax = Tax::all();

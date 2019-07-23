@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Envio de Documento no Fiscal</title>
+	<title>Referencia Factura no Fiscal</title>
 </head>
 <body>
-	<p>Saludos. Realizamos envio de documento que hace referencia para la factura n°:  {{ $voucher_num }}.</p>
+	<p>Saludos. Realizamos envio copia digital hace referencia para la factura n°:  {{ $numsale }}.</p>
 	
 </body>
 </html>

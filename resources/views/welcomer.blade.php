@@ -19,7 +19,7 @@
                 padding-left: 15px;
         }
         @page {
-            size: 29.7cm 21.6cm;margin: 60px 2px 15px 2px;
+            size: 29cm 21cm;margin: 60px 45px 15px 15px;
         }
         body {
         /*position: relative;*/
@@ -64,7 +64,7 @@
             padding:  0px;
             top:0;
             bottom: 0px;
-            font-size: 14;
+            font-size: 11;
             font-weight: 400;
             text-align: center;
         }
@@ -72,22 +72,22 @@
             
             margin:0;
             padding:  0px;
-            top: 10px;
+            top: 7px;
             bottom: 0px;
             
             
         }
         table.art thead, table.art tbody{
             margin: 4px;
-            font-size: 11px;
+            font-size: 10px;
         }
         tr th, tr td {
             padding: 3px;
             margin: 3px;
-            font-size: 11px;
+            font-size: 10px;
         }
         .art{
-            font-size: 11;
+            font-size: 10;
             text-align: justify;
             margin:0 0 0 5px;
         }
@@ -96,11 +96,11 @@
         }
         div p.card-text {
             text-align: center;
-            font-size: 11;
+            font-size: 10;
         }
         div.form-group p.card-text {
             text-align: justify;
-            font-size: 11;
+            font-size: 10;
         }
         .container-fluid {
             width: 100%;
@@ -171,7 +171,7 @@
             border: 1px solid #dee2e6;
         }
         .table th, .table td {
-            padding: 4px;
+            padding: 2px;
             vertical-align: top;
             border-top: 1px solid #dee2e6;
         }
@@ -202,7 +202,7 @@
             width: 193px !important;
         }
         footer {
-            top: 90%;
+            top: 70%;
             position: absolute;
             width: 100%;
             text-align: center;
@@ -210,17 +210,30 @@
         .signat1 {
             padding: 2px 0px 0 10px;
             float: left;
-            font-size: 11px;
+            font-size: 10px;
             width: 50%;
         }
         .signat2 {
+            top: 310%;
             float: right;
             padding: 2px 0px 0 10px;
-            font-size: 11px;
+            font-size: 10px;
             width: 50%;
         }
         footer span{
-            font-size: 10px;
+            font-size: 9px;
+        }
+        .stamp {
+            top: 100%;
+            width: 40%;
+            height: 900%;
+            padding: 0;
+            margin: 0;
+        }
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
         }
 
     </style>
@@ -240,12 +253,12 @@
                      <thead>
                         <tr>
                              <td  rowspan="2" class="law"><b>Ley IVA - Art. 11:</b>Decreto con Rango, Valor y Fuerza de Ley de Reforma de la Ley del Impuesto al Valor Agregado N° 1.436 del 17 de noviembre de 2014 "La Administración Tributaria podrá designar como responsables del pago del impuesto, en calidad de agentes de retención, a quienes por sus funciones públicas o por razón de sus actividades privadas intervengan en operaciones gravadas con el impuesto establecido en esta Ley. (...)"</td>
-                             <td nowrap class="border widtd1 ">0. NRO COMPROBANTE <br> {{ $r->voucher_num }}
+                             <td nowrap class="border widtd1 ">0. NRO COMPROBANTE <br> <b>{{ $r->voucher_num }}</b>
                             </td>
-                            <td nowrap class="border widtd1 ">1. FECHA<br>{{ date("d-m-Y", strtotime($r->date)) }}</td>
+                            <td nowrap class="border widtd1 ">1. FECHA<br><b>{{ date("d-m-Y", strtotime($r->date)) }}</b></td>
                         </tr>
                         <tr>
-                            <td colspan="2" class="border widtd1 ">4. PERIODO FISCAL <br> AÑO: {{ $r->year }} / MES: {{ $r->month }}</td>
+                            <td colspan="2" class="border widtd1 ">4. PERIODO FISCAL <br> <b>AÑO: {{ $r->year }} / MES: {{ $r->month }}</b></td>
                         </tr>
                      </thead>
                  </table>
@@ -269,21 +282,20 @@
                  </table>
                 @endforeach
                 <table class="art table table-bordered" align="center" width="100%" cellpadding="1" cellspacing="1">
-                    <thead class="thead-light">
-                        
+                    <thead class="thead-light" align="center">
                         <tr>
                             <th scope="col">Oper.</th>
                             <th scope="col">Fecha</th>
                             <th scope="col">Factura</th>
                             <th scope="col">Control</th>
-                            <th scope="col">N. Debito</th>
-                            <th scope="col">N. Credito</th>
+                            <th scope="col">N. Débito</th>
+                            <th scope="col">N. Crédito</th>
                             <th scope="col">Tipo Trans.</th>
                             <th scope="col">Fact Afect.</th>
                             <th scope="col">Compras + IVA</th>
                             <th scope="col">Sin Crédito</th>
                             <th scope="col">Base Imponible</th>
-                            <th scope="col">Alic</th>
+                            <th scope="col">Alic.</th>
                             <th scope="col">Impuesto IVA</th>
                             <th scope="col">IVA Retenido</th>
                         </tr>
@@ -300,36 +312,53 @@
                             <td>0</td>
                             <td>01</td>
                             <td>0</td>
-                            <td>{{ $d->totalp }}</td>
-                            <td>0,00</td>
-                            <td>{{ $d->totalp - $d->tax_mount }}</td>
-                            <td>{{ $d->tax }}</td>
-                            <td>{{ $d->tax_mount }}</td>
-                            <td>{{ $d->tax_mount }}</td>
+                            <td>{{ number_format($d->totalp, 2, ',', '.') }}</td>
+                            <td>{{ number_format($d->exempt, 2, ',', '.') }}</td>
+                            <td>{{ number_format(($d->totalp - $d->tax_mount)-$d->exempt, 2, ',', '.') }}</td>
+                            <td>{{ $d->tax.'%' }}</td>
+                            <td>{{ number_format($d->tax_mount, 2, ',', '.') }}</td>
+                            <td>{{ number_format($d->total_ret, 2, ',', '.') }}</td>
+                            @for ($i = 0; $i <count($detailret) ; $i++)
+                                @php
+                                    $total_exempt = 0.00;
+                                    $total_base = 0.00;
+                                    $total_taxes = 0.00;
+                                    $tot_p = 0.00;
+                                @endphp
+                                    @php ($total_exempt = $total_exempt + $d->exempt)
+                                    @php ($total_base = $total_base + (($d->totalp - $d->tax_mount)-$d->exempt))
+                                    @php ($total_taxes = $total_taxes + $d->tax_mount)
+                                    @php ($tot_p = $tot_p + $d->totalp)
+                            @endfor
+                            
+                            
                         </tr>
                         @endforeach
-                    </tbody>
-                    {{-- <tfoot>
                         <tr>
-                            <td style="border-right-color: #fff;" colspan="7">
-                                <hr align="center" noshade="noshade" size="2" width="60%" />
-                                <span>Agente de Retención (Fecha de Entrega)</span>
-                            </td>
-                            <td colspan="7">
-                                <hr align="center" noshade="noshade" size="2" width="60%" />
-                                <span>Sujeto Retenido (Fecha de Recepción)</span>
-                            </td>
+                            <td colspan="8"></td>
+                            {{-- <td>{{  }}</td> --}}
+                            <td>{{ number_format($tot_p, 2, ',', '.') }}</td>
+                            <td>{{ number_format($total_exempt, 2, ',', '.') }}</td>
+                            <td>{{ number_format($total_base, 2, ',', '.') }}</td>
+                            <td></td>
+                            <td>{{ number_format($total_taxes, 2, ',', '.') }}</td>
+                            @foreach ($retention as $r)
+                            <td>{{ number_format($r->total, 2, ',', '.') }}</td>
+                            @endforeach
                         </tr>
-                    </tfoot> --}}
+                        
+                    </tbody>
+                    
                 </table>
                
                 
             </main>
-            
+        
         
             <footer class="container-fluid">
                 <div class="row clearfix">
                     <div class="signat1">
+                        {{-- <img class="stamp" src="{{ public_path($image) }}" > --}}
                         <img src="{{ url($image) }}" alt="">
                         <hr noshade="noshade" size="3" width="60%" />
                         <p>Agente de Retención (Fecha de Entrega)</p>

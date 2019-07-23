@@ -366,15 +366,21 @@
                                     <button type="button" class="btn btn-info " @click="editSale(sale_id)"><i class="icon-note"></i>&nbsp;
                                       Modificar
                                     </button> &nbsp;
+                                    <template>
+                                        <button type="button" @click="emailSale(sale_id)" class="btn btn-warning btn-sm">
+                                            <i class="icon-envelope">&nbsp; </i>Enviar por Email
+                                        </button>
+                                    </template>
 
+                                    
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="button" class="btn btn-secondary float-right" @click="hideDetail()">Cerrar</button>
                                     <template  v-if="status=='Registrado'">
                                         <button type="button" @click="desactiveSale(sale_id)" class="btn btn-danger" >
                                          Anular
                                         </button>
                                     </template>
-                                </div>
-                                <div class="col-md-6">
-                                    <button type="button" class="btn btn-secondary float-right" @click="hideDetail()">Cerrar</button>
                                 </div>
                             </div>
                         </div>
@@ -745,7 +751,7 @@
                         
                         result2 = result2 +((this.arrayDetail[i].price*this.arrayDetail[i].quantity)*divisor);
                         this.taxV = this.arrayDetail[i].tax;
-                        console.log(this.taxV);
+                        // console.log(this.taxV);
                     }
                 }
                 // console.log(divisor);
@@ -823,6 +829,38 @@
                     console.log(error);
                 });
             },
+            emailSale(id){
+                Swal.fire({
+                    title: 'Enviar Factura mediante Email?',
+                    type: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Aceptar!',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonClass:'btn btn-success',
+                    cancelButtonClass: 'btn btn-danger',
+                    buttonsStyling: false,
+                    reverseButtons: true
+                    }).then((result) => {
+                        if (result.value) {
+                            let me=this;
+                            axios.get('sale/email?id='+id).then(function (response){
+                                Swal.fire(
+                                    'Enviado!',
+                                    'La Retencion ha sido Enviada con Exito.',
+                                    'success'
+                                    );
+                            }) .catch(function (error) {
+                                console.log(error);
+                            });
+                        } else if (
+                            result.dismiss === swal.DismissReason.cancel
+                            ){
+
+                        }
+                    });
+            },
             clientSelect(search,loading){
                 let me=this;
                 loading(true)
@@ -832,7 +870,7 @@
                     var response = response.data; 
 
                     me.arrayClient = response.clients;
-                    console.log(me.arrayClient);
+                    // console.log(me.arrayClient);
                     loading(false)
                 })
                 .catch(function (error) {
@@ -858,7 +896,7 @@
                 axios.get(url).then(function(response) {
                     var response = response.data; 
                     me.voucher_num = response.saleid;
-                    console.log(me.voucher_num);
+                    // console.log(me.voucher_num);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -1065,7 +1103,7 @@
                 axios.get(url).then(function(response) {
                     var response = response.data; 
                     me.arraySaleTemp = response.sale;
-                    console.log(me.arraySaleTemp[0]);
+                    // console.log(me.arraySaleTemp[0]);
                     me.sale_id = id;
                     me.client_id = me.arraySaleTemp[0]['client_id'];
                     me.name = me.arraySaleTemp[0]['name'];
@@ -1074,7 +1112,7 @@
                     me.address = me.arraySaleTemp[0]['address'];
                     me.user = me.arraySaleTemp[0]['user'];
                     me.voucher = me.arraySaleTemp[0]['voucher'];
-                    me.voucher_serie = me.arraySaleTemp[0]['voucher_serie'] ;
+                    me.voucher_serie = me.arraySaleTemp[0]['voucher_serie'] 
                     me.voucher_num = me.arraySaleTemp[0]['voucher_num'];
                     me.tax = me.arraySaleTemp[0]['tax'];
                     me.tax_mount = me.arraySaleTemp[0]['tax_mount'];
@@ -1188,8 +1226,6 @@
                     });
                 };
                 return me.errorSmsS;  
-                
-
             },
             showDetail(model, action, data){
                 // console.log(data['id']);

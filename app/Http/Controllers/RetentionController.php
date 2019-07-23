@@ -89,7 +89,9 @@ class RetentionController extends Controller
 
     public function pdf(Request $request, $id)
     {
-        $image = '\img\stamps\romaninaStamp.png';
+        // $image = 'img/stamps/romaninaStamp.png';
+        // $image = 'img/stamps/neon-corporal.jpg';
+        $image = '';
         $company = Company::all();
         $retention = retention::join('purchases', 'retentions.id', '=', 'purchases.ret_id')
         ->join('users', 'purchases.user_id', '=', 'users.id')
@@ -108,6 +110,7 @@ class RetentionController extends Controller
     public function email(Request $request)
     {
         // dd($request);
+        $image = 'img/stamps/romaninaStamp2.png';
         $company = Company::all();
         $retention = retention::join('purchases', 'retentions.id', '=', 'purchases.ret_id')
         ->join('users', 'purchases.user_id', '=', 'users.id')
@@ -118,7 +121,7 @@ class RetentionController extends Controller
         $detailret = Purchase::select('purchases.id', 'purchases.voucher', 'purchases.date as datep', 'purchases.voucher_num as purchase_num', 'purchases.voucher_serie', 'purchases.total as totalp', 'purchases.exempt', 'purchases.tax_mount', 'purchases.total_ret', 'purchases.tax')
             ->where('purchases.ret_id','=',$request->id)->get();
 
-        $pdf = \PDF::loadView('pdf.ret',['retention'=>$retention, 'detailret'=>$detailret, 'company'=>$company])->stream('retencion-'.$retention[0]->voucher_num.'.pdf');
+        $pdf = \PDF::loadView('pdf.ret',['retention'=>$retention, 'detailret'=>$detailret, 'company'=>$company, 'image'=>$image])->stream('retencion-'.$retention[0]->voucher_num.'.pdf');
 
         Mail::send('mails.retention_send', ['pdf'=>$pdf, 'detailret'=>$detailret], function($message) use ($pdf, $retention)
         {

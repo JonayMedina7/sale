@@ -201,26 +201,43 @@
         tr td .widtd1 {
             width: 193px !important;
         }
-        footer {
-            top: 90%;
-            position: absolute;
-            width: 100%;
-            text-align: center;
-        }
+        
         .signat1 {
             padding: 2px 0px 0 10px;
             float: left;
             font-size: 10px;
             width: 50%;
         }
+        .signpad {
+            padding: 140px 0px 0 10px !important;
+        }
         .signat2 {
+            
             float: right;
-            padding: 2px 0px 0 10px;
+            padding: 140px 0px 0 10px;
             font-size: 10px;
             width: 50%;
         }
         footer span{
             font-size: 9px;
+        }
+        footer {
+            top: 70%;
+            position: absolute;
+            width: 100%;
+            text-align: center;
+        }
+        .stamp {
+            top: 100%;
+            width: 40%;
+            height: 900%;
+            padding: 0;
+            margin: 0;
+        }
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
         }
 
     </style>
@@ -344,8 +361,14 @@
         
             <footer class="container-fluid">
                 <div class="row clearfix">
+                    
+                    @if ($image)
                     <div class="signat1">
-                        <img src="{{ url($image) }}" alt="">
+                            <img class="stamp" src="{{ public_path($image) }}" >
+                    @else 
+                    <div class="signat1 signpad">
+                    @endif
+                        
                         <hr noshade="noshade" size="3" width="60%" />
                         <p>Agente de Retención (Fecha de Entrega)</p>
                     </div>

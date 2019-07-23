@@ -854,7 +854,6 @@
                 this.list=1;
             },
             emailRet(id){
-
                 Swal.fire({
                     title: 'Enviar Retención mediante Email?',
                     type: 'question',

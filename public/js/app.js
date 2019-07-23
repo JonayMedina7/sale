@@ -8116,6 +8116,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -8234,8 +8240,7 @@ __webpack_require__.r(__webpack_exports__);
         if (this.arrayDetail[i].tax > 0) {
           divisor = this.arrayDetail[i].tax / 100;
           result2 = result2 + this.arrayDetail[i].price * this.arrayDetail[i].quantity * divisor;
-          this.taxV = this.arrayDetail[i].tax;
-          console.log(this.taxV);
+          this.taxV = this.arrayDetail[i].tax; // console.log(this.taxV);
         }
       } // console.log(divisor);
 
@@ -8304,14 +8309,40 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
+    emailSale: function emailSale(id) {
+      var _this = this;
+
+      Swal.fire({
+        title: 'Enviar Factura mediante Email?',
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Aceptar!',
+        cancelButtonText: 'Cancelar',
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-danger',
+        buttonsStyling: false,
+        reverseButtons: true
+      }).then(function (result) {
+        if (result.value) {
+          var me = _this;
+          axios.get('sale/email?id=' + id).then(function (response) {
+            Swal.fire('Enviado!', 'La Retencion ha sido Enviada con Exito.', 'success');
+          })["catch"](function (error) {
+            console.log(error);
+          });
+        } else if (result.dismiss === swal.DismissReason.cancel) {}
+      });
+    },
     clientSelect: function clientSelect(search, loading) {
       var me = this;
       loading(true);
       var url = 'client/clientSelect?filter=' + search;
       axios.get(url).then(function (response) {
         var response = response.data;
-        me.arrayClient = response.clients;
-        console.log(me.arrayClient);
+        me.arrayClient = response.clients; // console.log(me.arrayClient);
+
         loading(false);
       })["catch"](function (error) {
         console.log(error);
@@ -8332,8 +8363,7 @@ __webpack_require__.r(__webpack_exports__);
       var url = 'sale/saleId';
       axios.get(url).then(function (response) {
         var response = response.data;
-        me.voucher_num = response.saleid;
-        console.log(me.voucher_num);
+        me.voucher_num = response.saleid; // console.log(me.voucher_num);
       })["catch"](function (error) {
         console.log(error);
       });
@@ -8531,8 +8561,8 @@ __webpack_require__.r(__webpack_exports__);
       var url = 'sale/getHeader?id=' + id;
       axios.get(url).then(function (response) {
         var response = response.data;
-        me.arraySaleTemp = response.sale;
-        console.log(me.arraySaleTemp[0]);
+        me.arraySaleTemp = response.sale; // console.log(me.arraySaleTemp[0]);
+
         me.sale_id = id;
         me.client_id = me.arraySaleTemp[0]['client_id'];
         me.name = me.arraySaleTemp[0]['name'];
@@ -8702,7 +8732,7 @@ __webpack_require__.r(__webpack_exports__);
       this.modal = 1;
     },
     desactiveSale: function desactiveSale(sale_id) {
-      var _this = this;
+      var _this2 = this;
 
       Swal.fire({
         title: 'Esta seguro de anular esta venta?',
@@ -8718,7 +8748,7 @@ __webpack_require__.r(__webpack_exports__);
         reverseButtons: true
       }).then(function (result) {
         if (result.value) {
-          var me = _this;
+          var me = _this2;
           axios.put('sale/desactive', {
             'id': sale_id
           }).then(function (response) {
@@ -68245,7 +68275,51 @@ var render = function() {
                             )
                           ]
                         ),
-                        _vm._v("  \n\n                            "),
+                        _vm._v("  \n                            "),
+                        [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-warning btn-sm",
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.emailSale(_vm.sale_id)
+                                }
+                              }
+                            },
+                            [
+                              _c("i", { staticClass: "icon-envelope" }, [
+                                _vm._v("  ")
+                              ]),
+                              _vm._v(
+                                "Enviar por Email\n                                "
+                              )
+                            ]
+                          )
+                        ]
+                      ],
+                      2
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "col-md-6" },
+                      [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-secondary float-right",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                return _vm.hideDetail()
+                              }
+                            }
+                          },
+                          [_vm._v("Cerrar")]
+                        ),
+                        _vm._v(" "),
                         _vm.status == "Registrado"
                           ? [
                               _c(
@@ -68269,23 +68343,7 @@ var render = function() {
                           : _vm._e()
                       ],
                       2
-                    ),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-md-6" }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-secondary float-right",
-                          attrs: { type: "button" },
-                          on: {
-                            click: function($event) {
-                              return _vm.hideDetail()
-                            }
-                          }
-                        },
-                        [_vm._v("Cerrar")]
-                      )
-                    ])
+                    )
                   ])
                 ])
               ]

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Sale;
 use Carbon\Carbon;
 use App\Detailsale;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -44,9 +46,7 @@ class SaleController extends Controller
 
     public function saleId (Request $request)
     {
-        // if (!$request->ajax()) return redirect('/');
-
-        
+        if (!$request->ajax()) return redirect('/');
         $saleid = Sale::select('sales.id as saleid')->orderBy('sales.id', 'desc')->take(1)->get();
             $num = 1;
             $saleid = $saleid[0]->saleid + $num;
@@ -108,42 +108,56 @@ class SaleController extends Controller
         ->orderBy('detailsales.id', 'desc')->get();
 
         $numsale = Sale::select('voucher_num')->where('id',$id)->get();
-        /*$sale=strtoupper($sale->name, $sale->address);
-        $details=strtoupper($details);*/
+        if (count($details)>17) {
+            $i=33;
+        } else if (count($details)<=17)  {
+            $i=17;
+        }
 
-        $pdf = \PDF::loadView('pdf.sale',['sale'=>$sale,'details'=>$details]);
+        $pdf = \PDF::loadView('pdf.sale',['sale'=>$sale,'details'=>$details, 'i'=>$i]);
         return $pdf->stream('Factura-'.$numsale[0]->voucher_num.'.pdf');
     }
 
-    public function email(Request $request, $id)
+    public function email(Request $request)
     {
+
+        $header = 'img/header-footer/header.jpg';
+        $footer = 'img/header-footer/footer.jpg';
+        $water = 'img/header-footer/watermark.png';
         $sale = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
         ->join('users', 'sales.user_id', '=', 'users.id')
-        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.exempt', 'sales.total', 'sales.status', 'sales.exempt', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
-        ->where('sales.id','=',$id)->take(1)->get();
+        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'sales.exempt', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
+        ->where('sales.id','=',$request->id)->take(1)->get();
 
          $details = Detailsale::join('products', 'detailsales.product_id', '=', 'products.id')
         ->select('detailsales.quantity', 'detailsales.price', 'detailsales.description', 'products.name as product')
-        ->where('detailsales.sale_id','=',$id)
+        ->where('detailsales.sale_id','=',$request->id)
         ->orderBy('detailsales.id', 'desc')->get();
+        if (count($details)>17) {
+            $i=33;
+        } else if (count($details)<=17)  {
+            $i=17;
+        }
+        
+        $numsale = $sale[0]->voucher_num;
 
-        $numsale = Sale::select('voucher_num')->where('id',$id)->get();
-        /*$sale=strtoupper($sale->name, $sale->address);
-        $details=strtoupper($details);*/
+        $pdf = \PDF::loadView('pdf.sale_email',['sale'=>$sale,'details'=>$details, 'header'=>$header, 'footer'=>$footer, 'water'=>$water, 'i'=>$i])->stream();
 
-        $pdf = \PDF::loadView('pdf.sale',['sale'=>$sale,'details'=>$details])->stream();
-
-        Mail::send('mails.invoiceSend', ['pdf'=>$pdf, $numsale], function($message) use ($pdf, $sale)
+        Mail::send('mails.invoiceSend', ['pdf'=>$pdf, 'numsale'=>$numsale], function($message) use ($pdf, $sale)
         {
             $message->to($sale[0]->email, $sale[0]->name)->subject('Factura n° '.$sale[0]->voucher_num);
             $message->attachData($pdf, 'factura-'.$sale[0]->voucher_num.'.pdf');
         });
 
-        return;
+        return 200;
     }
 
     public function pdfw(Request $request, $id)
     {
+
+        $header = 'img/header-footer/header.jpg';
+        $footer = 'img/header-footer/footer.jpg';
+        // $water = 'img/header-footer/watermark.png';
         $sale = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
         ->join('users', 'sales.user_id', '=', 'users.id')
         ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'sales.exempt', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
@@ -153,11 +167,18 @@ class SaleController extends Controller
         ->select('detailsales.quantity', 'detailsales.price', 'detailsales.description', 'products.name as product')
         ->where('detailsales.sale_id','=',$id)
         ->orderBy('detailsales.id', 'desc')->get();
-
+        if (count($details)>17) {
+            $i=33;
+        } else if (count($details)<=17)  {
+            $i=17;
+        }
+        
         $numsale = Sale::select('voucher_num')->where('id',$id)->get();
 
-        
-        return view('welcome', compact('sale', 'details', 'numsale'));
+        $pdf = \PDF::loadView('pdf.sale_email',['sale'=>$sale,'details'=>$details, 'header'=>$header, 'footer'=>$footer, 'i'=>$i])->stream();
+
+        // return view('welcome', compact('sale', 'details', 'numsale','header', 'footer', 'water', 'i'));
+        return $pdf;
     }
   
 

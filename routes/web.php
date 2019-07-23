@@ -161,6 +161,7 @@ Route::group(['middleware' =>['auth']], function()
 		route::get('/sale/saleSearchRet', 'SaleController@saleSearchRet');
 		route::get('/sale/pdf/{id}', 'SaleController@pdf')->name('venta_pdf');
 		route::get('/sale/pdfw/{id}', 'SaleController@pdfw')->name('venta');
+		route::get('sale/email', 'SaleController@email');
 
 		route::get('/quota', 'QuotaController@index');
 		route::post('/quota/register', 'QuotaController@store');
