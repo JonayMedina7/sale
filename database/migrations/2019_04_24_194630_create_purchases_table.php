@@ -20,16 +20,18 @@ class CreatePurchasesTable extends Migration
             $table->enum('voucher',['bill', 'note', 'credit'])->default('bill');
             $table->string('voucher_serie', 7)->nullable();
             $table->string('voucher_num', 10);
-            $table->dateTime('date');
-            $table->decimal('tax_mount', 15,2);
+            $table->date('date');
+            $table->decimal('total', 20, 2);
+            $table->decimal('tax_mount', 20,2);
             $table->integer('tax', 4);
-            $table->decimal('total', 11, 2);
-            $table->integer('exempt', 20)->nullable();
+            
+            $table->integer('exempt', 20, 2)->nullable();
             $table->bigInteger('ret_id')->unsigned();
             $table->foreing('ret_id')->references('id')->on('retentions');
             $table->decimal('total_ret', 20,2);
             $table->string('status', 20);
             $table->string('description');
+            $table->string('type', 10);
             $table->timestamps();
         });
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Sale;
 use Carbon\Carbon;
 use App\Detailsale;
+use App\Mail\InvoiceSend;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
@@ -121,9 +122,10 @@ class SaleController extends Controller
     public function email(Request $request)
     {
 
-        $header = 'img/header-footer/header.jpg';
-        $footer = 'img/header-footer/footer.jpg';
-        $water = 'img/header-footer/watermark.png';
+        $header = 'img/header-footer/header2.jpg';
+        $footer = 'img/header-footer/footer2.jpg';
+        // $water = 'img/header-footer/watermark.png';
+        $water = 'img/header-footer/watermark2.jpg';
         $sale = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
         ->join('users', 'sales.user_id', '=', 'users.id')
         ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'sales.exempt', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
@@ -141,22 +143,22 @@ class SaleController extends Controller
         
         $numsale = $sale[0]->voucher_num;
 
-        $pdf = \PDF::loadView('pdf.sale_email',['sale'=>$sale,'details'=>$details, 'header'=>$header, 'footer'=>$footer, 'water'=>$water, 'i'=>$i])->stream();
+        $pdf = \PDF::loadView('pdf.sale_email',['sale'=>$sale,'details'=>$details, 'header'=>$header, 'footer'=>$footer,'water'=>$water, 'i'=>$i])->stream('factura-'.$sale[0]->voucher_num.'.pdf');
 
-        Mail::send('mails.invoiceSend', ['pdf'=>$pdf, 'numsale'=>$numsale], function($message) use ($pdf, $sale)
+        Mail::send('mails.invoiceSend', ['pdf'=>$pdf, 'sale'=>$sale, 'numsale'=>$numsale], function($message) use ($pdf, $sale, $numsale)
         {
             $message->to($sale[0]->email, $sale[0]->name)->subject('Factura n° '.$sale[0]->voucher_num);
-            $message->attachData($pdf, 'factura-'.$sale[0]->voucher_num.'.pdf');
+            $message->attachData($pdf, 'factura-'.$numsale.'.pdf');
         });
-
         return 200;
     }
 
     public function pdfw(Request $request, $id)
     {
-
-        $header = 'img/header-footer/header.jpg';
-        $footer = 'img/header-footer/footer.jpg';
+        $header ='';
+        $footer = '';
+        // $header = 'img/header-footer/header.jpg';
+        // $footer = 'img/header-footer/footer.jpg';
         // $water = 'img/header-footer/watermark.png';
         $sale = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
         ->join('users', 'sales.user_id', '=', 'users.id')

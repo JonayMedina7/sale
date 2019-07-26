@@ -35,11 +35,13 @@
             /*display: inline;*/
         }
         .water{
-            background-image: url('{{ asset('./img/header-footer/watermark.png') }}');
+            {{-- background-image: url('{{ asset('./img/header-footer/watermark.png') }}'); --}}
+            background-image: url('{{ asset('./img/header-footer/watermark2.jpg') }}');
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
-            height: 400px; 
+            /*height: ;*/
+            width: 90% 
             opacity: 0.3;
         }
         .clearfix{

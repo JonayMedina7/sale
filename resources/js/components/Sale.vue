@@ -848,7 +848,7 @@
                             axios.get('sale/email?id='+id).then(function (response){
                                 Swal.fire(
                                     'Enviado!',
-                                    'La Retencion ha sido Enviada con Exito.',
+                                    'La Factura ha sido Enviada con Exito.',
                                     'success'
                                     );
                             }) .catch(function (error) {
