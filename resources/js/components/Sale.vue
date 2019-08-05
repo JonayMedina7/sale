@@ -452,7 +452,7 @@
                                         <input disabled type="text" class="form-control" v-model="voucher_num" name="">    
                                     </div>
                                 </div>
-                                
+                                <developer/>
                             </div>
                             <div class="form-group row border">
                                 <div class="col-md-4">
@@ -564,7 +564,7 @@
                                           <option value="name">Nombre</option>
                                           <option value="code">Codigo</option>
                                         </select>
-                                        <input type="text" v-model="search" @keyup.enter="listProductSale(1,searchS,criteryS)" class="form-control" placeholder="Ingrese datos a Buscar">
+                                        <input type="text" v-model="searchS" class="form-control" placeholder="Ingrese datos a Buscar">
                                         <button type="submit" @click="listProductSale(1,searchS,criteryS)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                     </div>
                                 </div>
@@ -830,7 +830,7 @@
                 });
             },
             emailSale(id){
-                Swal.fire({
+                Swal.queue([{
                     title: 'Enviar Factura mediante Email?',
                     type: 'question',
                     showCancelButton: true,
@@ -840,26 +840,57 @@
                     cancelButtonText: 'Cancelar',
                     confirmButtonClass:'btn btn-success',
                     cancelButtonClass: 'btn btn-danger',
-                    buttonsStyling: false,
-                    reverseButtons: true
-                    }).then((result) => {
-                        if (result.value) {
-                            let me=this;
-                            axios.get('sale/email?id='+id).then(function (response){
-                                Swal.fire(
-                                    'Enviado!',
-                                    'La Factura ha sido Enviada con Exito.',
-                                    'success'
-                                    );
-                            }) .catch(function (error) {
-                                console.log(error);
-                            });
-                        } else if (
-                            result.dismiss === swal.DismissReason.cancel
-                            ){
+                    // buttonsStyling: false,
+                    // reverseButtons: true,
+                    showLoaderOnConfirm: true,
+                    preConfirm: () => {
+                        return fetch(axios.get('sale/email?id='+id))
+                        .then(function(response){
+                            Swal.insertQueueStep({
+                                                    title:'Enviado!',
+                                                    
+                                                    type:'success'}
+                            )
+                        })
+                        .catch(() => {
+                            Swal.insertQueueStep({
+                                type: 'error',
+                                title: 'Por Favor Intente de nuevo'
+                            })
+                            
+                        })
+                    }
+                    }]);
+                // Swal.fire({
+                //     title: 'Enviar Factura mediante Email?',
+                //     type: 'question',
+                //     showCancelButton: true,
+                //     confirmButtonColor: '#3085d6',
+                //     cancelButtonColor: '#d33',
+                //     confirmButtonText: 'Aceptar!',
+                //     cancelButtonText: 'Cancelar',
+                //     confirmButtonClass:'btn btn-success',
+                //     cancelButtonClass: 'btn btn-danger',
+                //     buttonsStyling: false,
+                //     reverseButtons: true
+                //     }).then((result) => {
+                //         if (result.value) {
+                //             let me=this;
+                //             axios.get('sale/email?id='+id).then(function (response){
+                //                 Swal.fire(
+                //                     'Enviado!',
+                //                     'La Factura ha sido Enviada con Exito.',
+                //                     'success'
+                //                     );
+                //             }) .catch(function (error) {
+                //                 console.log(error);
+                //             });
+                //         } else if (
+                //             result.dismiss === swal.DismissReason.cancel
+                //             ){
 
-                        }
-                    });
+                //         }
+                //     });
             },
             clientSelect(search,loading){
                 let me=this;

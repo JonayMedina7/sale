@@ -18,6 +18,7 @@ class ProductController extends Controller
 
         $search = $request->search;
         $critery = $request->critery;
+
         
         if ($search=='') {
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
@@ -32,6 +33,8 @@ class ProductController extends Controller
             ->orderBy('products.id', 'desc')->paginate(7);
             
         }
+
+
 
         
         return [

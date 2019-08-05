@@ -12,6 +12,7 @@
             
           </li>
         </ol>
+            <!-- div tabla de productos -->
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
@@ -104,6 +105,7 @@
                 </div>
                 <!-- Fin ejemplo de tabla Listado -->
             </div>
+            <!-- fin div tabla de productos -->
             <!--Inicio del modal agregar/actualizar-->
             <div class="modal fade" tabindex="-1" :class="{'show' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog modal-primary modal-lg" role="document">
@@ -127,11 +129,10 @@
                                 </div>
                                 <div class="form-group row" >
                                     <label class="col-md-3 form-control-label">Seleccione Producto con I.v.a. o Exento</label>
-                                        <div class="col-md-2">
-                                            <select v-for="t in arrayTax" :key="t.id" class=" form-control" v-model="tax_id">
-                                                <option value="0" disabled>Seleccione</option>
-                                                <option :value="t.id"  v-if="t.tax==0" >Exento</option>
-                                                <option v-else :value="t.id" v-text="t.tax + '%'"></option>
+                                        <div class="col-md-2" >
+                                            <select  class=" form-control" v-model="tax_id">
+                                                <option value="0" disabled>Seleccione</option>                            
+                                                <option v-for="t in arrayTax" :key="t.id" :value="t.id" v-text="t.tax "></option>
                                             </select>    
                                         </div>
                                 </div>
@@ -330,6 +331,11 @@
                 var url='tax/searchTax';
                 axios.get(url).then(function(response) {
                     me.arrayTax = response.data;
+                    for (var i = me.arrayTax.length - 1; i >= 0; i--) {
+                        if (me.arrayTax[i]['tax']==0) {
+                            me.arrayTax[i]['tax']='Exento';
+                        }
+                    }
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -398,9 +404,9 @@
 
                 if (!this.name) this.errorSmsProduct.push("El Nombre del producto no puede estar vacio");
 
-                if (!this.stock) this.errorSmsProduct.push(" Stock del producto debe ser un Numero y no puede estar vacio");
+                // if (!this.stock) this.errorSmsProduct.push(" Stock del producto debe ser un Numero y no puede estar vacio");
 
-                if (!this.price_buy) this.errorSmsProduct.push("Precio de Compra del producto debe ser un Numero y no puede estar vacio");
+                // if (!this.price_buy) this.errorSmsProduct.push("Precio de Compra del producto debe ser un Numero y no puede estar vacio");
 
                 if (this.tax_id == 0) this.errorSmsProduct.push("Seleccione tipo de impuesto para el producto");
 
@@ -447,7 +453,7 @@
                 this.modal1=0;
                 this.category_id= 0;
                 this.category_name='';
-                this.code=0;
+                this.code='';
                 this.price_buy=0;
                 this.stock=0;
                 this.errorProduct=0;
@@ -468,10 +474,10 @@
                                 this.modal          = 1;
                                 this.category_id= 0;
                                 this.category_name='';
-                                this.code=0;
+                                this.code='';
                                 this.name         = '';
-                                this.price_buy=0;
-                                this.stock=0;
+                                this.price_buy='';
+                                this.stock='';
                                 this.description    = '';
                                 this.actionType     = 1;
                                 this.tax_id=0;
