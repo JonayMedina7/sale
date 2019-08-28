@@ -2,28 +2,35 @@
  
 namespace App\Http\Controllers;
 
+use App\Tax;
 use App\Retention;
+use App\Purchase;
+use App\Company;
 use Carbon\Carbon;
+use App\Mail\RetentionSend;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
 
 class RetentionController extends Controller
 {
      public function index(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        // if (!$request->ajax()) return redirect('/');
         $search = $request->search;
         $criterion = $request->criterion;
-        
+        $mytime = Carbon::now('America/Caracas');
+        $mytime = $mytime->format('Ym');
         if ($search=='') {
-            $retention = Retention::join('sales', 'retentions.ret', '=', 'sales.id')
-            ->join('users', 'retentions.user_id', '=', 'users.id')
-            ->select('retentions.id', 'retentions.voucher', 'retentions.voucher_serie', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.status', 'sales.name', 'sales.type', 'sales.rif', 'users.user')
+            $retentions = Retention::join('clients', 'retentions.provider_id', '=', 'clients.id')
+            ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.total', 'retentions.status', 'clients.name')
             ->orderBy('retentions.id', 'desc')->paginate(10);
         } else {
-            $retentions = retention::join('clients', 'retentions.client_id', '=', 'clients.id')
-            ->join('users', 'retentions.user_id', '=', 'users.id')
-            ->select('retentions.id', 'retentions.voucher', 'retentions.voucher_serial', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
+            $retentions = retention::join('clients', 'retentions.provider_id', '=', 'clients.id')
+            ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.total', 'retentions.status', 'clients.name')
             ->where('retentions.'.$criterion, 'like', '%'. $search . '%')->orderBy('retentions.id', 'desc')->paginate(4);
         }
 
@@ -36,61 +43,122 @@ class RetentionController extends Controller
                 'last_page'     => $retentions->lastPage(),
                 'from'          => $retentions->firstItem(),
                 'to'            => $retentions->lastItem(),
-            ],
-            'retentions' => $retentions
+                ],
+            'retentions' => $retentions, 'mytime'=>$mytime 
         ];
+    }
+
+    public function retId()
+    {
+        $mytime = Carbon::now('America/Caracas');
+        $mytime = $mytime->format('Ym');
+        $retid = Retention::select('retentions.id')->orderBy('retentions.id','desc')->take(1)->get();
+        $num = 1;
+        $retid = $retid[0]->id + $num;
+        $retid = $mytime.(str_pad($retid,8,"0",STR_PAD_LEFT ));
+        
+        return ['retid' => $retid];
+        
     }
 
     public function getHeader(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        // if (!$request->ajax()) return redirect('/');
         $id = $request->id;
         
-        $retention = retention::join('clients', 'retentions.client_id', '=', 'clients.id')
-        ->join('users', 'retentions.user_id', '=', 'users.id')
-        ->select('retentions.id', 'retentions.voucher', 'retentions.voucher_serie', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
-        ->where('retentions.id','=',$id)
-        ->orderBy('retentions.id', 'desc')->take(1)->get();
+        $retention = Retention::join('purchases', 'retentions.id', '=', 'purchases.ret_id')
+            ->join('users', 'purchases.user_id', '=', 'users.id')
+            ->join('clients', 'retentions.provider_id', '=', 'clients.id')
+            ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.total', 'retentions.status', 'retentions.provider_id', 'users.user', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.retention')
+            ->where('retentions.id','=',$id)
+            ->orderBy('retentions.id', 'desc')->take(1)->get();
         
-        return ['retention' => $retention];
+        return [ 'retention' => $retention];
+    }
+
+    public function getDetail(Request $request)
+    {
+        // if (!$request->ajax()) return redirect('/');
+        $id = $request->id;
+
+        $detailp = Purchase::select('purchases.id', 'purchases.voucher', 'purchases.voucher_num as purchase_num', 'purchases.total as totalp', 'purchases.date as datep', 'purchases.tax', 'purchases.total_ret')
+                        ->where('purchases.ret_id','=',$id)
+                        ->orderBy('purchases.id', 'desc')->get();
+        return ['detailp' => $detailp];
     }
 
     public function pdf(Request $request, $id)
     {
-        $retention = retention::join('clients', 'retentions.client_id', '=', 'clients.id')
-        ->join('users', 'retentions.user_id', '=', 'users.id')
-        ->select('retentions.id', 'retentions.voucher', 'retentions.voucher_serie', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.status', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
+        // $image = 'img/stamps/romaninaStamp.png';
+        // $image = 'img/stamps/neon-corporal.jpg';
+        $image = '';
+        $company = Company::all();
+        $retention = retention::join('purchases', 'retentions.id', '=', 'purchases.ret_id')
+        ->join('users', 'purchases.user_id', '=', 'users.id')
+        ->join('clients', 'retentions.provider_id', '=', 'clients.id')
+        ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.total', 'retentions.year', 'retentions.month', 'retentions.status', 'clients.name', 'clients.type', 'clients.rif', 'clients.retention', 'purchases.user_id', 'users.user')
         ->where('retentions.id','=',$id)->take(1)->get();
 
-         $details = Detailretention::join('products', 'detailretentions.product_id', '=', 'products.id')
-        ->select('detailretentions.quantity', 'detailretentions.price', 'products.name as product')
-        ->where('detailretentions.retention_id','=',$id)
-        ->orderBy('detailretentions.id', 'desc')->get();
+        $detailret = Purchase::select('purchases.id', 'purchases.voucher', 'purchases.date as datep', 'purchases.voucher_num as purchase_num', 'purchases.voucher_serie', 'purchases.total as totalp', 'purchases.exempt', 'purchases.tax_mount', 'purchases.total_ret', 'purchases.tax')
+            ->where('purchases.ret_id','=',$id)->get();
 
-        $numretention = retention::select('voucher_num')->where('id',$id)->get();
-        /*$retention=strtoupper($retention->name, $retention->address);
-        $details=strtoupper($details);*/
+        $pdf = \PDF::loadView('pdf.ret',['retention'=>$retention, 'detailret'=>$detailret, 'company'=>$company, 'image'=>$image])->stream('retencion-'.$retention[0]->voucher_num.'.pdf');
 
-        $pdf = \PDF::loadView('pdf.retention',['retention'=>$retention]);
-        return $pdf->download('venta-'.$numretention[0]->voucher_num.'.pdf');
+        return $pdf;
+    }
+
+    public function email(Request $request)
+    {
+        // dd($request);
+        $image = 'img/stamps/romaninaStamp2.png';
+        $company = Company::all();
+        $retention = retention::join('purchases', 'retentions.id', '=', 'purchases.ret_id')
+        ->join('users', 'purchases.user_id', '=', 'users.id')
+        ->join('clients', 'retentions.provider_id', '=', 'clients.id')
+        ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.total', 'retentions.year', 'retentions.month', 'retentions.status', 'clients.name', 'clients.email', 'clients.type', 'clients.rif', 'clients.retention', 'purchases.user_id', 'users.user')
+        ->where('retentions.id','=',$request->id)->take(1)->get();
+
+        $detailret = Purchase::select('purchases.id', 'purchases.voucher', 'purchases.date as datep', 'purchases.voucher_num as purchase_num', 'purchases.voucher_serie', 'purchases.total as totalp', 'purchases.exempt', 'purchases.tax_mount', 'purchases.total_ret', 'purchases.tax')
+            ->where('purchases.ret_id','=',$request->id)->get();
+
+        $pdf = \PDF::loadView('pdf.ret',['retention'=>$retention, 'detailret'=>$detailret, 'company'=>$company, 'image'=>$image])->stream('retencion-'.$retention[0]->voucher_num.'.pdf');
+
+        Mail::send('mails.retention_send', ['pdf'=>$pdf, 'detailret'=>$detailret], function($message) use ($pdf, $retention)
+        {
+            $message->to($retention[0]->email, $retention[0]->name)->subject('Retención n° '.$retention[0]->voucher_num);
+            $message->attachData($pdf, 'retencion-'.$retention[0]->voucher_num.'.pdf');
+        });
+        return;
     }
 
     public function pdfw(Request $request, $id)
     {
-        $retention = retention::join('clients', 'retentions.client_id', '=', 'clients.id')
-        ->join('users', 'retentions.user_id', '=', 'users.id')
-        ->select('retentions.id', 'retentions.voucher', 'retentions.voucher_serie', 'retentions.voucher_num', 'retentions.date', 'retentions.tax', 'retentions.total', 'retentions.status', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
+
+        $image = '\img\stamps\romaninaStamp.png';
+         $company = Company::all();
+        $retention = retention::join('purchases', 'retentions.id', '=', 'purchases.ret_id')
+        ->join('users', 'purchases.user_id', '=', 'users.id')
+        ->join('clients', 'retentions.provider_id', '=', 'clients.id')
+        ->select('retentions.id', 'retentions.voucher_num', 'retentions.date', 'retentions.total', 'retentions.year', 'retentions.month', 'retentions.status', 'clients.name', 'clients.type', 'clients.rif', 'clients.retention', 'purchases.user_id', 'users.user')
         ->where('retentions.id','=',$id)->take(1)->get();
 
-         $details = Detailretention::join('products', 'detailretentions.product_id', '=', 'products.id')
-        ->select('detailretentions.quantity', 'detailretentions.price', 'products.name as product')
-        ->where('detailretentions.retention_id','=',$id)
-        ->orderBy('detailretentions.id', 'desc')->get();
+        $detailret = Purchase::select('purchases.id', 'purchases.voucher', 'purchases.date as datep', 'purchases.voucher_num as purchase_num', 'purchases.voucher_serie', 'purchases.total as totalp', 'purchases.exempt', 'purchases.tax_mount', 'purchases.total_ret', 'purchases.tax')
+            ->where('purchases.ret_id','=',$id)->get();
+        return view('welcomer', compact('retention', 'detailret', 'company', 'image'));
+    }
 
-        $numretention = retention::select('voucher_num')->where('id',$id)->get();
-
+     public function getDownload(Request $request)
+    {
         
-        return view('welcome', compact('retention', 'details', 'numretention'));
+         $company = Company::all();
+         $fecha1 = $request->fecha1;
+         $fecha2 = $request->fecha2;
+         $retentions = Retention::join('purchases', 'retentions.id', '=', 'purchases.ret_id')
+            ->join('clients', 'retentions.provider_id', '=', 'clients.id')
+            ->select('retentions.year', 'retentions.month', 'retentions.date', 'retentions.voucher_num', 'retentions.total', 'purchases.date as datep', 'retentions.provider_id', 'purchases.voucher_serie','purchases.tax_mount', 'purchases.voucher_num as purchase_num', 'purchases.total as totalp','purchases.exempt', 'purchases.tax', 'clients.type as prov_type', 'clients.rif as prov_rif')->whereBetween('retentions.date', [$fecha1, $fecha2])->get();
+    
+            return ['txt' =>$retentions, 'company' => $company];
+
     }
   
 
@@ -110,15 +178,12 @@ class RetentionController extends Controller
             $mytime = Carbon::now('America/Caracas');
 
         DB::beginTransaction();
-        $retention = new retention();
-        $retention->client_id = $request->client_id;
-        $retention->user_id = \Auth::user()->id;
-        $retention->voucher = $request->voucher;
-        $retention->voucher_serie = $request->voucher_serie;
+        $retention = new Retention();
+        $retention->provider_id = $request->provider_id;
         $retention->voucher_num = $request->voucher_num;
         $retention->date = $mytime->toDateString();
-        
-        $retention->tax = $request->tax;
+        $retention->year = $mytime->format('Y');
+        $retention->month = $mytime->format('m');
         $retention->total = $request->total;
         $retention->status = 'Registrado';
         $retention->save();
@@ -126,13 +191,11 @@ class RetentionController extends Controller
 
         $details = $request->data; // Array de detalles de venta
         // recorrido del array
-        foreach ($details as $retentions => $det) {
-            $detailretention = new Detailretention();
-            $detailretention->retention_id = $retention->id;
-            $detailretention->product_id = $det['product_id'];
-            $detailretention->quantity = $det['quantity'];
-            $detailretention->price = $det['price'];
-            $detailretention->save();
+        foreach ($details as $purchases => $det) {
+            $purchase = Purchase::findOrFail($det['purchase_id']);
+            $purchase->ret_id = $retention->id;
+            $purchase->total_ret = $det['ret_amount'];
+            $purchase->save();
         }
 
         DB::commit();

@@ -25,6 +25,7 @@ class CreateProductsTable extends Migration
             $table->decimal('price_sell', 10, 2);
             $table->string('description', 256)->nullable();
             $table->integer('price_buy')->nullable();
+            $table->integer('tax_id');
             $table->boolean('condition')->default(1);
             $table->timestamps();
         });

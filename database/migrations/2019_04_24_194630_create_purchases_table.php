@@ -14,18 +14,24 @@ class CreatePurchasesTable extends Migration
     public function up()
     {
         Schema::create('purchases', function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-
             $table->bigIncrements('id');
             $table->integer('provider_id')->unsigned();
             $table->bigInteger('user_id')->unsigned();
             $table->enum('voucher',['bill', 'note', 'credit'])->default('bill');
             $table->string('voucher_serie', 7)->nullable();
             $table->string('voucher_num', 10);
-            $table->dateTime('date');
-            $table->decimal('tax', 4, 2);
-            $table->decimal('total', 11, 2);
+            $table->date('date');
+            $table->decimal('total', 20, 2);
+            $table->decimal('tax_mount', 20,2);
+            $table->integer('tax', 4);
+            
+            $table->integer('exempt', 20, 2)->nullable();
+            $table->bigInteger('ret_id')->unsigned();
+            $table->foreing('ret_id')->references('id')->on('retentions');
+            $table->decimal('total_ret', 20,2);
             $table->string('status', 20);
+            $table->string('description');
+            $table->string('type', 10);
             $table->timestamps();
         });
     }

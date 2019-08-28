@@ -46,6 +46,15 @@ Vue.component('finds', require('./components/FindSale.vue').default);
 
 Vue.component('dash', require('./components/Dashboard.vue').default);
 
+Vue.component('ret', require('./components/retention.vue').default);
+
+Vue.component('quota', require('./components/Quota.vue').default);
+
+Vue.component('company', require('./components/Company.vue').default);
+
+Vue.component('tax', require('./components/Tax.vue').default);
+
+Vue.component('buy', require('./components/Buy.vue').default);
 
 
 /**

@@ -50,12 +50,32 @@
                   </template>
 
                   <template v-if="menu==11">
-                    <h1> contenido ayuda de sistema</h1>
+                    <ret></ret>
+                  </template>
+
+                  <template v-if="menu==14">
+                    <quota></quota>
                   </template>
 
                   <template v-if="menu==12">
+                    <h1> contenido ayuda de sistema</h1>
+                  </template>
+
+                  <template v-if="menu==13">
                     <h1> contenido menu acerca del sistema</h1>
-                  </template>                    
+                  </template>
+
+                  <template v-if="menu==15">
+                    <company></company>
+                  </template>
+
+                  <template v-if="menu==16">
+                    <tax></tax>
+                  </template>
+
+                  <template v-if="menu==17">
+                    <buy></buy>
+                  </template>
                 @elseif (Auth::user()->role_id == 2)
                   <template v-if="menu==0">
                     <dash></dash>
@@ -71,6 +91,10 @@
                             
                   <template v-if="menu==10">
                     <finds></finds>
+                  </template>
+                  
+                  <template v-if="menu==14">
+                    <quota></quota>
                   </template>
 
                   <template v-if="menu==11">

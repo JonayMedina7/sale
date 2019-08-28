@@ -2,17 +2,23 @@
         <main class="main">
             <!-- Breadcrumb -->
             <ol class="breadcrumb">
-                
-                <li class="breadcrumb-item"><a href="/">Escritorio</a></li>
-                
-            </ol>
+          <li class="breadcrumb-item">Inicio</li>
+          <li class="breadcrumb-item">
+            <a href="#">Dilia Software</a>
+          </li>
+          <li class="breadcrumb-item active"> Proveedores&nbsp;&nbsp;<i class="fa fa-address-book-o"></i></li>
+          <!-- Breadcrumb Menu-->
+          <li class="breadcrumb-menu d-md-down-none">
+            
+          </li>
+        </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Proveedor
-                        <button type="button" class="btn btn-secondary" @click="openModal('client','register')">
-                            <i class="icon-plus"></i>&nbsp;Nuevo
+                        
+                        <button type="button" class="btn btn-success" @click="openModal('client','register')">
+                            <i class="fa fa-address-book-o"></i>&nbsp;&nbsp;Agregar Nuevo
                         </button>
                     </div>
                     <div class="card-body">
@@ -24,10 +30,13 @@
                                       <option value="rif">Rif</option>
                                     </select>
                                     <input type="text" v-model="search" @keyup.enter="listClient(1,search,criterion)" class="form-control" placeholder="Texto a Buscar">
-                                    <button type="submit" @click="listClient(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
+                                    <button type="submit" @click="listClient(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
+                        <div class="box-header">
+                                    <center><h3 class="box-title">Listado de Proveedores</h3></center>
+                                </div>  <br><hr>  
                         <table class="table table-bordered table-striped table-sm">
                             <thead>
                                 <tr>
@@ -46,7 +55,7 @@
                                 <tr v-for="client in arrayClient" :key="client.id">
                                     <td>
                                         <button type="button" class="btn btn-warning btn-sm" @click="openModal('client','update', client)">
-                                          <i class="icon-pencil"></i>
+                                          <i class="icon-pencil"></i>&nbsp;&nbsp; Editar
                                         </button> &nbsp;
                                         
                                     </td>
@@ -54,10 +63,10 @@
                                     <td v-text="client.name"></td>
                                     <td v-text="client.phone"></td>
                                     <td v-text="client.email"></td>
-                                    <div >
+                                    
                                     	<td v-if="client.retention>=75" v-text="client.retention + '%' "></td>
-										<td v-else>No es Agente de retención</td>
-									</div>
+										<td v-else>No Aplica</td>
+								
                                     <td v-text="client.address"></td>
                                     <td v-text="client.contact"></td>
                                     <td>
@@ -164,7 +173,7 @@
                                     <label class="col-md-3 form-control-label" for="retention">Es Agente de Retención?</label>
                                     <div class="col-md-5">
                                         <select class="form-control" v-model="retention" required>
-											<option value="0" >No</option>
+											<option value="no" >No</option>
 											<option value="75" >75%</option>
 											<option value="100" >100%</option>
                                         </select>
@@ -236,7 +245,7 @@
                 name : '',
                 phone : '',
                 email: '',
-                retention : 0,
+                retention : 'no',
                 address : '',
                 condition : '',
                 type: '',
@@ -318,8 +327,8 @@
             	
                 if (this.validateClient()) {
                     return;
-                };
-                let me=this;
+                } else {
+                    let me=this;
                 console.log(this.name);
                 axios.post('provider/register', {
                     'type':this.type,
@@ -338,7 +347,9 @@
                 })
                 .catch(function (error) {
                     console.log(error);
-                });
+                });    
+                };
+                
             },
             updateClient() {
                 if (this.validateClient()) {
@@ -371,20 +382,22 @@
 
                 
 
-                if (!this.name) this.errorSmsList.push("el name del producto no puede estar vacio");
+                if (!this.name) this.errorSmsList.push("El Nombre del proveedor no puede estar vacio");
 
-                if (!this.type) this.errorSmsList.push("Seleccione el tipo de Cliente: J, G, V, Cedula")
+                if (!this.type) this.errorSmsList.push("Seleccione el tipo de documento del Proveedor: J, G, V, Cedula")
 
-                if (!this.rif) this.errorSmsList.push("El Rif del cliente debe ser nuemro y no puede estar vacio");
+                if (!this.rif) this.errorSmsList.push("El Rif del Proveedor debe ser nuemro y no puede estar vacio");
 
                 if (this.errorSmsList.length) this.errorSms = 1;
-                Swal.fire({
+                    if (this.errorSmsList.length >= 1) {
+                        Swal.fire({
                     confirmButtonText: 'Aceptar!',
                     confirmButtonClass: 'btn btn-danger',
                     confirmButtonColor: '#3085d6',
-                    html: `${this.errorSmsListP.map( er =>`<br><br>${er}`)}`,
+                    html: `${this.errorSmsList.map( er =>`<br><br>${er}`)}`,
                     showCancelButton: false
-                });
+                    });
+                };
                 return this.errorSms;
             },
             desactiveClient(){
@@ -422,7 +435,7 @@
                 this.client_id= 0;
                 this.name='';
                 this.address='';
-                this.retention=0;
+                this.retention='no';
                 this.rif=0;
                 this.phone='';
                 this.email='';
@@ -443,7 +456,7 @@
 
                                 this.name='';
 				                this.address='';
-				                this.retention=0;
+				                this.retention='no';
 				                this.rif=0;
 				                this.phone='';
 				                this.email='';
@@ -492,27 +505,3 @@
         }
     };
 </script>
-
-<style type="text/css">
-    .modal-content{
-        margin-top: 11vh;
-        width: 100% !important;
-        position: absolute !important;
-    }
-    .show {
-        display: list-item !important;
-        opacity: 1 !important;
-        position: absolute;
-        background-color: #3c29297a !important; 
-    }
-    .div-error{
-        display: flex;
-        justify-content: center;
-
-    }
-    .text-error{
-        color: red !important;
-        font-weight: bold;
-    }
-
-</style>

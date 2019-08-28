@@ -1,18 +1,24 @@
  <template>
         <main class="main">
             <!-- Breadcrumb -->
-            <ol class="breadcrumb">
-                
-                <li class="breadcrumb-item"><a href="/">Escritorio</a></li>
-                
-            </ol>
+             <ol class="breadcrumb">
+          <li class="breadcrumb-item">Inicio</li>
+          <li class="breadcrumb-item">
+            <a href="#">Dilia Software</a>
+          </li>
+          <li class="breadcrumb-item active"> Clientes&nbsp;&nbsp;<i class="fa fa-address-book-o"></i></li>
+          <!-- Breadcrumb Menu-->
+          <li class="breadcrumb-menu d-md-down-none">
+            
+          </li>
+        </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Cliente
-                        <button type="button" class="btn btn-secondary" @click="openModal('client','register')">
-                            <i class="icon-plus"></i>&nbsp;Nuevo
+                        
+                        <button type="button" class="btn btn-success" @click="openModal('client','register')">
+                            <i class="fa fa-address-book-o"></i>&nbsp;&nbsp; Agregar Nuevo
                         </button>
                     </div>
                     <div class="card-body">
@@ -24,7 +30,7 @@
                                       <option value="rif">Rif</option>
                                     </select>
                                     <input type="number" v-model="search" @keyup.enter="listClient(1,search,criterion)" class="form-control" placeholder="Texto a Buscar">
-                                    <button type="submit" @click="listClient(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
+                                    <button type="submit" @click="listClient(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -45,10 +51,10 @@
                                 <tr v-for="client in arrayClient" :key="client.id">
                                     <td>
                                         <button type="button" class="btn btn-warning btn-sm" @click="openModal('client','update', client)">
-                                          <i class="icon-pencil"></i>
+                                          &nbsp;&nbsp;Editar
                                         </button> &nbsp;
                                         <button v-if="client.condition" type="button" @click="openModal('client','desactive',client)" class="btn btn-danger btn-sm" >
-                                          <i class="icon-trash"></i>
+                                          &nbsp;&nbsp;Anular
                                         </button>
                                         <button v-else type="button" @click="openModal('client','active',client)" class="btn btn-success btn-sm" >
                                           <i class="icon-check"></i>
@@ -58,10 +64,10 @@
                                     <td v-text="client.name"></td>
                                     <td v-text="client.phone"></td>
                                     <td v-text="client.email"></td>
-                                    <div >
+                                   
                                     	<td v-if="client.retention>=75" v-text="client.retention + '%' "></td>
-										<td v-else>No es Agente de retención</td>
-									</div>
+										<td v-else>No aplica</td>
+									
                                     <td v-text="client.address"></td>
                                     <td>
                                         <div v-if="client.condition">
@@ -111,7 +117,7 @@
                                     <div class="col-md-2">
                                         <select class="form-control" v-model="type">
 
-											<option value="j" default>J</option>
+											<option value="j">J</option>
 											<option value="g" >G</option>
 											<option value="v" >V</option>
 											<option value="c" >Cedula</option>
@@ -154,7 +160,7 @@
                                     <label class="col-md-3 form-control-label" for="retention">Es Agente de Retención?</label>
                                     <div class="col-md-5">
                                         <select class="form-control" v-model="retention" required>
-											<option value="0" >No</option>
+											<option value="no" >No</option>
 											<option value="75" >75%</option>
 											<option value="100" >100%</option>
                                         </select>
@@ -226,7 +232,7 @@
                 name : '',
                 phone : '',
                 email: '',
-                retention : 0,
+                retention : 'no',
                 address : '',
                 condition : '',
                 type: '',
@@ -307,26 +313,26 @@
 
                 if (this.validateClient()) {
                     return;
+                } else {
+                        let me=this;
+                    
+                    axios.post('client/register', {
+                        'type':this.type,
+                        'rif':this.rif,
+                        'name': this.name,
+                        'phone': this.phone,
+                        'email': this.email,
+                        'retention': this.retention,
+                        'address': this.address
+                    }).then(function(response) {
+                        me.closeModal();
+                        me.listClient(1,'','name');
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
                 };
-                let me=this;
-                console.log(this.name);
-                axios.post('client/register', {
-                    'type':this.type,
-                    'rif':this.rif,
-                    'name': this.name,
-                    'phone': this.stock,
-                    'email': this.email,
-                    'retention': this.retention,
-                    'address': this.address
-                    
-                    
-                }).then(function(response) {
-                    me.closeModal();
-                    me.listClient(1,'','name');
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+                
             },
             updateClient() {
                 if (this.validateClient()) {
@@ -355,8 +361,6 @@
                 this.errorSms=0;
                 this.errorSmsList =[];
 
-                
-
                 if (!this.name) this.errorSmsList.push("El Nombre del producto no puede estar vacio");
 
                 if (!this.email) this.errorSmsList.push("El Correo Eléctronico del Cliente no puede estar vacio");
@@ -366,13 +370,15 @@
                 if (!this.rif) this.errorSmsList.push("El Rif del cliente debe ser nuemro y no puede estar vacio");
 
                 if (this.errorSmsList.length) this.errorSms = 1;
-                Swal.fire({
+                    if (this.errorSmsList.length >= 1) {
+                        Swal.fire({
                     confirmButtonText: 'Aceptar!',
                     confirmButtonClass: 'btn btn-danger',
                     confirmButtonColor: '#3085d6',
                     html: `${this.errorSmsList.map( er =>`<br><br>${er}`)}`,
                     showCancelButton: false
-                });
+                    });
+                };
                 return this.errorSms;
             },
             desactiveClient(){
@@ -410,7 +416,7 @@
                 this.client_id= 0;
                 this.name='';
                 this.address='';
-                this.retention=0;
+                this.retention='no';
                 this.rif=0;
                 this.phone='';
                 this.email='';
@@ -423,13 +429,13 @@
                         switch(accion){
                             case 'register':
                             {
-                                this.titleModal    = 'Registrar Client';
+                                this.titleModal    = 'Registrar Cliente';
                                 this.modal          = 1;
                                 this.actionType     = 1;
 
                                 this.name='';
 				                this.address='';
-				                this.retention=0;
+				                this.retention='no';
 				                this.rif=0;
 				                this.phone='';
 				                this.email='';
@@ -475,27 +481,3 @@
         }
     };
 </script>
-
-<style type="text/css">
-    .modal-content{
-        margin-top: 11vh;
-        width: 100% !important;
-        position: absolute !important;
-    }
-    .show {
-        display: list-item !important;
-        opacity: 1 !important;
-        position: absolute;
-        background-color: #3c29297a !important; 
-    }
-    .div-error{
-        display: flex;
-        justify-content: center;
-
-    }
-    .text-error{
-        color: red !important;
-        font-weight: bold;
-    }
-
-</style>

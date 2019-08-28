@@ -13,19 +13,23 @@
                   <p class="text-muted">Control de acceso al sistema</p>
 
                   <div class="form-group mb-3 {{ $errors->has('user' ? 'is-invalid' : '')}}">
-                    <span><i class="icon-user"></i>
+                    <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      
+                    </span>
+                  </div>
                     <input type="text" name="user" id="user" class="form-control" placeholder="Usuario" value="{{ old('user') }}"></span>
                     {!! $errors->first('user','<span class="invalid-feedback">:message</span>') !!}
 
                   </div>
                   <div class="form-group mb-4 {{ $errors->has('password' ? 'is-invalid' : '')}}">
-                    <span class="input-group-addon"><i class="icon-lock"></i></span>
+                    
                     <input type="password" name="password" id="password" class="form-control" placeholder="Password">
                      {!! $errors->first('password','<span class="invalid-feedback">:message</span>') !!}
                   </div>
                   <div class="row">
                     <div class="col-6">
-                      <button type="submit" class="btn btn-primary px-4">Acceder</button>
+                      <button type="submit" class="btn btn-primary px-4"><i class="icon-lock-open"></i>&nbsp;&nbsp;Entrar</button>
                     </div>
                     <div class="col-6 text-right">
                       <!--<button type="button" class="btn btn-link px-0">Olvidaste tu password?</button>-->

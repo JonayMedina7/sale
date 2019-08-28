@@ -15,9 +15,11 @@ class CreateRetentionsTable extends Migration
     {
         Schema::create('retentions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('voucher_num', 10);
-            $table->dateTime('date');
-            $table->decimal('tax', 4, 2);
+            $table->integer('provider_id');
+            $table->string('voucher_num', 20);
+            $table->date('date');
+            $table->string('year', 7);
+            $table->string('month', 11);
             $table->decimal('total', 15, 2);
             $table->string('status', 20);
             $table->timestamps();

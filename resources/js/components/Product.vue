@@ -2,20 +2,27 @@
         <main class="main">
             <!-- Breadcrumb -->
             <ol class="breadcrumb">
-                
-                <li class="breadcrumb-item"><a href="/">Escritorio</a></li>
-                
-            </ol>
+          <li class="breadcrumb-item">Inicio</li>
+          <li class="breadcrumb-item">
+            <a href="#">Dilia Software</a>
+          </li>
+          <li class="breadcrumb-item active"> Productos&nbsp;&nbsp;<i class="fa fa-archive"></i></li>
+          <!-- Breadcrumb Menu-->
+          <li class="breadcrumb-menu d-md-down-none">
+            
+          </li>
+        </ol>
+            <!-- div tabla de productos -->
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Productos
-                        <button type="button" class="btn btn-secondary" @click="openModal('product','register')">
-                            <i class="icon-plus"></i>&nbsp;Nuevo
+                        
+                        <button type="button" class="btn btn-success" @click="openModal('product','register')">
+                            <i class="fa fa-archive"></i>&nbsp;Ingresar Nuevo
                         </button>
                         <button type="button" class="btn btn-info" @click="loadPdf()">
-                            <i class="icon-doc"></i>&nbsp;Reporte
+                            <i class="icon-doc"></i>&nbsp;Listado de Productos
                         </button>
                     </div>
                     <div class="card-body">
@@ -39,6 +46,7 @@
                                     <th>Nombre</th>
                                     <th>Categoría</th>
                                     <th>Precio Compra</th>
+                                    <th>I.v.a.</th>
                                     <th>Stock</th>
                                     <th>Descripción</th>
                                     <th>Estado</th>
@@ -61,6 +69,8 @@
                                     <td v-text="product.name"></td>
                                     <td v-text="product.category_name"></td>
                                     <td v-text="product.price_buy"></td>
+                                    <td v-if="product.tax==0">Exento</td>
+                                    <td v-else v-text="product.tax + '%'"></td>
                                     <td v-text="product.stock"></td>
                                     <td v-text="product.description"></td> 
 
@@ -70,7 +80,7 @@
                                         </div>
 
                                         <div v-else>
-                                            <span class="badge badge-secondary">Inactivo</span>
+                                            <span class="badge badge-danger">Inactivo</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -95,6 +105,7 @@
                 </div>
                 <!-- Fin ejemplo de tabla Listado -->
             </div>
+            <!-- fin div tabla de productos -->
             <!--Inicio del modal agregar/actualizar-->
             <div class="modal fade" tabindex="-1" :class="{'show' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog modal-primary modal-lg" role="document">
@@ -115,6 +126,15 @@
                                             <option v-for="category in arrayCategory" :key="category.id" :value="category.id" v-text="category.name"></option>
                                         </select>
                                     </div>
+                                </div>
+                                <div class="form-group row" >
+                                    <label class="col-md-3 form-control-label">Seleccione Producto con I.v.a. o Exento</label>
+                                        <div class="col-md-2" >
+                                            <select  class=" form-control" v-model="tax_id">
+                                                <option value="0" disabled>Seleccione</option>                            
+                                                <option v-for="t in arrayTax" :key="t.id" :value="t.id" v-text="t.tax "></option>
+                                            </select>    
+                                        </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Código</label>
@@ -217,7 +237,10 @@
                 stock: 0,
                 description : '',
                 condition : '',
+                tax_id: 0,
+                tax:'',
                 arrayProduct : [],
+                arrayTax:[],
                 modal1 : 0,
                 modal : 0,
                 titleModal : '',
@@ -302,6 +325,22 @@
                     console.log(error);
                 });
             },
+            searchTax(){
+                let me = this;
+
+                var url='tax/searchTax';
+                axios.get(url).then(function(response) {
+                    me.arrayTax = response.data;
+                    for (var i = me.arrayTax.length - 1; i >= 0; i--) {
+                        if (me.arrayTax[i]['tax']==0) {
+                            me.arrayTax[i]['tax']='Exento';
+                        }
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
             changePage(page, search, critery){
                 let me = this;
                 // actualiza la pagina 
@@ -316,14 +355,15 @@
                     return;
                 };
                 let me=this;
-                console.log(this.name);
                 axios.post('product/register', {
                     'category_id': this.category_id,
                     'code':this.code,
                     'name': this.name,
                     'stock': this.stock,
                     'price_buy': this.price_buy,
-                    'description': this.description
+                    'tax_id': this.tax_id,
+                    'description': this.description,
+                    'tax_id': this.tax_id
                     
                 }).then(function(response) {
                     me.closeModal();
@@ -347,6 +387,7 @@
                     'name': this.name,
                     'stock': this.stock,
                     'price_buy': this.price_buy,
+                    'tax_id': this.tax_id,
                     'description': this.description
                 }).then(function (response){
                     me.closeModal();
@@ -363,18 +404,22 @@
 
                 if (!this.name) this.errorSmsProduct.push("El Nombre del producto no puede estar vacio");
 
-                if (!this.stock) this.errorSmsProduct.push(" Stock del producto debe ser un Numero y no puede estar vacio");
+                // if (!this.stock) this.errorSmsProduct.push(" Stock del producto debe ser un Numero y no puede estar vacio");
 
-                if (!this.price_buy) this.errorSmsProduct.push("Precio de Compra del producto debe ser un Numero y no puede estar vacio");
+                // if (!this.price_buy) this.errorSmsProduct.push("Precio de Compra del producto debe ser un Numero y no puede estar vacio");
+
+                if (this.tax_id == 0) this.errorSmsProduct.push("Seleccione tipo de impuesto para el producto");
 
                 if (this.errorSmsProduct.length) this.errorProduct = 1;
-                Swal.fire({
-                    confirmButtonText: 'Aceptar!',
-                    confirmButtonClass: 'btn btn-danger',
-                    confirmButtonColor: '#3085d6',
-                    html: `${this.errorSmsProduct.map( er =>`<br><br>${er}`)}`,
-                    showCancelButton: false
-                });
+                    if (this.errorSmsProduct.length >= 1) {
+                        Swal.fire({
+                            confirmButtonText: 'Aceptar!',
+                            confirmButtonClass: 'btn btn-danger',
+                            confirmButtonColor: '#3085d6',
+                            html: `${this.errorSmsProduct.map( er =>`<br><br>${er}`)}`,
+                            showCancelButton: false
+                            });
+                        };
                 return this.errorProduct;
             },
             desactiveProduct(){
@@ -408,13 +453,15 @@
                 this.modal1=0;
                 this.category_id= 0;
                 this.category_name='';
-                this.code=0;
+                this.code='';
                 this.price_buy=0;
                 this.stock=0;
                 this.errorProduct=0;
                 this.titleModal= '';
                 this.name='';
                 this.description='';
+                this.tax_id=0;
+                this.tax='';
             },
             openModal(modelo, accion, data = []){
                 switch(modelo) {
@@ -427,12 +474,14 @@
                                 this.modal          = 1;
                                 this.category_id= 0;
                                 this.category_name='';
-                                this.code=0;
+                                this.code='';
                                 this.name         = '';
-                                this.price_buy=0;
-                                this.stock=0;
+                                this.price_buy='';
+                                this.stock='';
                                 this.description    = '';
                                 this.actionType     = 1;
+                                this.tax_id=0;
+                                this.tax='';
                                 break;
                             }
                             case 'update':
@@ -447,6 +496,8 @@
                                 this.price_buy   = data['price_buy'];
                                 this.stock        = data['stock'];
                                 this.description  = data['description'];
+                                this.tax_id= data['tax_id'];
+                                this.tax= data['tax'];
                                 this.actionType   = 2;
                                 break;
                             }
@@ -467,6 +518,7 @@
                     }
                 }
                 this.categorySelect();
+                this.searchTax();
             }
         },
         mounted() {
@@ -474,27 +526,3 @@
         }
     };
 </script>
-
-<style type="text/css">
-    .modal-content{
-        margin-top: 11vh;
-        width: 100% !important;
-        position: absolute !important;
-    }
-    .show {
-        display: list-item !important;
-        opacity: 1 !important;
-        position: absolute;
-        background-color: #3c29297a !important; 
-    }
-    .div-error{
-        display: flex;
-        justify-content: center;
-
-    }
-    .text-error{
-        color: red !important;
-        font-weight: bold;
-    }
-
-</style>

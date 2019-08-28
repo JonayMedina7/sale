@@ -16,13 +16,13 @@ class CategoryController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
 
-        $buscar = $request->buscar;
-        $criterio = $request->criterio;
+        $search = $request->search;
+        $criterion = $request->criterion;
         
-        if ($buscar=='') {
+        if ($search=='') {
             $categories = Category::orderBy('id', 'desc')->paginate(4);
         } else {
-            $categories = Category::where($criterio, 'like', '%'. $buscar . '%')->orderBy('id', 'desc')->paginate(4);
+            $categories = Category::where($criterion, 'like', '%'. $search . '%')->orderBy('id', 'desc')->paginate(4);
         }
 
         
@@ -35,7 +35,7 @@ class CategoryController extends Controller
                 'from'          => $categories->firstItem(),
                 'to'            => $categories->lastItem(),
             ],
-            'categorias' => $categories
+            'categories' => $categories
         ];
     }
 

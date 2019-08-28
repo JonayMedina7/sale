@@ -1,16 +1,21 @@
  <template>
         <main class="main">
-            <!-- Breadcrumb -->
-            <!-- <ol class="breadcrumb">
-                
-                <li class="breadcrumb-item"><a href="/">Escritorio</a></li>
-                
-            </ol> -->
+             <ol class="breadcrumb">
+          <li class="breadcrumb-item">Inicio</li>
+          <li class="breadcrumb-item">
+            <a href="#">Dilia Software</a>
+          </li>
+          <li class="breadcrumb-item active"> Cuentas por Pagar&nbsp;&nbsp;<i class="icon-chart"></i></li>
+          <!-- Breadcrumb Menu-->
+          <li class="breadcrumb-menu d-md-down-none">
+            
+          </li>
+        </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Compras
+                        
                     </div>
                     <!-- litado registros -->
                     <template v-if="list==1">
@@ -20,11 +25,11 @@
                                     <div class="input-group">
                                         <select class="form-control col-md-3" v-model="criterion">
                                           <option value="voucher">Tipo de Comprobante</option>
-                                          <option value="voucher_num">numero de comprobante</option>
+                                          <option value="voucher_num">Numero de comprobante</option>
                                           <option value="date">Fecha-hora</option>
                                         </select>
                                         <input type="text" v-model="search" @keyup.enter="listPurchase(1,search,criterion)" class="form-control" placeholder="Texto a Buscar">
-                                        <button type="submit" @click="listPurchase(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
+                                        <button type="submit" @click="listPurchase(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                     </div>
                                 </div>
                             </div>
@@ -36,7 +41,6 @@
                                             <th>Nombre Usuario</th>
                                             <th>Proveedor</th>
                                             <th>Tipo de comprobante</th>
-                                            <th>Serie comprobante</th>
                                             <th>Número comprobante</th>
                                             <th>Fecha Hora</th>
                                             <th>Total</th>
@@ -48,14 +52,13 @@
                                         <tr v-for="purchase in arrayPurchase" :key="purchase.id">
                                             <td>
                                                 <button type="button" class="btn btn-success btn-sm" @click="showPurchase(purchase.id)">
-                                                  <i class="icon-eye"></i>
+                                                  Detalles
                                                 </button>
                                                 
                                             </td>
                                             <td v-text="purchase.user"></td>
                                             <td v-text="purchase.name"></td>
                                             <td v-text="purchase.voucher"></td>
-                                            <td v-text="purchase.voucher_serie"></td>
                                             <td v-text="purchase.voucher_num"></td>
                                             <td v-text="purchase.date"></td>
                                             <td v-text="purchase.total"></td>
@@ -361,33 +364,3 @@
         }
     };
 </script>
-
-<style type="text/css">
-    .modal-content{
-        margin-top: 1vh;
-        width: 100% !important;
-        position: absolute !important;
-    }
-    .show {
-        display: list-item !important;
-        opacity: 1 !important;
-        position: absolute;
-        background-color: #3c29297a !important; 
-    }
-    .div-error{
-        display: flex;
-        justify-content: center;
-
-    }
-    .text-error{
-        color: red !important;
-        font-weight: bold;
-    }
-    @media (min-width: 600px) {
-        .btn-add {
-            margin-top: 2rem;
-        }    
-    }
-    
-
-</style> 

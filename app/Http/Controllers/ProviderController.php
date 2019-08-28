@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use DB;
+
 use App\Client;
 use App\Provider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProviderController extends Controller
 {
@@ -45,7 +46,7 @@ class ProviderController extends Controller
         $providers = Provider::join('clients','providers.id','=','clients.id')
         ->where('clients.name', 'like', '%'. $filter . '%')
         ->orWhere('clients.rif', 'like', '%'. $filter . '%')
-        ->select('clients.id','clients.name','clients.type','clients.rif')
+        ->select('clients.id','clients.name','clients.type','clients.rif', 'clients.address', 'clients.retention')
         ->orderBy('clients.name', 'asc')->get();
 
         return ['providers' => $providers];
@@ -62,7 +63,7 @@ class ProviderController extends Controller
         if (!$request->ajax()) return redirect('/');
 
         try {
-        DB::begingTransaction();
+        DB::beginTransaction();
         $client = new Client();
         $client->name = $request->name;
         $client->phone = $request->phone;
@@ -100,8 +101,8 @@ class ProviderController extends Controller
     public function update(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-try {
-        DB::begingTransaction();
+        try {
+        DB::beginTransaction();
 
         $provider = Provider::findOrFail($request->id);
 

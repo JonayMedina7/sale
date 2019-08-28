@@ -22,21 +22,24 @@ Route::group(['middleware' =>['auth']], function()
 	Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 
 	Route::get('welcome', function () {
-    return view('welcome');
-	});
+    return view('welcome');	});
+
 	route::get('/dashboard', 'DashboardController');
 
+	route::get('welcomer', function (){
+		return view('welcomer');
+	});
 
 	Route::group(['middleware' =>['storer']], function()
 	{
 		Route::get('/home', 'HomeController@index')->name('home');
 
-		route::get('/categoria', 'CategoryController@index');
-		route::post('/categoria/registrar', 'CategoryController@store');
-		route::put('/categoria/actualizar', 'CategoryController@update');
-		route::put('/categoria/desactivar', 'CategoryController@desactive');
-		route::put('/categoria/activar', 'CategoryController@active');
-		route::get('/categoria/categorySelect', 'CategoryController@categorySelect');
+		route::get('/category', 'CategoryController@index');
+		route::post('/category/register', 'CategoryController@store');
+		route::put('/category/update', 'CategoryController@update');
+		route::put('/category/desactive', 'CategoryController@desactive');
+		route::put('/category/active', 'CategoryController@active');
+		route::get('/category/categorySelect', 'CategoryController@categorySelect');
 
 		route::get('/product', 'ProductController@index');
 		route::post('/product/register', 'ProductController@store');
@@ -81,23 +84,23 @@ Route::group(['middleware' =>['auth']], function()
 		route::get('/sale/getHeader', 'SaleController@getHeader');
 		route::get('/sale/getDetail', 'SaleController@getDetail'); 
 		route::get('/sale/pdf/{id}', 'SaleController@pdf')->name('venta_pdf');
-		route::get('/sale/pdfw/{id}', 'SaleController@pdfw')->name('venta'); 
+		route::get('/sale/pdfw/{id}', 'SaleController@pdfw')->name('venta');
 
 		route::get('/product/listProductSale', 'ProductController@listProductSale');
 		route::get('/product/productSearchSale', 'ProductController@productSearchSale');
 
-
+		route::get('/retencion', 'RetentionController@index');
 	});
 
 	Route::group(['middleware' =>['admin']], function()
 	{
 		Route::get('/home', 'HomeController@index')->name('home');
 
-		route::get('/categoria', 'CategoryController@index');
-		route::post('/categoria/registrar', 'CategoryController@store');
-		route::put('/categoria/actualizar', 'CategoryController@update');
-		route::put('/categoria/desactivar', 'CategoryController@desactive');
-		route::put('/categoria/activar', 'CategoryController@active');
+		route::get('/category', 'CategoryController@index');
+		route::post('/category/register', 'CategoryController@store');
+		route::put('/category/update', 'CategoryController@update');
+		route::put('/category/desactive', 'CategoryController@desactive');
+		route::put('/category/active', 'CategoryController@active');
 		route::get('/categoria/categorySelect', 'CategoryController@categorySelect');
 
 		route::get('/product', 'ProductController@index');
@@ -145,6 +148,8 @@ Route::group(['middleware' =>['auth']], function()
 		route::put('/purchase/desactive', 'PurchaseController@desactive');
 		route::get('/purchase/getHeader', 'PurchaseController@getHeader');
 		route::get('/purchase/getDetail', 'PurchaseController@getDetail'); 
+		route::get('/purchase/purchaseRet', 'PurchaseController@purchaseRet');
+		route::get('/purchase/listPurchaseRet', 'PurchaseController@listPurchaseRet');
 
 		route::get('/sale', 'SaleController@index');
 		route::post('/sale/register', 'SaleController@store');
@@ -152,8 +157,50 @@ Route::group(['middleware' =>['auth']], function()
 		route::put('/sale/desactive', 'SaleController@desactive');
 		route::get('/sale/getHeader', 'SaleController@getHeader');
 		route::get('/sale/getDetail', 'SaleController@getDetail');
-		route::get('/sale/saleId', 'SaleController@saleId'); 
+		route::get('/sale/saleId', 'SaleController@saleId');
+		route::get('/sale/saleSearchRet', 'SaleController@saleSearchRet');
+		route::get('/sale/pdf/{id}', 'SaleController@pdf')->name('venta_pdf');
+		route::get('/sale/pdfw/{id}', 'SaleController@pdfw')->name('venta');
+		route::get('sale/email', 'SaleController@email');
 
+		route::get('/quota', 'QuotaController@index');
+		route::post('/quota/register', 'QuotaController@store');
+		route::put('/quota/update', 'QuotaController@update');
+		route::put('/quota/desactive', 'QuotaController@desactive');
+		route::get('/quota/getHeader', 'QuotaController@getHeader');
+		route::get('/quota/getDetail', 'QuotaController@getDetail');
+		route::get('/quota/quotaId', 'QuotaController@quotaId');
+		route::get('/quota/quotaSearchRet', 'QuotaController@saleSearchRet');
+
+		route::get('/retention', 'RetentionController@index');
+		route::get('retention/retId', 'RetentionController@retId');
+		route::post('/retention/register', 'RetentionController@store');
+		route::get('/retention/getHeader', 'RetentionController@getHeader');
+		route::get('/retention/getDetail', 'RetentionController@getDetail');
+		route::put('/retention/update', 'RetentionController@update');
+		route::put('/retention/desactive', 'RetentionController@desactive');
+		route::get('/retention/getDownload', 'RetentionController@getDownload');
+		route::get('/retention/pdf/{id}', 'RetentionController@pdf')->name('retencion');
+		route::get('/retention/pdfw/{id}', 'RetentionController@pdfw')->name('retencion');
+		route::get('retention/email', 'RetentionController@email');
+		
+		route::get('/company', 'CompanyController@index');
+		route::post('/company/register', 'CompanyController@store');
+		route::put('/company/update', 'CompanyController@update');
+
+		route::get('/tax', 'TaxController@index');
+		route::post('/tax/register', 'TaxController@store');
+		route::put('/tax/update', 'TaxController@update');
+		route::get('tax/searchTax', 'TaxController@searchTax');
+
+		route::get('buy/indexb', 'PurchaseController@indexb');
+		route::post('/buy/register', 'PurchaseController@storeb');
+		route::put('/buy/update', 'PurchaseController@updateb');
+		route::put('/buy/desactive', 'PurchaseController@desactiveb');
+		route::get('/buy/getHeaderb', 'PurchaseController@getHeaderb');
+		route::get('/buy/getDetail', 'PurchaseController@getDetail'); 
+		route::get('/buy/purchaseRet', 'PurchaseController@purchaseRet');
+		route::get('/buy/listPurchaseRet', 'PurchaseController@listPurchaseRet');
 
 	});
 	

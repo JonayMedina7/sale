@@ -18,18 +18,23 @@ class ProductController extends Controller
 
         $search = $request->search;
         $critery = $request->critery;
+
         
         if ($search=='') {
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
-            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition')
+            ->join('taxes', 'products.tax_id', '=', 'taxes.id')
+            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition', 'taxes.tax')
             ->orderBy('products.id', 'desc')->paginate(7);
         } else {
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
-            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition')
+            ->join('taxes', 'products.tax_id', '=', 'taxes.id')
+            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition', 'taxes.tax')
             ->where('products.'.$critery, 'like', '%'. $search . '%')
             ->orderBy('products.id', 'desc')->paginate(7);
             
         }
+
+
 
         
         return [
@@ -54,31 +59,44 @@ class ProductController extends Controller
         
         if ($search=='') {
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
-            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition')
+            ->join('taxes', 'products.tax_id', '=', 'taxes.id')
+            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition', 'taxes.tax')
             ->orderBy('products.id', 'desc')->paginate(10);
         } else {
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
-            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition')
+            ->join('taxes', 'products.tax_id', '=', 'taxes.id')
+            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition', 'taxes.tax')
             ->where('products.'.$critery, 'like', '%'. $search . '%')
             ->orderBy('products.id', 'desc')->paginate(10);
             
         }
 
         
-        return [ 'products' => $products ];
+        return [
+            'pagination' => [
+                'total'         => $products->total(),
+                'current_page'  => $products->currentPage(),
+                'per_page'      => $products->perPage(),
+                'last_page'     => $products->lastPage(),
+                'from'          => $products->firstItem(),
+                'to'            => $products->lastItem(),
+            ],
+            'products' => $products
+        ];
     }
 
     public function listPdf(Request $request)
     {
 
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
-            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition')
+            ->join('taxes', 'products.tax_id', '=', 'taxes.id')
+            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition', 'taxes.tax')
             ->orderBy('products.name', 'desc')->get();
 
             $cont = Product::count();
 
-        $pdf = \PDF::loadView('pdf.productspdf',['products'=>$products,'cont'=>$cont]);
-        return $pdf->download('productos.pdf');
+            $pdf = \PDF::loadView('pdf.productspdf',['products'=>$products,'cont'=>$cont]);
+            return $pdf->download('productos.pdf');
     }
 
     public function listProductSale(Request $request)
@@ -90,20 +108,34 @@ class ProductController extends Controller
         
         if ($search=='') {
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
-            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition')
+            ->join('taxes', 'products.tax_id', '=', 'taxes.id')
+            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition', 'taxes.tax')
             ->where('products.stock','>','0')
+            ->where('products.condition', '>','0')
             ->orderBy('products.id', 'desc')->paginate(10);
         } else {
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
-            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition')
+            ->join('taxes', 'products.tax_id', '=', 'taxes.id')
+            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition', 'taxes.tax')
             ->where('products.'.$critery, 'like', '%'. $search . '%')
             ->where('products.stock','>','0')
+            ->where('products.condition', '>','0')
             ->orderBy('products.id', 'desc')->paginate(10);
             
         }
 
         
-        return [ 'products' => $products ];
+        return [
+            'pagination' => [
+                'total'         => $products->total(),
+                'current_page'  => $products->currentPage(),
+                'per_page'      => $products->perPage(),
+                'last_page'     => $products->lastPage(),
+                'from'          => $products->firstItem(),
+                'to'            => $products->lastItem(),
+            ],
+            'products' => $products
+        ];
     }
 
     public function productSearch(Request $request)
@@ -124,8 +156,9 @@ class ProductController extends Controller
         if (!$request->ajax()) return redirect('/');
 
         $filter = $request->filter;
-        $products = Product::where('code','=', $filter)
-        ->select('id','name', 'stock', 'price_buy')
+        $products = Product::join('taxes', 'products.tax_id', '=', 'taxes.id')
+        ->where('code','=', $filter)
+        ->select('id','name', 'stock', 'price_buy', 'description', 'taxes.tax')
         ->where('stock','>','0')
         ->orderBy('name','asc')->take(1)->get();
 
@@ -149,7 +182,8 @@ class ProductController extends Controller
         $product->name = $request->name;
         $product->stock = $request->stock;
         $product->price_buy = $request->price_buy;
-
+        $product->price_sell = 0;
+        $product->tax_id = $request->tax_id;
         $product->description = $request->description;
         $product->condition = '1';
         $product->save();
@@ -174,7 +208,7 @@ class ProductController extends Controller
         $product->name = $request->name;
         $product->stock = $request->stock;
         $product->price_buy = $request->price_buy;
-        
+        $product->tax_id = $request->tax_id;
         $product->description = $request->description;
         $product->condition = '1';
         $product->save();

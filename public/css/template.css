@@ -1397,7 +1397,8 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
 .was-validated .form-control:valid, .form-control.is-valid, .was-validated
 .custom-select:valid,
 .custom-select.is-valid {
-  border-color: #4dbd74; }
+  ; 
+border-radius: .45rem;}
   .was-validated .form-control:valid:focus, .form-control.is-valid:focus, .was-validated
   .custom-select:valid:focus,
   .custom-select.is-valid:focus {
@@ -1538,7 +1539,7 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
 
 .btn {
   display: inline-block;
-  font-weight: normal;
+      font-weight: 400;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
@@ -1546,9 +1547,11 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+
   border: 1px solid transparent;
-  padding: 0.5rem 0.75rem;
+  padding: .375rem .75rem;
   font-size: 0.875rem;
+      border-radius: .25rem;
   line-height: 1.25;
   transition: all 0.15s ease-in-out; }
   .btn:focus, .btn:hover {
@@ -2747,7 +2750,9 @@ tbody.collapse.show {
   word-wrap: break-word;
   background-color: #fff;
   background-clip: border-box;
-  border: 1px solid #c2cfd6; }
+  border: 1px solid #c2cfd6; 
+  border-radius: .45rem;
+}
 
 .card-body, .card-block {
   -ms-flex: 1 1 auto;
@@ -3381,7 +3386,7 @@ button.close {
   left: 0;
   z-index: 1050;
   display: none;
-  overflow: hidden;
+  overflow: visible;
   outline: 0; }
   .modal.fade .modal-dialog {
     transition: -webkit-transform 0.3s ease-out;
@@ -3403,7 +3408,7 @@ button.close {
   margin: 10px; }
 
 .modal-content {
-  position: relative;
+  
   display: -ms-flexbox;
   display: flex;
   -ms-flex-direction: column;
@@ -3411,7 +3416,11 @@ button.close {
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  outline: 0; }
+  outline: 0;
+  margin-top: 3vh;
+  width: 100% !important;
+  position: relative !important;
+   }
 
 .modal-backdrop {
   position: fixed;
@@ -3470,7 +3479,7 @@ button.close {
 @media (min-width: 576px) {
   .modal-dialog {
     max-width: 500px;
-    margin: 30px auto; }
+    margin: 3px auto; }
   .modal-sm {
     max-width: 300px; } }
 
@@ -7642,20 +7651,20 @@ base-chart.chart {
   height: 55px;
   padding: 0;
   margin: 0;
-  background-color: #fff;
-  border-bottom: 1px solid #c2cfd6; }
+  background-color: #20a8d8 !important;
+  border-bottom: 1px solid #f4723f; }
   .app-header.navbar .navbar-brand {
     display: inline-block;
     width: 155px;
     height: 55px;
     padding: 0.5rem 1rem;
     margin-right: 0;
-    background-color: #fff;
+    /*background-color: #fff;*/
     background-image: url("../img/dsl.png");
     background-repeat: no-repeat;
     background-position: center center;
     background-size: 70px auto;
-    border-bottom: 1px solid #c2cfd6; }
+   /* border-bottom: 1px solid #c2cfd6;*/ }
   .app-header.navbar .navbar-toggler {
     min-width: 50px;
     padding: 0.25rem 0; }
@@ -7697,14 +7706,14 @@ base-chart.chart {
     min-width: 180px; }
 
 .navbar-brand {
-  color: #29363d; }
+  color: #fff; }
   .navbar-brand:focus, .navbar-brand:hover {
-    color: #29363d; }
+    color: #fff; }
 
 .navbar-nav .nav-link, .navbar-nav .navbar .dropdown-toggle, .navbar .navbar-nav .dropdown-toggle {
-  color: #536c79; }
+  color: #fff; }
   .navbar-nav .nav-link:focus, .navbar-nav .navbar .dropdown-toggle:focus, .navbar .navbar-nav .dropdown-toggle:focus, .navbar-nav .nav-link:hover, .navbar-nav .navbar .dropdown-toggle:hover, .navbar .navbar-nav .dropdown-toggle:hover {
-    color: #29363d; }
+    color: #fff; }
 
 .navbar-nav .open > .nav-link, .navbar-nav .navbar .open > .dropdown-toggle, .navbar .navbar-nav .open > .dropdown-toggle, .navbar-nav .open > .nav-link:focus, .navbar-nav .navbar .open > .dropdown-toggle:focus, .navbar .navbar-nav .open > .dropdown-toggle:focus, .navbar-nav .open > .nav-link:hover, .navbar-nav .navbar .open > .dropdown-toggle:hover, .navbar .navbar-nav .open > .dropdown-toggle:hover,
 .navbar-nav .active > .nav-link,
@@ -7743,7 +7752,7 @@ base-chart.chart {
   .brand-minimized .app-header.navbar .navbar-brand {
     width: 50px;
     background-color: #fff;
-    background-image: url("../img/logo-symbol.png");
+    /*background-image: url("../img/logo-symbol.png");*/
     background-size: 24px;
     border-bottom: 1px solid #c2cfd6; } }
 
@@ -8004,7 +8013,7 @@ base-chart.chart {
       width: 50px;
       height: 50px;
       content: "";
-      background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 14'%3E%3Cpath fill='%23536c79' d='M9.148 2.352l-4.148 4.148 4.148 4.148q0.148 0.148 0.148 0.352t-0.148 0.352l-1.297 1.297q-0.148 0.148-0.352 0.148t-0.352-0.148l-5.797-5.797q-0.148-0.148-0.148-0.352t0.148-0.352l5.797-5.797q0.148-0.148 0.352-0.148t0.352 0.148l1.297 1.297q0.148 0.148 0.148 0.352t-0.148 0.352z'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 14'%3E%3Cpath fill='%23fff' d='M9.148 2.352l-4.148 4.148 4.148 4.148q0.148 0.148 0.148 0.352t-0.148 0.352l-1.297 1.297q-0.148 0.148-0.352 0.148t-0.352-0.148l-5.797-5.797q-0.148-0.148-0.148-0.352t0.148-0.352l5.797-5.797q0.148-0.148 0.352-0.148t0.352 0.148l1.297 1.297q0.148 0.148 0.148 0.352t-0.148 0.352z'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: center;
       background-size: 12.5px;
@@ -9029,7 +9038,7 @@ app-root {
     .sidebar-fixed .sidebar .sidebar-nav,
     .sidebar-fixed .sidebar .nav {
       width: 220px !important;
-      height: calc(100vh - 55px); }
+      /*height: calc(100vh - 55px);*/ }
     .sidebar .sidebar-minimizer,
     .sidebar-fixed .sidebar .sidebar-minimizer {
       display: none; }
@@ -9046,7 +9055,29 @@ app-root {
 
 hr.transparent {
   border-top: 1px solid transparent; }
+.show {
+        display: list-item !important;
+        opacity: 1 !important;
+        position: fixed;
+        background-color: #3c29297a !important; 
+    }
 
+.div-error{
+        display: flex;
+        justify-content: center;
+    }
+.text-error{
+        color: red !important;
+        font-weight: bold;
+    }
+.upper{
+        text-transform: uppercase;
+    }
+@media (min-width: 600px) {
+        .btn-add {
+            margin-top: 2rem;
+        }    
+    }
 .bg-primary,
 .bg-success,
 .bg-info,

@@ -51,7 +51,7 @@
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                        <img src="img/avatars/6.jpg" class="img-avatar" alt="">
+                        <img src="img/avatars/6.png" class="img-avatar" alt="">
                         <span class="d-md-down-none">{{ Auth::user()->user }}</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
@@ -89,8 +89,10 @@
     
 
     <footer class="app-footer">
-        <span><a href="http://www.dilia.com.ve/">Dilia Solucciones c.a.</a> &copy; 2019</span>
-        <span class="ml-auto">Desarrollado por <a href="http://www.dilia.com.ve/">Dilia Software</a></span>
+
+        <span><img src="img/dsl.png" width="30px" height="30px">&nbsp;&nbsp;Dilia Software</a> &copy; 2019</span>
+        <span class="ml-auto">Desarrollado por <a href="http://www.dilia.com.ve/">Dilia Soluciones</a>&nbsp;&nbsp;<img src="img/logo.png" width="30px" height="20px"></span>
+
     </footer>
 
     <!-- Bootstrap and necessary plugins -->

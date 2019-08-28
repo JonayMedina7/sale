@@ -2,17 +2,23 @@
         <main class="main">
             <!-- Breadcrumb -->
             <ol class="breadcrumb">
-                
-                <li class="breadcrumb-item"><a href="/">Escritorio</a></li>
-                
-            </ol>
+          <li class="breadcrumb-item">Inicio</li>
+          <li class="breadcrumb-item">
+            <a href="#">Dilia Software</a>
+          </li>
+          <li class="breadcrumb-item active"> Usuarios&nbsp;&nbsp;<i class="fa fa-users"></i></li>
+          <!-- Breadcrumb Menu-->
+          <li class="breadcrumb-menu d-md-down-none">
+            
+          </li>
+        </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Usuarios
-                        <button type="button" class="btn btn-secondary" @click="openModal('client','register')">
-                            <i class="icon-plus"></i>&nbsp;Nuevo
+                        
+                        <button type="button" class="btn btn-success" @click="openModal('client','register')">
+                            <i class="fa fa-user"></i>&nbsp;Nuevo Usuario
                         </button>
                     </div>
                     <div class="card-body">
@@ -24,7 +30,7 @@
                                       <option value="rif">Rif</option>
                                     </select>
                                     <input type="text" v-model="search" @keyup.enter="listClient(1,search,criterion)" class="form-control" placeholder="Texto a Buscar">
-                                    <button type="submit" @click="listClient(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
+                                    <button type="submit" @click="listClient(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -32,12 +38,11 @@
                             <thead>
                                 <tr>
                                     <th>Opciones</th>
-                                    <th>Rif</th>
+                                    
                                     <th>Nombre y Apellido</th>
-                                    <th>Teléfono</th>
+                                    
                                     <th>Corre o Electrónico</th>
-                                    <th>Agente de retención</th>
-                                    <th>Dirección</th>
+                                   
                                     <th>Usuario</th>
                                     <th>Role</th>
                                     <th>Estado</th>
@@ -57,12 +62,11 @@
                                         </button>
                                         
                                     </td>
-                                    <td v-text="client.type + '-' + client.rif"></td>
+                                    
                                     <td v-text="client.name"></td>
-                                    <td v-text="client.phone"></td>
+                                    
                                     <td v-text="client.email"></td>
-									<td v-text="client.retention"></td>
-                                    <td v-text="client.address"></td>
+                                    
                                     <td v-text="client.user"></td>
                                     <td v-text="client.role_name"></td>
                                     <td>
@@ -244,7 +248,7 @@
                 name : '',
                 phone : '',
                 email: '',
-                retention : '0',
+                retention : 'no',
                 address : '',
                 condition : '',
                 user: '',
@@ -410,13 +414,15 @@
                 if (this.role_id ==0 ) this.errorSmsListU.push("Por favor seleccione un 'Rol' para el Usuario");
 
                 if (this.errorSmsListU.length) this.errorSms = 1;
-                Swal.fire({
-                    confirmButtonText: 'Aceptar!',
-                    confirmButtonClass: 'btn btn-danger',
-                    confirmButtonColor: '#3085d6',
-                    html: `${this.errorSmsListU.map( er =>`<br><br>${er}`)}`,
-                    showCancelButton: false
-                });
+                if (this.errorSmsListU.length >= 1) {
+                        Swal.fire({
+                            confirmButtonText: 'Aceptar!',
+                            confirmButtonClass: 'btn btn-danger',
+                            confirmButtonColor: '#3085d6',
+                            html: `${this.errorSmsListU.map( er =>`<br><br>${er}`)}`,
+                            showCancelButton: false
+                            });
+                        };
                 return this.errorSms;
             },
             desactiveClient(){
@@ -455,7 +461,7 @@
                 this.client_id= 0;
                 this.name='';
                 this.address='';
-                this.retention='0';
+                this.retention='no';
                 this.type = 'c';
                 this.rif=0;
                 this.phone='';
@@ -478,7 +484,7 @@
 
                                 this.name='';
 				                this.address='';
-				                this.retention='0';
+				                this.retention='no';
 				                this.rif=0;
 				                this.phone='';
 				                this.email='';
@@ -529,27 +535,3 @@
         }
     };
 </script>
-
-<style type="text/css">
-    .modal-content{
-        
-        width: 100% !important;
-        position: absolute !important;
-    }
-    .show {
-        display: list-item !important;
-        opacity: 1 !important;
-        position: absolute;
-        background-color: #3c29297a !important; 
-    }
-    .div-error{
-        display: flex;
-        justify-content: center;
-
-    }
-    .text-error{
-        color: red !important;
-        font-weight: bold;
-    }
-
-</style>
