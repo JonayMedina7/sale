@@ -8,14 +8,14 @@
           <li class="breadcrumb-item active"> Cuentas por Cobrar&nbsp;&nbsp;<i class="icon-chart"></i></li>
           <!-- Breadcrumb Menu-->
           <li class="breadcrumb-menu d-md-down-none">
-            
+
           </li>
         </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        
+
                     </div>
                     <!-- litado registros -->
                     <template v-if="list==1">
@@ -57,7 +57,7 @@
                                                 </button> &nbsp;
                                                 <!-- <button type="button" class="btn btn-info btn-sm" @click="pdfSale(sale.id)">
                                                   <i class="icon-doc"></i>
-                                                </button> -->                                                
+                                                </button> -->
                                             </td>
                                             <td v-text="sale.user"></td>
                                             <td v-text="sale.name"></td>
@@ -69,9 +69,9 @@
                                             <td v-text="sale.date"></td>
                                             <td v-text="sale.total"></td>
                                             <td v-text="sale.tax"></td>
-                                            <td v-text="sale.status"></td>                                     
+                                            <td v-text="sale.status"></td>
                                         </tr>
-                                        
+
                                     </tbody>
                                 </table>
                             </div>
@@ -84,7 +84,7 @@
                                     <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActive ? 'active' : '']">
                                         <a class="page-link" href="#" @click.prevent="changePage(page, search, criterion)" v-text="page"></a>
                                     </li>
-                                    
+
                                     <li class="page-item" v-if="pagination.current_page < pagination.last_page">
                                         <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page +1, search, criterion)">Sig</a>
                                     </li>
@@ -135,9 +135,9 @@
                                         <p v-text="voucher_num"></p>
                                     </div>
                                 </div>
-                                
+
                             </div>
-                            
+
                             <div class="form-group row border">
                                 <div class="table-responsive col-md-12">
                                     <table class="table table-bordered table-striped table-sm">
@@ -146,12 +146,12 @@
                                                 <th>Artículo</th>
                                                 <th>Precio</th>
                                                 <th>Cantidad</th>
-                                                <th>subTotal</th> 
+                                                <th>subTotal</th>
                                             </tr>
                                         </thead>
                                         <tbody v-if="arrayDetail.length">
                                             <tr v-for="detail in arrayDetail" :key="detail.id">
-                                                
+
                                                 <td v-text="detail.product" ></td>
                                                 <td v-text="detail.price" ></td>
                                                 <td v-text="detail.quantity" ></td>
@@ -181,7 +181,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>  
+                            </div>
                             <div class="form-group row">
                                 <div class="col-md-12">
                                     <button type="button" class="btn btn-secondary" @click="hideDetail()">Cerrar</button>
@@ -292,12 +292,12 @@
         },
         methods : {
             listSale (page,search,criterion){
-                
+
                 let me=this;
 
                 var url='sale?page=' + page + '&search=' + search + '&criterion=' + criterion;
                 axios.get(url).then(function(response) {
-                    var response = response.data; 
+                    var response = response.data;
                      me.arraySale = response.sales.data;
                      me.pagination = response.pagination;
                 })
@@ -314,9 +314,9 @@
 
                 var url= 'sale/getHeader?id='+id;
                 axios.get(url).then(function(response) {
-                    var response = response.data; 
+                    var response = response.data;
                     me.arraySaleTemp = response.sale;
-                    
+
                     me.client = me.arraySaleTemp[0]['name'];
                     me.user = me.arraySaleTemp[0]['user'];
                     me.voucher = me.arraySaleTemp[0]['voucher'];
@@ -329,25 +329,28 @@
                 .catch(function (error) {
                     console.log(error);
                 });
-                
+
                 // obtener los datos de los detalles de la compra
 
                 var urld= 'sale/getDetail?id='+id;
                 axios.get(urld).then(function(response) {
-                    var response = response.data; 
+                    var response = response.data;
                     me.arrayDetail = response.details;
-                    
+
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
             },
             pdfSale(id){
-                window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');
+
+                // window.open('https://bacoop.com/sale/public/sale/pdf/'+ id + ','+ '_blank');
+                // window.open('https://bacoop.com/jm/public/sale/pdf/'+ id + ','+ '_blank');
+                window.open('http://localhost/sale/public/sale/pdf/'+ id + ','+ '_blank');
             },
             changePage(page, search, criterion){
                 let me = this;
-                // actualiza la pagina 
+                // actualiza la pagina
                 me.pagination.current_page = page;
                 // envia la peticion para visualizar la data de esa pagina
                 me.listSale(page, search, criterion);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -14,16 +15,17 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        // if (!$request->ajax()) return redirect('/');
 
         $search = $request->search;
         $critery = $request->critery;
 
-        
+
         if ($search=='') {
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
             ->join('taxes', 'products.tax_id', '=', 'taxes.id')
-            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition', 'taxes.tax')
+            ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.stock_min', 'products.description', 'products.condition', 'taxes.tax')
+            ->whereColumn('products.stock', '>=', 'products.stock_min')
             ->orderBy('products.id', 'desc')->paginate(7);
         } else {
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
@@ -31,12 +33,14 @@ class ProductController extends Controller
             ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition', 'taxes.tax')
             ->where('products.'.$critery, 'like', '%'. $search . '%')
             ->orderBy('products.id', 'desc')->paginate(7);
-            
+
         }
+        // $products = DB::table('products')
+        //     ->whereColumn('stock', '<=','stock_min')
+        //     ->orderBy('products.id', 'desc')->get();
 
 
 
-        
         return [
             'pagination' => [
                 'total'         => $products->total(),
@@ -56,7 +60,7 @@ class ProductController extends Controller
 
         $search = $request->search;
         $critery = $request->critery;
-        
+
         if ($search=='') {
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
             ->join('taxes', 'products.tax_id', '=', 'taxes.id')
@@ -68,10 +72,10 @@ class ProductController extends Controller
             ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition', 'taxes.tax')
             ->where('products.'.$critery, 'like', '%'. $search . '%')
             ->orderBy('products.id', 'desc')->paginate(10);
-            
+
         }
 
-        
+
         return [
             'pagination' => [
                 'total'         => $products->total(),
@@ -105,7 +109,7 @@ class ProductController extends Controller
 
         $search = $request->search;
         $critery = $request->critery;
-        
+        // dd($request);
         if ($search=='') {
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
             ->join('taxes', 'products.tax_id', '=', 'taxes.id')
@@ -121,10 +125,10 @@ class ProductController extends Controller
             ->where('products.stock','>','0')
             ->where('products.condition', '>','0')
             ->orderBy('products.id', 'desc')->paginate(10);
-            
+
         }
 
-        
+
         return [
             'pagination' => [
                 'total'         => $products->total(),
@@ -165,7 +169,7 @@ class ProductController extends Controller
         return ['products' => $products];
 
     }
-  
+
 
     /**
      * Store a newly created resource in storage.
@@ -190,8 +194,8 @@ class ProductController extends Controller
 
     }
 
-  
-    
+
+
     /**
      * Update the specified resource in storage.
      *
@@ -203,7 +207,7 @@ class ProductController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $product = Product::findOrFail($request->id);
-        
+
         $product->code = $request->code;
         $product->name = $request->name;
         $product->stock = $request->stock;
@@ -219,7 +223,7 @@ class ProductController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $product = Product::findOrFail($request->id);
-        
+
         $product->condition = '0';
         $product->save();
     }
@@ -228,7 +232,7 @@ class ProductController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $product = Product::findOrFail($request->id);
-        
+
         $product->condition = '1';
         $product->save();
     }

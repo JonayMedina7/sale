@@ -9,14 +9,14 @@
           <li class="breadcrumb-item active"> Clientes&nbsp;&nbsp;<i class="fa fa-address-book-o"></i></li>
           <!-- Breadcrumb Menu-->
           <li class="breadcrumb-menu d-md-down-none">
-            
+
           </li>
         </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        
+
                         <button type="button" class="btn btn-success" @click="openModal('client','register')">
                             <i class="fa fa-address-book-o"></i>&nbsp;&nbsp; Agregar Nuevo
                         </button>
@@ -64,10 +64,10 @@
                                     <td v-text="client.name"></td>
                                     <td v-text="client.phone"></td>
                                     <td v-text="client.email"></td>
-                                   
+
                                     	<td v-if="client.retention>=75" v-text="client.retention + '%' "></td>
 										<td v-else>No aplica</td>
-									
+
                                     <td v-text="client.address"></td>
                                     <td>
                                         <div v-if="client.condition">
@@ -79,7 +79,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                
+
                             </tbody>
                         </table>
                         <nav>
@@ -90,7 +90,7 @@
                                 <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActive ? 'active' : '']">
                                     <a class="page-link" href="#" @click.prevent="changePage(page, search, criterion)" v-text="page"></a>
                                 </li>
-                                
+
                                 <li class="page-item" v-if="pagination.current_page < pagination.last_page">
                                     <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page +1, search, criterion)">Sig</a>
                                 </li>
@@ -123,18 +123,18 @@
 											<option value="c" >Cedula</option>
 
                                         </select>
-								
+
                                     </div>
 									<div class="col-md-5">
                                         <input type="number" v-model="rif" class="form-control" maxlength="9" minlength="6">
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Razon Social</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="name" class="form-control" placeholder="Razon Social">
-                                        
+
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -149,7 +149,7 @@
                                         <input type="email" v-model="email" class="form-control" placeholder="">
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="description">Dirección</label>
                                     <div class="col-md-9">
@@ -166,7 +166,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                
+
                             </form>
                         </div>
                         <div class="modal-footer">
@@ -195,7 +195,7 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="closeModal()">Cancelar</button>
                             <button type="button" class="btn btn-danger" @click="desactiveClient()">Desactivar</button>
-                            
+
                         </div>
                     </div>
                     <div v-else class="modal-content">
@@ -218,7 +218,7 @@
                 <!-- /.modal-dialog -->
             </div>
             <!-- Fin del modal Eliminar -->
-            
+
         </main>
 </template>
 
@@ -287,15 +287,15 @@
         },
         methods : {
             listClient (page,search,criterion){
-                
+
                 let me=this;
 
                 var url='client?page=' + page + '&search=' + search + '&criterion=' + criterion;
                 axios.get(url).then(function(response) {
-                    var response = response.data; 
+                    var response = response.data;
                      me.arrayClient = response.clients.data;
                      me.pagination = response.pagination;
-                     console.log(url);
+                     // console.log(url);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -303,7 +303,7 @@
             },
             changePage(page, search, criterion){
                 let me = this;
-                // actualiza la pagina 
+                // actualiza la pagina
                 me.pagination.current_page = page;
                 // envia la peticion para visualizar la data de esa pagina
                 me.listClient(page, search, criterion);
@@ -315,7 +315,7 @@
                     return;
                 } else {
                         let me=this;
-                    
+
                     axios.post('client/register', {
                         'type':this.type,
                         'rif':this.rif,
@@ -332,7 +332,7 @@
                         console.log(error);
                     });
                 };
-                
+
             },
             updateClient() {
                 if (this.validateClient()) {
@@ -391,7 +391,7 @@
                             me.listClient(1,'', 'name');
                         })
                         .catch(function (error) {
-                           console.log(error); 
+                           console.log(error);
                         });
             },
             activeClient(){
@@ -403,7 +403,7 @@
                     me.closeModal();
                     me.listClient(1,'', 'name');
                 }).catch(function (error) {
-                    console.log(error); 
+                    console.log(error);
                 });
             },
 
@@ -473,7 +473,7 @@
                         }
                     }
                 }
-                
+
             }
         },
         mounted() {

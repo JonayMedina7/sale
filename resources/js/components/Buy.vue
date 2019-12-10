@@ -1,21 +1,21 @@
  <template>
         <main class="main">
-           <ol class="breadcrumb">
-          <li class="breadcrumb-item">Inicio</li>
-          <li class="breadcrumb-item">
-            <a href="#">Dilia Software</a>
-          </li>
-          <li class="breadcrumb-item active"> Gastos&nbsp;&nbsp;<i class="fa fa-cart-plus"></i></li>
-          <!-- Breadcrumb Menu-->
-          <li class="breadcrumb-menu d-md-down-none">
-            
-          </li>
-        </ol>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">Inicio</li>
+              <li class="breadcrumb-item">
+                <a href="#">Dilia Software</a>
+              </li>
+              <li class="breadcrumb-item active"> Gastos&nbsp;&nbsp;<i class="fa fa-cart-plus"></i></li>
+              <!-- Breadcrumb Menu-->
+              <li class="breadcrumb-menu d-md-down-none">
+
+              </li>
+            </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        
+
                         <button type="button" class="btn btn-success" @click="showDetail()">
                             <i class="fa fa-cart-plus"></i>&nbsp;&nbsp;Ingresar Gastos
                         </button>
@@ -36,7 +36,7 @@
                             </div>
                             <div class="box-header">
                                     <center><h3 class="box-title">Listado de Compras</h3></center>
-                                </div>  <br><hr>  
+                                </div>  <br><hr>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-sm">
                                     <thead>
@@ -68,9 +68,9 @@
                                             <td v-text="buy.voucher_num"></td>
                                             <td v-text="buy.date"></td>
                                             <td v-text="buy.total"></td>
-                                            <td v-text="buy.status"></td>                                     
+                                            <td v-text="buy.status"></td>
                                         </tr>
-                                        
+
                                     </tbody>
                                 </table>
                             </div>
@@ -83,7 +83,7 @@
                                     <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActive ? 'active' : '']">
                                         <a class="page-link" href="#" @click.prevent="changePage(page, search, criterion)" v-text="page"></a>
                                     </li>
-                                    
+
                                     <li class="page-item" v-if="pagination.current_page < pagination.last_page">
                                         <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page +1, search, criterion)">Sig</a>
                                     </li>
@@ -103,8 +103,8 @@
                                         <v-select  @search="providerSelect" label="name" :options="arrayProvider"
                                         placeholder="Buscar Proveedor"
                                         @input="getProviderInfo"
-                                        > 
-                                            
+                                        >
+
                                         </v-select>
                                     </div>
                                 </div>
@@ -137,7 +137,7 @@
                                         <input type="text" class="form-control" v-model="voucher_num" placeholder="000x" name="">
                                     </div>
                                 </div>
-                                
+
                             </div>
                             <div class="form-group row border">
                                 <div class="col-md-4">
@@ -169,9 +169,9 @@
                             </div>
                             <div class="form-group row border">
                                 <div class="table-responsive col-md-12">
-                                    
+
                                         <tbody >
-                                            
+
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="4" align="right"><strong>Base Imponible: </strong></td>
                                                 <td>Bs: {{ base }}</td>
@@ -236,9 +236,9 @@
                                         <h3><p v-text="voucher_num"></p></h3>
                                     </div>
                                 </div>
-                                
+
                             </div>
-                            
+
                             <div class="form-group row border">
                                <div class="col-md-4">
                                     <div class="form-group">
@@ -270,9 +270,9 @@
 
                             <div class="form-group row border">
                                 <div class="table-responsive col-md-12">
-                                    
+
                                         <tbody >
-                                          
+
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="4" align="right"><strong>Total Impuesto: </strong></td>
                                                 <td>Bs: {{ tax_mount }}</td>
@@ -305,8 +305,8 @@
                 </div>
                 <!-- Fin ejemplo de tabla Listado -->
             </div>
-            
-            
+
+
         </main>
 </template>
 
@@ -401,20 +401,20 @@
             // CALCULA EL TOTAL DEL MONTO DE LA FACTURA
             calculateTotalPartial: function(){
                 var result=0.0;
-                                    
-                    result= parseFloat(this.totalTax)+parseFloat(this.base)+ parseFloat(this.exempt);                    
-                
+
+                    result= parseFloat(this.totalTax)+parseFloat(this.base)+ parseFloat(this.exempt);
+
                 return result;
             },
         },
         methods : {
             listBuy (page,search,criterion){
-                
+
                 let me=this;
 
                 var url='buy/indexb?page=' + page + '&search=' + search + '&criterion=' + criterion;
                 axios.get(url).then(function(response) {
-                    var response = response.data; 
+                    var response = response.data;
                      me.arrayBuy = response.buys.data;
                      me.pagination = response.pagination;
                 })
@@ -431,7 +431,7 @@
 
                 var url= 'buy/getHeaderb?id='+id;
                 axios.get(url).then(function(response) {
-                    var response = response.data; 
+                    var response = response.data;
                     me.arrayBuyTemp = response.buy;
                     me.buy_id =id;
                     me.provider = me.arrayBuyTemp[0]['name'];
@@ -450,7 +450,7 @@
                 .catch(function (error) {
                     console.log(error);
                 });
-               
+
             },
             providerSelect(search,loading){
                 let me=this;
@@ -475,7 +475,7 @@
 
             changePage(page, search, criterion){
                 let me = this;
-                // actualiza la pagina 
+                // actualiza la pagina
                 me.pagination.current_page = page;
                 // envia la peticion para visualizar la data de esa pagina
                 me.listBuy(page, search, criterion);
@@ -485,10 +485,10 @@
                     return;
                 };
                 let me=this;
-                
+
                 axios.post('buy/register', {
 
-                    
+
                     'provider_id':this.provider_id,
                     'date': this.date,
                     'voucher': this.voucher,
@@ -499,7 +499,7 @@
                     'exempt': this.exempt,
                     'description': this.description,
                     'total': this.total,
-                    
+
                 }).then(function(response) {
                     me.list=1;
                     me.listBuy(1,'','voucher_num');
@@ -532,7 +532,7 @@
 
                 if (this.errorSmsListP.length) this.errorSmsP = 1;
                 /*console.log(this.errorSmsListP);*/
-                
+
                 if (this.errorSmsListP.length >= 1) {
                         Swal.fire({
                     confirmButtonText: 'Aceptar!',
@@ -545,7 +545,7 @@
                 return this.errorSmsP;
 
             },
-           
+
             showDetail(){
                 let me=this;
                 me.list=0;

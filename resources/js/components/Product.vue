@@ -9,7 +9,7 @@
           <li class="breadcrumb-item active"> Productos&nbsp;&nbsp;<i class="fa fa-archive"></i></li>
           <!-- Breadcrumb Menu-->
           <li class="breadcrumb-menu d-md-down-none">
-            
+
           </li>
         </ol>
             <!-- div tabla de productos -->
@@ -17,7 +17,7 @@
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        
+
                         <button type="button" class="btn btn-success" @click="openModal('product','register')">
                             <i class="fa fa-archive"></i>&nbsp;Ingresar Nuevo
                         </button>
@@ -72,7 +72,7 @@
                                     <td v-if="product.tax==0">Exento</td>
                                     <td v-else v-text="product.tax + '%'"></td>
                                     <td v-text="product.stock"></td>
-                                    <td v-text="product.description"></td> 
+                                    <td v-text="product.description"></td>
 
                                     <td>
                                         <div v-if="product.condition">
@@ -84,7 +84,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                
+
                             </tbody>
                         </table>
                         <nav>
@@ -95,7 +95,7 @@
                                 <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActive ? 'active' : '']">
                                     <a class="page-link" href="#" @click.prevent="changePage(page, search, critery)" v-text="page"></a>
                                 </li>
-                                
+
                                 <li class="page-item" v-if="pagination.current_page < pagination.last_page">
                                     <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page +1, search, critery)">Sig</a>
                                 </li>
@@ -131,23 +131,23 @@
                                     <label class="col-md-3 form-control-label">Seleccione Producto con I.v.a. o Exento</label>
                                         <div class="col-md-2" >
                                             <select  class=" form-control" v-model="tax_id">
-                                                <option value="0" disabled>Seleccione</option>                            
+                                                <option value="0" disabled>Seleccione</option>
                                                 <option v-for="t in arrayTax" :key="t.id" :value="t.id" v-text="t.tax "></option>
-                                            </select>    
+                                            </select>
                                         </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Código</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="code" class="form-control" placeholder="Codigo del producto o servicio">
-                                        
+
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Nombre del producto o servicio</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="name" class="form-control" placeholder="Nombre del Producto">
-                                        
+
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -162,14 +162,14 @@
                                         <input type="number" v-model="stock" class="form-control" placeholder="">
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="description">Descripción</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="description" class="form-control" placeholder="Ingrese descripción">
                                     </div>
                                 </div>
-                                
+
                             </form>
                         </div>
                         <div class="modal-footer">
@@ -198,7 +198,7 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="closeModal()">Cancelar</button>
                             <button type="button" class="btn btn-danger" @click="desactiveProduct()">Desactivar</button>
-                            
+
                         </div>
                     </div>
                     <div v-else class="modal-content">
@@ -221,7 +221,7 @@
                 <!-- /.modal-dialog -->
             </div>
             <!-- Fin del modal Eliminar -->
-            
+
         </main>
 </template>
 
@@ -259,7 +259,7 @@
                 critery : 'name',
                 search : '',
                 arrayCategory : [],
-                category_name: '' 
+                category_name: ''
             }
         },
         computed: {
@@ -293,7 +293,7 @@
         },
         methods : {
             listProduct (page,search,critery){
-                
+
                 let me=this;
 
                 var url='product?page=' + page + '&search=' + search + '&critery=' + critery;
@@ -307,8 +307,9 @@
                 });
             },
             loadPdf(){
-                /*window.open('https://bacoop.com/laravel/public/product/listPdf', '_blank');*/
-                window.open('http://localhost:8080/sistema1/public/product/listPdf', '_blank');
+                window.open('https://bacoop.com/admin/public/product/listPdf', '_blank');
+                // window.open('https://bacoop.com/jm/public/product/listPdf', '_blank');
+                // window.open('http://localhost/sale/public/product/listPdf', '_blank');
             },
             categorySelect(){
                 let me=this;
@@ -318,7 +319,7 @@
                     // console.log(response);
                     var response = response.data;
                      me.arrayCategory = response.categories;
-                     
+
                     //  console.log(url);
                 })
                 .catch(function (error) {
@@ -343,7 +344,7 @@
             },
             changePage(page, search, critery){
                 let me = this;
-                // actualiza la pagina 
+                // actualiza la pagina
                 me.pagination.current_page = page;
                 // envia la peticion para visualizar la data de esa pagina
                 me.listProduct(page, search, critery);
@@ -364,7 +365,7 @@
                     'tax_id': this.tax_id,
                     'description': this.description,
                     'tax_id': this.tax_id
-                    
+
                 }).then(function(response) {
                     me.closeModal();
                     me.listProduct(1,'','name');
@@ -432,7 +433,7 @@
                             me.listProduct(1,'', 'name');
                         })
                         .catch(function (error) {
-                           console.log(error); 
+                           console.log(error);
                         });
             },
             activeProduct(){
@@ -444,7 +445,7 @@
                     me.closeModal();
                     me.listProduct(1,'', 'name');
                 }).catch(function (error) {
-                    console.log(error); 
+                    console.log(error);
                 });
             },
 

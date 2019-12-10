@@ -1,5 +1,5 @@
 <?php
- 
+
 namespace App\Http\Controllers;
 
 use App\Purchase;
@@ -30,7 +30,7 @@ class PurchaseController extends Controller
             ->where('purchases.'.$criterion, 'like', '%'. $search . '%')->orderBy('purchases.id', 'desc')->paginate(10);
         }
 
-        
+
         return [
                'pagination' => [
                 'total'         => $purchases->total(),
@@ -49,14 +49,14 @@ class PurchaseController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $id = $request->id;
-        
+
         $purchase = Purchase::join('clients', 'purchases.provider_id', '=', 'clients.id')
         ->join('users', 'purchases.user_id', '=', 'users.id')
         ->select('purchases.id', 'purchases.voucher', 'purchases.voucher_serie', 'purchases.voucher_num', 'purchases.date', 'purchases.exempt', 'purchases.tax_mount', 'purchases.total', 'purchases.status', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
         ->where('purchases.type', '=', 'purchase' )
         ->where('purchases.id','=',$id)
         ->orderBy('purchases.id', 'desc')->take(1)->get();
-        
+
         return ['purchase' => $purchase];
     }
 
@@ -64,21 +64,15 @@ class PurchaseController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $id = $request->id;
-        
+
         $details = Detailpurchase::join('products', 'detailpurchases.product_id', '=', 'products.id')
         ->select('detailpurchases.quantity','detailpurchases.quantity', 'detailpurchases.price', 'products.name as product')
         ->where('detailpurchases.purchase_id','=',$id)
         ->orderBy('detailpurchases.id', 'desc')->get();
-        
+
         return ['details' => $details];
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         // dd($request);
@@ -105,7 +99,7 @@ class PurchaseController extends Controller
         $purchase->tax = $request->tax;
         $purchase->ret_id = 0;
         $purchase->total_ret = 0;
-        $purchase->save();            
+        $purchase->save();
 
         $details = $request->data; // Array de detalles de compra
         // recorrido del array
@@ -115,7 +109,7 @@ class PurchaseController extends Controller
             $detailpurchase->product_id = $det['product_id'];
             $detailpurchase->quantity = $det['quantity'];
             $detailpurchase->price = $det['price'];
-            
+
             $detailpurchase->save();
         }
 
@@ -125,14 +119,6 @@ class PurchaseController extends Controller
         }
 
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\purchase  $purchase
-     * @return \Illuminate\Http\Response
-     */
 
     public function desactive(Request $request)
     {
@@ -153,7 +139,7 @@ class PurchaseController extends Controller
         ->select('id','voucher', 'voucher_num as purchase_num', 'total as totalp', 'exempt', 'tax_mount', 'tax')
         ->where('ret_id','=', '0' )
         ->where('provider_id', '=', $id)
-        
+
         ->orderBy('id', 'desc')->take(1)->get();
 
         return ['purchases' => $purchases];
@@ -188,7 +174,7 @@ class PurchaseController extends Controller
     }
 
     // seccion gastos "buy"
-    
+
     public function indexb(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
@@ -199,7 +185,7 @@ class PurchaseController extends Controller
             $buys = Purchase::join('clients', 'purchases.provider_id', '=', 'clients.id')
             ->join('users', 'purchases.user_id', '=', 'users.id')
             ->select('purchases.id', 'purchases.voucher', 'purchases.voucher_serie', 'purchases.voucher_num', 'purchases.date', 'purchases.tax_mount', 'purchases.exempt', 'purchases.total', 'purchases.status', 'purchases.description', 'purchases.description', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
-            ->where('purchases.type', '=', 'buy' )
+            ->where('purchases.type', '=', 'buy')
             ->orderBy('purchases.id', 'desc')->paginate(10);
         } else {
             $buys = Purchase::join('clients', 'purchases.provider_id', '=', 'clients.id')
@@ -209,7 +195,6 @@ class PurchaseController extends Controller
             ->where('purchases.'.$criterion, 'like', '%'. $search . '%')->orderBy('purchases.id', 'desc')->paginate(10);
         }
 
-        
         return [
                'pagination' => [
                 'total'         => $buys->total(),
@@ -227,14 +212,14 @@ class PurchaseController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $id = $request->id;
-        
+
         $buy = Purchase::join('clients', 'purchases.provider_id', '=', 'clients.id')
         ->join('users', 'purchases.user_id', '=', 'users.id')
         ->select('purchases.id', 'purchases.voucher', 'purchases.voucher_serie', 'purchases.voucher_num', 'purchases.date', 'purchases.exempt', 'purchases.tax_mount', 'purchases.total', 'purchases.status', 'purchases.description', 'purchases.tax', 'clients.name', 'clients.type', 'clients.rif', 'users.user')
         ->where('purchases.type', '=', 'buy' )
         ->where('purchases.id','=',$id)
         ->orderBy('purchases.id', 'desc')->take(1)->get();
-        
+
         return ['buy' => $buy];
     }
 

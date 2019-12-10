@@ -15,17 +15,17 @@ class ClientController extends Controller
     public function index(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
-        
+
         $search = $request->search;
         $criterion = $request->criterion;
-        
+
         if ($search=='') {
             $clients = Client::orderBy('id', 'desc')->paginate(7);
         } else {
             $clients = Client::where($criterion, 'like', '%'. $search . '%')->orderBy('id', 'desc')->paginate(10);
         }
 
-        
+
         return [
             'pagination' => [
                 'total'         => $clients->total(),
@@ -50,7 +50,19 @@ class ClientController extends Controller
         ->orderBy('clients.name', 'asc')->get();
 
         return ['clients' => $clients];
-    } 
+    }
+
+    public function clientSearch (Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+        // dd()
+        $filter = $request->filter;
+        $clients = Client::where('id', '=', $filter)
+        ->select('clients.id', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.retention')
+        ->orderBy('clients.name', 'asc')->get();
+
+        return ['clients' => $clients];
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -62,8 +74,8 @@ class ClientController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $client = new Client();
-        
-        
+
+
         $client->name = $request->name;
         $client->phone = $request->phone;
         $client->email = $request->email;
@@ -87,7 +99,7 @@ class ClientController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $client = client::findOrFail($request->id);
-        
+
         $client->name = $request->name;
         $client->phone = $request->phone;
         $client->email = $request->email;
@@ -104,7 +116,7 @@ class ClientController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $client = client::findOrFail($request->id);
-        
+
         $client->condition = '0';
         $client->save();
     }
@@ -113,7 +125,7 @@ class ClientController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $client = client::findOrFail($request->id);
-        
+
         $client->condition = '1';
         $client->save();
     }

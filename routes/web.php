@@ -13,7 +13,7 @@
 
 Route::group(['middleware' =>['guest']], function()
 {
-	Route::get('/', 'Auth\LoginController@showLoginForm')->name('main'); 
+	Route::get('/', 'Auth\LoginController@showLoginForm')->name('main');
 	Route::post('/login', 'Auth\LoginController@login')->name('login');
 });
 
@@ -63,7 +63,7 @@ Route::group(['middleware' =>['auth']], function()
 		route::put('/purchase/update', 'PurchaseController@update');
 		route::put('/purchase/desactive', 'PurchaseController@desactive');
 		route::get('/purchase/getHeader', 'PurchaseController@getHeader');
-		route::get('/purchase/getDetail', 'PurchaseController@getDetail'); 
+		route::get('/purchase/getDetail', 'PurchaseController@getDetail');
 
 	});
 
@@ -75,6 +75,7 @@ Route::group(['middleware' =>['auth']], function()
 		route::post('/client/register', 'ClientController@store');
 		route::put('/client/update', 'ClientController@update');
 		route::get('/client/clientSelect', 'ClientController@clientSelect');
+		route::get('/client/clientSearch', 'ClientController@clientSearch');
 
 		route::get('/sale', 'SaleController@index');
 		route::get('/sale/saleId', 'SaleController@saleId');
@@ -82,7 +83,7 @@ Route::group(['middleware' =>['auth']], function()
 		route::put('/sale/update', 'SaleController@update');
 		route::put('/sale/desactive', 'SaleController@desactive');
 		route::get('/sale/getHeader', 'SaleController@getHeader');
-		route::get('/sale/getDetail', 'SaleController@getDetail'); 
+		route::get('/sale/getDetail', 'SaleController@getDetail');
 		route::get('/sale/pdf/{id}', 'SaleController@pdf')->name('venta_pdf');
 		route::get('/sale/pdfw/{id}', 'SaleController@pdfw')->name('venta');
 
@@ -111,7 +112,7 @@ Route::group(['middleware' =>['auth']], function()
 		route::get('/product/listProduct', 'ProductController@listProduct');
 		route::get('/product/productSearchSale', 'ProductController@productSearchSale');
 		route::get('/product/listProductSale', 'ProductController@listProductSale');
-		route::get('/product/listPdf', 'ProductController@listPdf')->name('products_pdf'); 
+		route::get('/product/listPdf', 'ProductController@listPdf')->name('products_pdf');
 
 
 		route::get('/client', 'ClientController@index');
@@ -120,6 +121,7 @@ Route::group(['middleware' =>['auth']], function()
 		route::put('/client/desactive', 'ClientController@desactive');
 		route::put('/client/active', 'ClientController@active');
 		route::get('/client/clientSelect', 'ClientController@clientSelect');
+		route::get('/client/clientSearch', 'ClientController@clientSearch');
 
 		route::get('/provider', 'ProviderController@index');
 		route::post('/provider/register', 'ProviderController@store');
@@ -147,7 +149,7 @@ Route::group(['middleware' =>['auth']], function()
 		route::put('/purchase/update', 'PurchaseController@update');
 		route::put('/purchase/desactive', 'PurchaseController@desactive');
 		route::get('/purchase/getHeader', 'PurchaseController@getHeader');
-		route::get('/purchase/getDetail', 'PurchaseController@getDetail'); 
+		route::get('/purchase/getDetail', 'PurchaseController@getDetail');
 		route::get('/purchase/purchaseRet', 'PurchaseController@purchaseRet');
 		route::get('/purchase/listPurchaseRet', 'PurchaseController@listPurchaseRet');
 
@@ -170,7 +172,7 @@ Route::group(['middleware' =>['auth']], function()
 		route::get('/quota/getHeader', 'QuotaController@getHeader');
 		route::get('/quota/getDetail', 'QuotaController@getDetail');
 		route::get('/quota/quotaId', 'QuotaController@quotaId');
-		route::get('/quota/quotaSearchRet', 'QuotaController@saleSearchRet');
+		route::get('/quota/pdf/{id}', 'QuotaController@pdf')->name('cotizacion_pdf');
 
 		route::get('/retention', 'RetentionController@index');
 		route::get('retention/retId', 'RetentionController@retId');
@@ -183,7 +185,7 @@ Route::group(['middleware' =>['auth']], function()
 		route::get('/retention/pdf/{id}', 'RetentionController@pdf')->name('retencion');
 		route::get('/retention/pdfw/{id}', 'RetentionController@pdfw')->name('retencion');
 		route::get('retention/email', 'RetentionController@email');
-		
+
 		route::get('/company', 'CompanyController@index');
 		route::post('/company/register', 'CompanyController@store');
 		route::put('/company/update', 'CompanyController@update');
@@ -198,12 +200,12 @@ Route::group(['middleware' =>['auth']], function()
 		route::put('/buy/update', 'PurchaseController@updateb');
 		route::put('/buy/desactive', 'PurchaseController@desactiveb');
 		route::get('/buy/getHeaderb', 'PurchaseController@getHeaderb');
-		route::get('/buy/getDetail', 'PurchaseController@getDetail'); 
+		route::get('/buy/getDetail', 'PurchaseController@getDetail');
 		route::get('/buy/purchaseRet', 'PurchaseController@purchaseRet');
 		route::get('/buy/listPurchaseRet', 'PurchaseController@listPurchaseRet');
 
 	});
-	
+
 
 
 });

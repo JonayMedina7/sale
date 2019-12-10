@@ -1397,7 +1397,7 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
 .was-validated .form-control:valid, .form-control.is-valid, .was-validated
 .custom-select:valid,
 .custom-select.is-valid {
-  ; 
+  ;
 border-radius: .45rem;}
   .was-validated .form-control:valid:focus, .form-control.is-valid:focus, .was-validated
   .custom-select:valid:focus,
@@ -2750,7 +2750,7 @@ tbody.collapse.show {
   word-wrap: break-word;
   background-color: #fff;
   background-clip: border-box;
-  border: 1px solid #c2cfd6; 
+  border: 1px solid #c2cfd6;
   border-radius: .45rem;
 }
 
@@ -3408,7 +3408,7 @@ button.close {
   margin: 10px; }
 
 .modal-content {
-  
+
   display: -ms-flexbox;
   display: flex;
   -ms-flex-direction: column;
@@ -9059,7 +9059,7 @@ hr.transparent {
         display: list-item !important;
         opacity: 1 !important;
         position: fixed;
-        background-color: #3c29297a !important; 
+        background-color: #3c29297a !important;
     }
 
 .div-error{
@@ -9076,7 +9076,7 @@ hr.transparent {
 @media (min-width: 600px) {
         .btn-add {
             margin-top: 2rem;
-        }    
+        }
     }
 .bg-primary,
 .bg-success,
@@ -9297,3 +9297,6 @@ hr.transparent {
       float: left; }
   *[dir="rtl"] .callout-default {
     border-right-color: #536c79; }
+.blur {
+  filter: blur(3px);
+}

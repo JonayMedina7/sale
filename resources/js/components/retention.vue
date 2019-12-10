@@ -8,14 +8,14 @@
           <li class="breadcrumb-item active"> Retenciones&nbsp;&nbsp;<i class="fa fa-file"></i></li>
           <!-- Breadcrumb Menu-->
           <li class="breadcrumb-menu d-md-down-none">
-            
+
           </li>
         </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        
+
                         <button type="button" class="btn btn-success" @click="showInsert()">
                             <i class="fa fa-file"></i>&nbsp;&nbsp;Crear Retencion
                         </button>
@@ -41,7 +41,7 @@
                             </div>
                             <div class="box-header">
                                     <center><h3 class="box-title">Listado de Retenciones</h3></center>
-                                </div>  <br><hr>  
+                                </div>  <br><hr>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-sm">
                                     <thead>
@@ -63,15 +63,15 @@
                                                 <button type="button" class="btn btn-info btn-sm" @click="pdfRet(ret.id)">
                                                   <i class="icon-doc"></i>
                                                 </button> &nbsp;
-                                                
+
                                             </td>
                                             <td v-text="ret.voucher_num"></td>
                                             <td class="upper" v-text="ret.name"></td>
                                             <td v-text="ret.date"></td>
                                             <td v-text="ret.total"></td>
-                                            <td v-text="ret.status"></td>                                     
+                                            <td v-text="ret.status"></td>
                                         </tr>
-                                        
+
                                     </tbody>
                                 </table>
                             </div>
@@ -84,7 +84,7 @@
                                     <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActive ? 'active' : '']">
                                         <a class="page-link" href="#" @click.prevent="changePage(page, search, criterion)" v-text="page"></a>
                                     </li>
-                                    
+
                                     <li class="page-item" v-if="pagination.current_page < pagination.last_page">
                                         <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page +1, search, criterion)">Sig.</a>
                                     </li>
@@ -101,15 +101,15 @@
                                        <!--  <select class="form-control col-md-3" v-model="criterion">
                                           <option value="voucher">Tipo de Comprobante</option>
                                           <option value="voucher_num">Numero de comprobante</option>
-                                          <option value="date">Fecha-hora</option> 
+                                          <option value="date">Fecha-hora</option>
                                         </select> -->
                                         <input type="date" v-model="fecha1" class="form-control" required>
                                         <input type="date" v-model="fecha2" class="form-control" required>
-                                        
+
                                     </div>
                                 </div>
                             </div>
-                            
+
 
                            <button type="button" class="btn btn-secondary" @click="hideRet()">Cerrar</button>
                            <button type="button" class="btn btn-primary" @click="txt(fecha1,fecha2)">Registrar Retención</button>
@@ -127,8 +127,8 @@
                                         <v-select  @search="providerSelectr" label="name" :options="arrayProvider"
                                         placeholder="Buscar Proveedor"
                                         @input="getProviderinfo"
-                                        > 
-                                            
+                                        >
+
                                         </v-select>
                                     </div>
                                 </div>
@@ -146,10 +146,10 @@
                                 <div  class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Rif o C.I(*)</label>
-                                        
-                                          <h4><span v-text="type + '-' + rif" class="upper"></span> </h4> 
-                                          
-                                        
+
+                                          <h4><span v-text="type + '-' + rif" class="upper"></span> </h4>
+
+
                                     </div>
                                 </div>
                                 <div class="col-md-9">
@@ -158,7 +158,7 @@
                                         <h4><span v-text="address" class="upper"> </span></h4>
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-3">
                                     <label for=""> % Retenido</label>
                                     <input type="text" class="form-control" v-model="retention" name="" >
@@ -167,7 +167,7 @@
                                     <label for="">N° Retención</label>
                                     <h5><span v-text="voucher_num"></span></h5>
                                 </div>
-                                
+
                             </div>
                             <div class="form-group row border">
                                 <div class="col-md-4">
@@ -186,7 +186,7 @@
                                         <span class="form-control" v-if="voucher=='bill'">Factura</span>
                                             <span class="form-control" v-else-if="voucher=='note'">Vale</span>
                                             <span class="form-control" v-else-if="voucher=='credit'">Nota de Crédito</span>
-                                        
+
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -233,7 +233,7 @@
                                                     <span class="form-control" v-else-if="detail.voucher=='note'">Vale</span>
                                                     <span class="form-control" v-else-if="detail.voucher=='credit'">Nota de Crédito</span>
                                                 </td>
-                                                
+
                                                 <td>
                                                     <input v-model="detail.totalp" disabled="" type="number"  class="form-control" name="">
                                                 </td>
@@ -294,7 +294,7 @@
 
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="user">Usuario que Registró</label>
@@ -307,7 +307,7 @@
                                     <h4><span v-text="address" class="upper"> </span></h4>
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label>Numero de Retención</label>
@@ -321,9 +321,9 @@
                                         <p v-text="date"></p>
                                     </div>
                                 </div>
-                                
+
                             </div>
-                            
+
                             <div class="form-group row border">
                                 <div class="table-responsive col-md-12">
                                     <table class="table table-bordered table-striped table-sm">
@@ -334,12 +334,12 @@
                                                 <th>Fecha Documento</th>
                                                 <th>Monto Documento</th>
                                                 <th>Monto Retenido</th>
-                                                
+
                                             </tr>
                                         </thead>
                                         <tbody v-if="arrayDetailr.length">
                                             <tr v-for="detail in arrayDetailr" :key="detail.id">
-                                                
+
                                                 <td v-text="detail.voucher" ></td>
                                                 <td v-text="detail.purchase_num" ></td>
                                                 <td v-text="detail.datep" ></td>
@@ -356,7 +356,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>  
+                            </div>
                             <div class="form-group row">
                                 <div class="col-md-6">
                                     <template  v-if="status=='Registrado'">
@@ -365,11 +365,11 @@
                                           Anular
                                         </button>
                                     </template>
-                                    <template>
+                                    <!-- <template>
                                         <button type="button" @click="emailRet(id)" class="btn btn-warning btn-sm">
                                             <i class="icon-envelope">&nbsp; </i>Enviar por Email
                                         </button>
-                                    </template>
+                                    </template> -->
                                 </div>
                                 <div class="col-md-6 float-right">
                                     <button type="button" class="btn btn-secondary float-right" @click="hideRet()">
@@ -429,7 +429,7 @@
                                             <td v-text="purchase.totalp"></td>
                                             <td v-text="purchase.tax_mount"></td>
                                         </tr>
-                                        
+
                                     </tbody>
                                 </table>
                             </div>
@@ -445,7 +445,7 @@
                 <!-- /.modal-dialog -->
             </div>
             <!--Fin del modal-->
-            
+
         </main>
 </template>
 
@@ -557,12 +557,12 @@
         },
         methods : {
             listRetention (page,search,criterion){
-                
+
                 let me=this;
 
                 var url='retention?page=' + page + '&search=' + search + '&criterion=' + criterion;
                 axios.get(url).then(function(response) {
-                    var response = response.data; 
+                    var response = response.data;
                      me.arrayRet = response.retentions.data;
                      me.pagination = response.pagination;
                      me.mytime = response.mytime;
@@ -591,7 +591,7 @@
               this.fecha2='';
             },
             txt (fecha1,fecha2){
-                
+
                 let me=this;
 
                 var texto = '';
@@ -605,15 +605,15 @@
                     var response = response.data;
                     me.arrayTxt = response.txt;
 
-                    
+
 
                     me.company = response.company;
                     me.company.forEach(function(elemento){
                          comp = elemento['type']+elemento['rif'];
                         me.arrayTxt.forEach(function(element){
                         tot = ((element['totalp']-element['tax_mount'])-element['exempt']);
-                        texto += comp + '\t'  +element['year']+element['month']+ '\t'  +element['datep']+ '\t'  +'C'+ '\t'  +'01'+ '\t'  +element['prov_type']+element['prov_rif'] + '\t'  +element['purchase_num']+ '\t'  +element['voucher_serie']+ '\t'  +element['totalp']+ '\t'  + tot + '\t'  +element['total']+ '\t'  +'0'+ '\t'  +element['voucher_num']+ '\t'  +element['exempt']+ '\t'  +element['tax']+ '\t'  +'0' + '\n'; 
- 
+                        texto += comp + '\t'  +element['year']+element['month']+ '\t'  +element['datep']+ '\t'  +'C'+ '\t'  +'01'+ '\t'  +element['prov_type']+element['prov_rif'] + '\t'  +element['purchase_num']+ '\t'  +element['voucher_serie']+ '\t'  +element['totalp']+ '\t'  + tot + '\t'  +element['total']+ '\t'  +'0'+ '\t'  +element['voucher_num']+ '\t'  +element['exempt']+ '\t'  +element['tax']+ '\t'  +'0' + '\n';
+
                         });
                     });
                    me.download("retentions.txt", texto);
@@ -621,7 +621,7 @@
                 .catch(function(error) {
                     console.log(error);
                 });
-                
+
             },
             retId(){
                 let me=this;
@@ -632,7 +632,7 @@
                     var response = response.data;
 
                     me.voucher_num = response.retid;
-                    
+
                     // me.arrayId = response.saleid;
                     /*me.voucher_num = me.arrayId[0]['id'];
                     console.log(me.voucher_num);*/
@@ -644,7 +644,7 @@
             showRet(id){
                 let me=this;
 
-                // otorga el valor 2 a la variable Lista para abrir la vista 
+                // otorga el valor 2 a la variable Lista para abrir la vista
                 me.list=2;
 
                 var arrayRetTemp = [];
@@ -674,7 +674,7 @@
                 });
 
                 // obtener las faturas asignadas a la retencion seleccionada
-                
+
                 var urlr = 'retention/getDetail?id='+id;
                 axios.get(urlr).then(function(response) {
                     var responseD = response.data;
@@ -888,12 +888,13 @@
                     });
             },
             pdfRet(id){
-                /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
-                window.open('http://localhost/sale/public/retention/pdf/'+ id + ','+ '_blank');
+                window.open('https://bacoop.com/admin/public/sale/pdf/'+ id + ','+ '_blank');
+                // window.open('https://bacoop.com/jm/public/sale/pdf/'+ id + ','+ '_blank');
+                // window.open('http://localhost/sale/public/retention/pdf/'+ id + ','+ '_blank');
             },
             changePage(page, search, criterion){
                 let me = this;
-                // actualiza la pagina 
+                // actualiza la pagina
                 me.pagination.current_page = page;
                 // envia la peticion para visualizar la data de esa pagina
                 me.listSale(page, search, criterion);
@@ -925,7 +926,7 @@
                     me.type='';
                     me.rif='';
                     me.address='';
-                    
+
                     me.voucher='bill';
                     me.voucher_num = '';
                     me.purchase_num='';

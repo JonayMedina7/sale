@@ -1,5 +1,5 @@
 <?php
- 
+
 namespace App\Http\Controllers;
 
 use App\Sale;
@@ -18,7 +18,7 @@ class SaleController extends Controller
         /*if (!$request->ajax()) return redirect('/');*/
         $search = $request->search;
         $criterion = $request->criterion;
-        
+
         if ($search=='') {
             $sales = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
             ->join('users', 'sales.user_id', '=', 'users.id')
@@ -31,7 +31,7 @@ class SaleController extends Controller
             ->where('sales.'.$criterion, 'like', '%'. $search . '%')->orderBy('sales.id', 'desc')->paginate(10);
         }
 
-        
+
         return [
                'pagination' => [
                 'total'         => $sales->total(),
@@ -73,13 +73,13 @@ class SaleController extends Controller
     {
         // if (!$request->ajax()) return redirect('/');
         $id = $request->id;
-        
+
         $sale = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
         ->join('users', 'sales.user_id', '=', 'users.id')
         ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.total', 'sales.status', 'sales.exempt', 'sales.client_id', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'users.user')
         ->where('sales.id','=',$id)
         ->orderBy('sales.id', 'desc')->take(1)->get();
-        
+
         return ['sale' => $sale];
     }
 
@@ -87,12 +87,12 @@ class SaleController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $id = $request->id;
-        
+
         $details = Detailsale::join('products', 'detailsales.product_id', '=', 'products.id')
         ->select('detailsales.quantity', 'detailsales.product_id', 'detailsales.description', 'detailsales.tax', 'detailsales.price', 'products.name as product', 'products.stock')
         ->where('detailsales.sale_id','=',$id)
         ->orderBy('detailsales.id', 'desc')->get();
-        
+
         return ['details' => $details];
     }
 
@@ -100,7 +100,7 @@ class SaleController extends Controller
     {
         $sale = Sale::join('clients', 'sales.client_id', '=', 'clients.id')
         ->join('users', 'sales.user_id', '=', 'users.id')
-        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.exempt', 'sales.total', 'sales.status', 'sales.exempt', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
+        ->select('sales.id', 'sales.voucher', 'sales.voucher_serie', 'sales.voucher_num', 'sales.date', 'sales.tax', 'sales.tax_mount', 'sales.exempt', 'sales.total', 'sales.status', 'clients.name', 'clients.type', 'clients.rif', 'clients.address', 'clients.email', 'clients.phone', 'users.user')
         ->where('sales.id','=',$id)->take(1)->get();
 
          $details = Detailsale::join('products', 'detailsales.product_id', '=', 'products.id')
@@ -108,7 +108,7 @@ class SaleController extends Controller
         ->where('detailsales.sale_id','=',$id)
         ->orderBy('detailsales.id', 'desc')->get();
 
-        $numsale = Sale::select('voucher_num')->where('id',$id)->get();
+        // $numsale = Sale::select('voucher_num')->where('id',$id)->get();
         if (count($details)>17) {
             $i=33;
         } else if (count($details)<=17)  {
@@ -116,7 +116,7 @@ class SaleController extends Controller
         }
 
         $pdf = \PDF::loadView('pdf.sale',['sale'=>$sale,'details'=>$details, 'i'=>$i]);
-        return $pdf->stream('Factura-'.$numsale[0]->voucher_num.'.pdf');
+        return $pdf->stream('Factura-'.$sale[0]->voucher_num.'.pdf');
     }
 
     public function email(Request $request)
@@ -140,7 +140,7 @@ class SaleController extends Controller
         } else if (count($details)<=17)  {
             $i=17;
         }
-        
+
         $numsale = $sale[0]->voucher_num;
 
         $pdf = \PDF::loadView('pdf.sale_email',['sale'=>$sale,'details'=>$details, 'header'=>$header, 'footer'=>$footer,'water'=>$water, 'i'=>$i])->stream('factura-'.$sale[0]->voucher_num.'.pdf');
@@ -174,7 +174,7 @@ class SaleController extends Controller
         } else if (count($details)<=17)  {
             $i=17;
         }
-        
+
         $numsale = Sale::select('voucher_num')->where('id',$id)->get();
 
         $pdf = \PDF::loadView('pdf.sale_email',['sale'=>$sale,'details'=>$details, 'header'=>$header, 'footer'=>$footer, 'i'=>$i])->stream();
@@ -182,7 +182,7 @@ class SaleController extends Controller
         // return view('welcome', compact('sale', 'details', 'numsale','header', 'footer', 'water', 'i'));
         return $pdf;
     }
-  
+
 
     /**
      * Store a newly created resource in storage.
@@ -192,7 +192,7 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         if (!$request->ajax()) return redirect('/');
 
         try {
@@ -207,7 +207,7 @@ class SaleController extends Controller
         $sale->voucher_serie = $request->voucher_serie;
         $sale->voucher_num = $request->voucher_num;
         $sale->date = $mytime->toDateString();
-        
+
         $sale->tax = $request->tax;
         $sale->tax_mount = $request->tax_mount;
         $sale->exempt = $request->exempt;
@@ -215,7 +215,7 @@ class SaleController extends Controller
         $sale->total = $request->total;
         $sale->status = 'Registrado';
         $sale->save();
-        
+
 
         $details = $request->data; // Array de detalles de venta
         // recorrido del array
@@ -253,7 +253,7 @@ class SaleController extends Controller
         $sale->voucher_serie = $request->voucher_serie;
         $sale->voucher_num = $request->voucher_num;
         // $sale->date = $mytime->toDateString();
-        
+
         $sale->tax = $request->tax;
         $sale->tax_mount = $request->tax_mount;
         $sale->exempt = $request->exempt;

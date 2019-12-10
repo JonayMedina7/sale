@@ -1,22 +1,22 @@
 <template>
 	<main class="main">
 		            <!-- Breadcrumb -->
-		            <ol class="breadcrumb">
-          <li class="breadcrumb-item">Inicio</li>
-          <li class="breadcrumb-item">
-            <a href="#">Dilia Software</a>
-          </li>
-          <li class="breadcrumb-item active"> Categorias&nbsp;&nbsp;<i class="fa fa-file"></i></li>
-          <!-- Breadcrumb Menu-->
-          <li class="breadcrumb-menu d-md-down-none">
-            
-          </li>
-        </ol>
+    		<ol class="breadcrumb">
+              <li class="breadcrumb-item">Inicio</li>
+              <li class="breadcrumb-item">
+                <a href="#">Dilia Software</a>
+              </li>
+              <li class="breadcrumb-item active"> Categorias&nbsp;&nbsp;<i class="fa fa-file"></i></li>
+              <!-- Breadcrumb Menu-->
+              <li class="breadcrumb-menu d-md-down-none">
+
+              </li>
+            </ol>
 		            <div class="container-fluid">
 		                <!-- Ejemplo de tabla Listado -->
 		                <div class="card">
 		                    <div class="card-header">
-		                        
+
 		                        <button type="button" class="btn btn-success" @click="openModal('category','register')">
 		                            <i class="icon-plus"></i>&nbsp;&nbsp;Nueva Categoria
 		                        </button>
@@ -77,7 +77,7 @@
 		                                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActive ? 'active' : '']">
 		                                    <a class="page-link" href="#" @click.prevent="changePage(page, search, criterion)" v-text="page"></a>
 		                                </li>
-		                                
+
 		                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
 		                                    <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page +1, search, criterion)">Sig</a>
 		                                </li>
@@ -136,7 +136,7 @@
 		                        <div class="modal-footer">
 		                            <button type="button" class="btn btn-secondary" @click="closeModal()">Cancelar</button>
 		                            <button type="button" class="btn btn-danger" @click="desactiveCategory()">Desactivar</button>
-		                            
+
 		                        </div>
 		                    </div>
 		                    <div v-else class="modal-content">
@@ -161,7 +161,7 @@
 		            <!-- Fin del modal Eliminar -->
 	</main>
 </template>
-	  		
+
 <script>
 	export default {
 		data (){
@@ -225,7 +225,7 @@
 
 				var url='category?page=' + page + '&search=' + search + '&criterion=' + criterion;
                 axios.get(url).then(function(response) {
-                    var response = response.data; 
+                    var response = response.data;
                      me.arrayCategory = response.categories.data;
                      me.pagination = response.pagination;
                      // console.log(url);
@@ -236,7 +236,7 @@
             },
             changePage(page, search, criterion){
                 let me = this;
-                // actualiza la pagina 
+                // actualiza la pagina
                 me.pagination.current_page = page;
                 // envia la peticion para visualizar la data de esa pagina
                 me.listClient(page, search, criterion);
@@ -307,7 +307,7 @@
                     me.listCategory(1,'', 'name');
                 })
                 .catch(function (error) {
-                   console.log(error); 
+                   console.log(error);
                 });
             },
             activeCategory(){
@@ -319,7 +319,7 @@
                     me.closeModal();
                     me.listCategory(1,'', 'name');
                 }).catch(function (error) {
-                    console.log(error); 
+                    console.log(error);
                 });
             },
             closeModal(){
@@ -374,7 +374,7 @@
                         }
                     }
                 }
-                
+
             }
 		},
 		mounted(){

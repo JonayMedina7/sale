@@ -1,22 +1,23 @@
  <template>
-        <main class="main">
-           <ol class="breadcrumb">
-          <li class="breadcrumb-item">Inicio</li>
-          <li class="breadcrumb-item">
-            <a href="#">Dilia Software</a>
-          </li>
-          <li class="breadcrumb-item active"> Ventas&nbsp;&nbsp;<i class="fa fa-file"></i></li>
-          <!-- Breadcrumb Menu-->
-          <li class="breadcrumb-menu d-md-down-none">
-
-          </li>
-        </ol>
+    <main class="main" :class="dim == 1 ? 'blur' : '' ">
+        <!-- <div style="filter:blur(3px); width:100%; position: static;" v-show="dim==1" >
+        </div> -->
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">Inicio</li>
+              <li class="breadcrumb-item">
+                <a href="#">Dilia Software</a>
+              </li>
+              <li class="breadcrumb-item active"> Ventas&nbsp;&nbsp;<i class="fa fa-file"></i></li>
+              <!-- Breadcrumb Menu-->
+              <li class="breadcrumb-menu d-md-down-none">
+              </li>
+            </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
 
-                        <button type="button" class="btn btn-success" @click="showDetail('sale', 'create')">
+                        <button type="button" class="btn btn-success" @click="showDetail()">
                             <i class="fa fa-file"></i>&nbsp;&nbsp;Crear Factura
                         </button>
                     </div>
@@ -27,9 +28,8 @@
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <select class="form-control col-md-6" v-model="criterion">
-                                          <option value="voucher">Tipo de Comprobante</option>
-                                          <option value="voucher_num">Numero de comprobante</option>
-                                          <option value="date">Fecha-hora</option>
+                                          <option value="voucher_num">Numero de Documento</option>
+                                          <option value="date">Fecha</option>
                                         </select>
                                         <input type="text" v-model="search" @keyup.enter="listSale(1,search,criterion)" class="form-control" placeholder="Texto a Buscar">
                                         <button type="submit" @click="listSale(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
@@ -46,13 +46,11 @@
                                     <thead>
                                         <tr>
                                             <th>Opciones</th>
-
                                             <th>Cliente</th>
                                             <th>Tipo de comprobante</th>
                                             <th>Número comprobante</th>
                                             <th>Fecha Hora</th>
                                             <th>Total</th>
-
                                             <th>Estado</th>
                                         </tr>
                                     </thead>
@@ -62,12 +60,7 @@
                                                 <button type="button" class="btn btn-success btn-sm" @click="showSale(sale.id)">
                                                   Detalles</i>
                                                 </button> &nbsp;
-                                                <!-- <button type="button" class="btn btn-success" @click="showDetail('sale', 'update', sale)">
-                                                    <i class="fa fa-file"></i>&nbsp;&nbsp;Editar Factura
-                                                </button> -->
-
                                             </td>
-
                                             <td v-text="sale.name"></td>
                                             <td v-if="sale.voucher=='bill'">Factura</td>
                                             <td v-else-if="sale.voucher=='note'">Vale</td>
@@ -104,7 +97,6 @@
                     <template v-else-if="list==0">
                         <div class="card-body">
                             <div class="modal-header">
-                                <h4 class="modal-title" v-text="titleSale"></h4>
                                 <button type="button" class="close" @click="hideDetail()" aria-label="Close">
                                   <span aria-hidden="true">×</span>
                                 </button>
@@ -117,7 +109,6 @@
                                         placeholder="Buscar Cliente"
                                         @input="getClientInfo"
                                         >
-
                                         </v-select>
                                     </div>
                                 </div>
@@ -139,9 +130,6 @@
                                         <h4><span v-text="address" style="text-transform: uppercase;"> </span></h4>
                                     </div>
                                 </div>
-
-
-
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Tipo comprobante(*)</label>
@@ -186,7 +174,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Opciones</th>
-                                                <th>Artículo</th>
+                                                <th>Artículo o Servicioth>
                                                 <th>Descripción</th>
                                                 <th>Precio</th>
                                                 <th>Cantidad</th>
@@ -365,11 +353,11 @@
                                     <button type="button" class="btn btn-info " @click="editSale(sale_id)"><i class="icon-note"></i>&nbsp;
                                       Modificar
                                     </button> &nbsp;
-                                    <template>
+                                    <!-- <template>
                                         <button type="button" @click="emailSale(sale_id)" class="btn btn-warning btn-sm">
                                             <i class="icon-envelope">&nbsp; </i>Enviar por Email
                                         </button>
-                                    </template>
+                                    </template> -->
 
 
                                 </div>
@@ -425,9 +413,6 @@
                                         <h4><span v-text="address" style="text-transform: uppercase;"> </span></h4>
                                     </div>
                                 </div>
-
-
-
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Tipo comprobante(*)</label>
@@ -451,7 +436,7 @@
                                         <input disabled type="text" class="form-control" v-model="voucher_num" name="">
                                     </div>
                                 </div>
-                                <developer/>
+
                             </div>
                             <div class="form-group row border">
                                 <div class="col-md-4">
@@ -464,7 +449,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                             <div class="form-group row border">
                                 <div class="table-responsive col-md-12">
@@ -506,19 +490,19 @@
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="6" align="right"><strong>Sub-total: </strong></td>
-                                                <td>Bs {{ totalPartial=(calculateTotalPartial).toFixed(2) }}</td>
+                                                <td>Bs: {{ totalPartial=(calculateTotalPartial).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="6" align="right"><strong> Total Impuesto: </strong></td>
-                                                <td>Bs {{ totalTax=(calcTax).toFixed(2) }}</td>
+                                                <td>Bs: {{ totalTax=(calcTax).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="6" align="right"><strong>Exento: </strong></td>
-                                                <td>Bs {{ totalExempt=(calcExempt).toFixed(2) }}</td>
+                                                <td>Bs: {{ totalExempt=(calcExempt).toFixed(2) }}</td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="6" align="right"><strong>Total a Pagar: </strong></td>
-                                                <td>$ {{ total=(calculateTotal).toFixed(2) }}</td>
+                                                <td>Bs: {{ total=(calculateTotal).toFixed(2) }}</td>
 
                                             </tr>
                                         </tbody>
@@ -546,7 +530,7 @@
                 <!-- Fin ejemplo de tabla Listado -->
             </div>
             <!--Inicio del modal agregar Productos-->
-            <div class="modal fade" tabindex="-1" :class="{'show' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+            <div class="modal fade" tabindex="-1" :class="{'show' : modal }" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog modal-primary modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -607,7 +591,7 @@
                                     </tbody>
                                 </table>
                                 <nav>
-                                    <ul class="pagination">
+                                    <ul class="pagination" v-if="pagination">
                                         <li class="page-item" v-if="pagination.current_page > 1">
                                             <a class="page-link" href="#" @click.prevent="changePageModal(pagination.current_page -1, search, criterion)">Ant</a>
                                         </li>
@@ -632,7 +616,8 @@
             </div>
             <!--Fin del modal-->
 
-        </main>
+
+    </main>
 </template>
 
 <script>
@@ -698,7 +683,8 @@
                 search : '',
                 criteryS: 'name',
                 searchS: '',
-                saleid:0
+                saleid:0,
+                dim:0
             }
         },
         components: {
@@ -770,7 +756,6 @@
             calculateTotal: function (){
                 return parseFloat(this.totalTax) + parseFloat(this.totalPartial);
             }
-
         },
         methods : {
             listSale (page,search,criterion){
@@ -898,7 +883,6 @@
                 var url= 'client/clientSelect?filter='+search;
                 axios.get(url).then(function(response) {
                     var response = response.data;
-
                     me.arrayClient = response.clients;
                     // console.log(me.arrayClient);
                     loading(false)
@@ -920,8 +904,6 @@
             },
             saleId(){
                 let me=this;
-
-
                 var url= 'sale/saleId';
                 axios.get(url).then(function(response) {
                     var response = response.data;
@@ -954,8 +936,9 @@
                 });
             },
             pdfSale(id){
-                /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
-                window.open('http://localhost/sale/public/sale/pdf/'+ id + ','+ '_blank');
+                window.open('https://bacoop.com/admin/public/sale/pdf/'+ id + ','+ '_blank');
+                // window.open('https://bacoop.com/jm/public/sale/pdf/'+ id + ','+ '_blank');
+                // window.open('http://localhost/sale/public/sale/pdf/'+ id + ','+ '_blank');
             },
             changePage(page, search, criterion){
                 let me = this;
@@ -1066,10 +1049,8 @@
                     return;
                 }else {
                 let me=this;
-
+                me.dim=1;
                 axios.post('sale/register', {
-
-
                     'client_id':this.client_id,
                     'user_id': this.user_id,
                     'product_id': this.product_id,
@@ -1081,7 +1062,6 @@
                     'tax_mount': this.totalTax,
                     'total': this.total,
                     'data': this.arrayDetail
-
 
                 }).then(function(response) {
 
@@ -1116,9 +1096,10 @@
                     me.code='';
                     me.arrayDetail=[];
 
-                    /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
-                    window.open('http://localhost/sale/public/sale/pdf/'+ response.data.id + ','+ '_blank');
-
+                    // window.open('https://bacoop.com/admin/public/sale/pdf/'+ id + ','+ '_blank');
+                    // window.open('https://bacoop.com/jm/public/sale/pdf/'+ id + ','+ '_blank');
+                     window.open('http://localhost/sale/public/sale/pdf/'+ response.data.id + ','+ '_blank');
+                     me.dim=0;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -1192,6 +1173,7 @@
 
                     me.list=1;
                     me.listSale(1,'','voucher_num');
+                    me.sale_id=0;
                     me.saleid=0;
                     me.client_id=0;
                     me.type='';
@@ -1218,7 +1200,8 @@
                     me.code='';
                     me.arrayDetail=[];
                     me.showSale(response.data.id);
-                    /*window.open('https://bacoop.com/laravel/public/sale/pdf/'+ id + ','+ '_blank');*/
+                    window.open('https://bacoop.com/admin/public/sale/pdf/'+ response.data.id + ','+ '_blank');
+                    // window.open('https://bacoop.com/jm/public/sale/pdf/'+ response.data.id + ','+ '_blank');
                     // window.open('http://localhost/sale/public/sale/pdf/'+ response.data.id + ','+ '_blank');
 
                 })
@@ -1257,49 +1240,28 @@
                 };
                 return me.errorSmsS;
             },
-            showDetail(model, action, data){
+            showDetail(){
                 // console.log(data['id']);
                 let me=this;
-                switch(model) {
-                   case "sale" :
-                   {
-                        switch(action)
-                        {
-                            case 'create':
-                            {
-                                me.titleSale = 'Registrar Venta';
-                                me.list = 0;
-                                me.actionType = 1;
 
-                                me.voucher="bill";
-                                me.user_id=0;
-                                me.product_id=0;
-                                me.voucher_num='';
-                                me.voucher_serie='';
-                                me.tax='';
-                                me.tax_mount=0.0;
-                                me.totalExempt=0.0;
-                                me.total=0.0;
-                                me.product='';
-                                me.quantity=0;
-                                me.price=0.0;
-                                me.description='';
-                                me.arrayDetail=[];
-                                me.saleId();
-                                break;
-                            }
-                            case'update':
-                            {
-                                me.titleSale = 'Actualizar Factura';
-                                me.list = 0;
-                                me.actionType=2;
-                                me.editSale(data['id']);
-                                break;
-                            }
-                        }
-                   }
-                }
+                me.list = 0;
+                me.actionType = 1;
 
+                me.voucher="bill";
+                me.user_id=0;
+                me.product_id=0;
+                me.voucher_num='';
+                me.voucher_serie='';
+                me.tax='';
+                me.tax_mount=0.0;
+                me.totalExempt=0.0;
+                me.total=0.0;
+                me.product='';
+                me.quantity=0;
+                me.price=0.0;
+                me.description='';
+                me.arrayDetail=[];
+                me.saleId();
 
             },
             hideDetail(){

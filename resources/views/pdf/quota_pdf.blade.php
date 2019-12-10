@@ -3,7 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Reporte de venta</title>
+    <title>Reporte de Cotización</title>
     <style>
         @page {
             margin: 30px 20px 10px 20px !important;
@@ -33,16 +33,6 @@
             width: 776px;
             height: 100px;
             /*display: inline;*/
-        }
-        .water{
-            {{-- background-image: url('{{ asset('./img/header-footer/watermark.png') }}'); --}}
-            background-image: url('{{ asset('./img/header-footer/watermark2.jpg') }}');
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: cover;
-            /*height: ;*/
-            width: 90%
-            opacity: 0.3;
         }
         .clearfix{
             overflow: auto;
@@ -150,7 +140,7 @@
 
     <body  >
         <img class="img-header" src="{{ public_path($header) }}" alt="">
-        @foreach ($sale as $s)
+        @foreach ($quota as $s)
         {{-- <nav>
 
         </nav> --}}
@@ -161,14 +151,14 @@
                 <span > Fecha de Emisión: {{ date("d-m-Y",strtotime($s->date)) }}</span>
             </div>
             <div id="inv" >
-                <span>Sin Derecho a crédito Fiscal - Copia digital de la <b> Cotización N° {{ '000'.$s->voucher_num }}</b></span>
+                <span> <b> Cotización N° {{ '000'.$s->voucher_num }}</b></span>
 
             </div>
         </header>
         {{-- Fin Header --}}
         {{-- Inicio Seccion info Cliente --}}
         <section>
-            <div >
+            <div>
                 <table id="facliente">
 
                         <tr>
@@ -259,25 +249,25 @@
 
             <table class="footer-rigth" >
                 <thead border="1">
-                    @foreach ($sale as $s)
+                    @foreach ($quota as $s)
                     <tr id="footer1" class="top-footer">
-                        <th>SUBTOTAL Bs: </th>
+                        <th>SUBTOTAL </th>
                         <td>{{ number_format($s->total-$s->tax_mount, 2, ',', '.') }}</td>
                     </tr>
                     <tr id="footer1">
-                        <th>EXENTO Bs: </th>
+                        <th>EXENTO </th>
                         <td>{{ number_format($s->exempt, 2, ',', '.') }}</td>
                     </tr>
                     <tr id="footer1">
-                        <th>BASE IMPONIBLE BS: </th>
+                        <th>BASE IMPONIBLE </th>
                         <td>{{ number_format(($s->total-$s->tax_mount)-$s->exempt, 2, ',', '.') }}</td>
                     </tr>
                     <tr id="footer1">
-                        <th>I.V.A. 16% Bs: </th>
+                        <th>I.V.A. 16% </th>
                         <td>{{ number_format($s->tax_mount, 2, ',', '.') }}</td>
                     </tr>
                     <tr id="footer1" class="bottom-footer">
-                        <th>TOTAL Bs: </th>
+                        <th>TOTAL </th>
                         <td>{{ number_format($s->total, 2, ',', '.') }}</td>
                     </tr>
                     @endforeach
