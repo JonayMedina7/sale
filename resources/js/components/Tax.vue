@@ -1,9 +1,15 @@
 <template>
-	<main class="main">
+	<main class="main" :class="dim == 1 ? 'blur' : '' ">
 		            <!-- Breadcrumb -->
 		            <ol class="breadcrumb">
-		                <li class="breadcrumb-item"><a href="./dashboard">Escritorio</a></li>
-		            </ol>
+                        <li class="breadcrumb-item">Inicio</li>
+                        <li class="breadcrumb-item">
+                            <a href="#">Dilia Software</a>
+                        </li>
+                        <li class="breadcrumb-item active"> Impuesto&nbsp;&nbsp;<i class="fa fa-file"></i></li>
+                        <!-- Breadcrumb Menu-->
+                        <li class="breadcrumb-menu d-md-down-none"></li>
+                    </ol>
 		            <div class="container-fluid">
 		                <!-- Ejemplo de tabla Listado -->
 		                <div class=" card"  style="width: fit-content">
@@ -16,16 +22,16 @@
                                         <h3 for="tax">I.V.A. Registrado</h3>
                                         <div class="form-group" v-for="taxes in arrayTax" :key="taxes.id" v-if="arrayTax.length">
                                             <div class="form-group center border"  style="width: fit-content">
-                                                <h4 class="upper form-text " v-text="taxes.tax + '   '"></h4> 
+                                                <h4 class="upper form-text " v-text="taxes.tax + '   '"></h4>
                                             <button type="button" class="btn btn-primary " @click="updateTax(taxes)">Actualizar</button>
-                                                <br>    
+                                                <br>
                                             </div>
-                                            
+
                                         </div>
 
                                     </div>
                                     <hr>
-                                    
+
                                 </div>
                                 <div class="card-body float-right">
                                     <div class="col-12" >
@@ -42,18 +48,18 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
 		                    </div>
 		                </div>
-                        
+
 		                <!-- Fin ejemplo de tabla mostar -->
 		            </div>
 		            <!--Inicio del modal agregar/actualizar-->
-		            
+
 	</main>
 </template>
-	  		
+
 <script>
 	export default {
 		data (){
@@ -62,12 +68,12 @@
 			tax: '',
             arrayTax: [],
             errorTax: 0,
-            
+            dim:0
 			}
 
 		},
 		computed: {
-			
+
 		},
 		methods: {
 			listTax (){
@@ -75,9 +81,9 @@
 
 				var url='tax';
                 axios.get(url).then(function(response) {
-                    me.arrayTax = response.data; 
-                    
-                    
+                    me.arrayTax = response.data;
+
+
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -88,16 +94,17 @@
                     return;
                 }
                 let me = this;
-
+                me.dim=1;
                 axios.post('tax/register', {
                     'tax':this.tax
                 }).then(function(response){
                     me.listTax();
+                    me.dim=0;
                 }).catch(function(error){
                     console.log(error);
                 });
             },
-            
+
             updateTax(data = []){
             	if (this.validateTax()){
             		return;
@@ -116,19 +123,19 @@
                 });
             },
             validateTax(){
-                
+
             	this.errorTax=0;
                 this.errorTaxList =[];
 
                 if(this.tax=='') this.errorTaxList.push("Ingrese un impuesto valido");
-                
+
                 var sw;
                 for(var i=0;i<this.arrayTax.length;i++){
                     if (this.arrayTax[i].tax == this.tax) {
                         this.errorTaxList.push("Ya este monto de impuesto se encuentra registrado");
                     }
                 }
-                
+
                 if (this.errorTaxList.length) this.errorTax = 1;
                     if (this.errorTaxList.length >= 1) {
                         Swal.fire({
@@ -141,7 +148,7 @@
                 };
                 return this.errorTax;
             }
-            
+
 		},
 		mounted(){
 			this.listTax();

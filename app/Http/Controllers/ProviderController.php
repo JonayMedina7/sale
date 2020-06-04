@@ -16,14 +16,14 @@ class ProviderController extends Controller
     	/*if (!$request->ajax()) return redirect('/');*/
         $search = $request->search;
         $criterion = $request->criterion;
-        
+
         if ($search=='') {
-            $clients = Provider::join('clients', 'providers.id', '=', 'clients.id')->select('clients.id', 'clients.name', 'clients.phone', 'clients.email', 'clients.type', 'clients.rif', 'clients.retention', 'clients.address', 'providers.contact', 'providers.contact_phone' )->orderBy('clients.id', 'desc')->paginate(7);
+            $clients = Provider::join('clients', 'providers.id', '=', 'clients.id')->select('clients.id', 'clients.name', 'clients.phone', 'clients.email', 'clients.type', 'clients.rif', 'clients.retention', 'clients.address', 'clients.condition', 'providers.contact', 'providers.contact_phone' )->orderBy('clients.id', 'desc')->paginate(7);
         } else {
-            $clients = Provider::join('clients', 'providers.id', '=', 'clients.id')->select('clients.id', 'clients.name', 'clients.phone', 'clients.email', 'clients.type', 'clients.rif', 'clients.retention', 'clients.address', 'providers.contact', 'providers.contact_phone' )->where($criterion, 'like', '%'. $search . '%')->orderBy('id', 'desc')->paginate(7);
+            $clients = Provider::join('clients', 'providers.id', '=', 'clients.id')->select('clients.id', 'clients.name', 'clients.phone', 'clients.email', 'clients.type', 'clients.rif', 'clients.retention', 'clients.address', 'clients.condition', 'providers.contact', 'providers.contact_phone' )->where($criterion, 'like', '%'. $search . '%')->orderBy('id', 'desc')->paginate(7);
         }
 
-        
+
         return [
             'pagination' => [
                 'total'         => $clients->total(),
@@ -40,13 +40,13 @@ class ProviderController extends Controller
     public function providerSelect(Request $request)
     {
 
-        /*if (!$request->ajax()) return redirect('/');*/
+        if (!$request->ajax()) return redirect('/');
 
         $filter = $request->filter;
         $providers = Provider::join('clients','providers.id','=','clients.id')
         ->where('clients.name', 'like', '%'. $filter . '%')
         ->orWhere('clients.rif', 'like', '%'. $filter . '%')
-        ->select('clients.id','clients.name','clients.type','clients.rif', 'clients.address', 'clients.retention')
+        ->select('clients.id','clients.name','clients.type','clients.rif', 'clients.address', 'clients.retention',  'clients.condition')
         ->orderBy('clients.name', 'asc')->get();
 
         return ['providers' => $providers];
@@ -65,18 +65,18 @@ class ProviderController extends Controller
         try {
         DB::beginTransaction();
         $client = new Client();
-        $client->name = $request->name;
+        $client->name = ucwords(strtolower($request->name));
         $client->phone = $request->phone;
-        $client->email = $request->email;
+        $client->email = strtolower($request->email);
         $client->type = $request->type;
         $client->rif = $request->rif;
         $client->retention = $request->retention;
-        $client->address = $request->address;
+        $client->address = ucwords(strtolower($request->address));
         $client->condition = '1';
-        $client->save();	
+        $client->save();
 
         $provider = new Provider();
-        $provider->contact = $request->contact;
+        $provider->contact = ucwords(strtolower($request->contact));
         $provider->contact_phone = $request->contact_phone;
         $provider->id = $client->id;
 
@@ -87,7 +87,7 @@ class ProviderController extends Controller
         	DB::rollBack();
 
         }
-        
+
 
     }
 
@@ -98,9 +98,11 @@ class ProviderController extends Controller
      * @param  \App\client  $client
      * @return \Illuminate\Http\Response
      */
+
     public function update(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
+
         try {
         DB::beginTransaction();
 
@@ -108,18 +110,17 @@ class ProviderController extends Controller
 
         $client = Client::findOrFail($provider->id);
 
-        
-        $client->name = $request->name;
+        $client->name = ucwords(strtolower($request->name));
         $client->phone = $request->phone;
-        $client->email = $request->email;
+        $client->email = strtolower($request->email);
         $client->type = $request->type;
         $client->rif = $request->rif;
         $client->retention = $request->retention;
-        $client->address = $request->address;
+        $client->address = ucwords(strtolower($request->address));
         $client->condition = '1';
         $client->save();
 
-        $provider->contact = $request->contact;
+        $provider->contact = ucwords(strtolower($request->contact));
         $provider->contact_phone = $request->contact_phone;
         $provider->save();
         DB::commit();
@@ -127,8 +128,8 @@ class ProviderController extends Controller
         	DB::rollBack();
 
         }
-        
+
     }
 
-    
+
 }

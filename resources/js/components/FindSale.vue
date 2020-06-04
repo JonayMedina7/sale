@@ -24,11 +24,11 @@
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <select class="form-control col-md-3" v-model="criterion">
-                                          <option value="voucher">Tipo de Comprobante</option>
-                                          <option value="voucher_num">numero de comprobante</option>
+                                          <option value="voucher_num">Número</option>
                                           <option value="date">Fecha-hora</option>
                                         </select>
-                                        <input type="text" v-model="search" @keyup.enter="listSale(1,search,criterion)" class="form-control" placeholder="Texto a Buscar">
+                                        <input v-if="criterion == 'voucher_num'" type="text" v-model="search" @keyup.enter="listSale(1,search,criterion)" class="form-control" placeholder="Buscar">
+                                        <input v-if="criterion == 'date'" type="date" v-model="search" @keyup.enter="listSale(1,search,criterion)" class="form-control" placeholder="Buscar">
                                         <button type="submit" @click="listSale(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> search</button>
                                     </div>
                                 </div>
@@ -40,9 +40,9 @@
                                             <th>Opciones</th>
                                             <th>Nombre Usuario</th>
                                             <th>Cliente</th>
-                                            <th>Tipo de comprobante</th>
+                                            <th>Tipo de Documento</th>
                                             <!-- <th>Serie comprobante</th> -->
-                                            <th>Número comprobante</th>
+                                            <th>Número</th>
                                             <th>Fecha Hora</th>
                                             <th>Total</th>
                                             <th>Impuesto</th>
@@ -63,7 +63,7 @@
                                             <td v-text="sale.name"></td>
                                             <td v-if="sale.voucher=='bill'">Factura</td>
                                             <td v-else-if="sale.voucher=='note'">Vale</td>
-                                            <td v-else-if="sale.voucher=='credit'">Nota de Credito</td>
+                                            <td v-else-if="sale.voucher=='credit'">Nota de crédito</td>
                                             <!-- <td v-text="sale.voucher_serie"></td> -->
                                             <td v-text="sale.voucher_num"></td>
                                             <td v-text="sale.date"></td>
@@ -116,11 +116,11 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Tipo comprobante</label>
+                                        <label>Tipo Documento</label>
 
                                         <p v-if="voucher=='bill'">Factura</p>
                                         <p v-else-if="voucher=='note'">Vale</p>
-                                        <p v-else-if="voucher=='credit'">Nota de credito</p>
+                                        <p v-else-if="voucher=='credit'">Nota de crédito</p>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -131,7 +131,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Numero Comprobante</label>
+                                        <label>Número</label>
                                         <p v-text="voucher_num"></p>
                                     </div>
                                 </div>
@@ -204,6 +204,7 @@
     export default {
         data (){
             return {
+                appUrl: process.env.MIX_APP_URL,
                 sale_id : 0,
                 product_id : 0,
                 user_id : 0,
@@ -343,10 +344,10 @@
                 });
             },
             pdfSale(id){
-
+                window.open(this.appUrl + 'sale/pdf/'+ id);
                 // window.open('https://bacoop.com/sale/public/sale/pdf/'+ id + ','+ '_blank');
-                // window.open('https://bacoop.com/jm/public/sale/pdf/'+ id + ','+ '_blank');
-                window.open('http://localhost/sale/public/sale/pdf/'+ id + ','+ '_blank');
+                // window.open('https://bacoop.com/test/public/sale/pdf/'+ id + ','+ '_blank');
+                // window.open('http://localhost/sale/public/sale/pdf/'+ id + ','+ '_blank');
             },
             changePage(page, search, criterion){
                 let me = this;

@@ -1,17 +1,17 @@
- <template>
-        <main class="main">
+W <template>
+        <main class="main" :class="dim == 1 ? 'blur' : '' ">
             <!-- Breadcrumb -->
              <ol class="breadcrumb">
-          <li class="breadcrumb-item">Inicio</li>
-          <li class="breadcrumb-item">
-            <a href="#">Dilia Software</a>
-          </li>
-          <li class="breadcrumb-item active"> Clientes&nbsp;&nbsp;<i class="fa fa-address-book-o"></i></li>
-          <!-- Breadcrumb Menu-->
-          <li class="breadcrumb-menu d-md-down-none">
+              <li class="breadcrumb-item">Inicio</li>
+              <li class="breadcrumb-item">
+                <a href="#">Dilia Software</a>
+              </li>
+              <li class="breadcrumb-item active"> Clientes&nbsp;&nbsp;<i class="fa fa-address-book-o"></i></li>
+              <!-- Breadcrumb Menu-->
+              <li class="breadcrumb-menu d-md-down-none">
 
-          </li>
-        </ol>
+              </li>
+            </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
@@ -29,7 +29,7 @@
                                       <option value="name">Nombre</option>
                                       <option value="rif">Rif</option>
                                     </select>
-                                    <input type="number" v-model="search" @keyup.enter="listClient(1,search,criterion)" class="form-control" placeholder="Texto a Buscar">
+                                    <input type="text" v-model="search" @keyup.enter="listClient(1,search,criterion)" class="form-control" placeholder="Texto a Buscar">
                                     <button type="submit" @click="listClient(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
@@ -54,7 +54,7 @@
                                           &nbsp;&nbsp;Editar
                                         </button> &nbsp;
                                         <button v-if="client.condition" type="button" @click="openModal('client','desactive',client)" class="btn btn-danger btn-sm" >
-                                          &nbsp;&nbsp;Anular
+                                          &nbsp;&nbsp;Suspender
                                         </button>
                                         <button v-else type="button" @click="openModal('client','active',client)" class="btn btn-success btn-sm" >
                                           <i class="icon-check"></i>
@@ -115,13 +115,12 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="rif">Rif o C.I.</label>
                                     <div class="col-md-2">
-                                        <select class="form-control" v-model="type">
 
-											<option value="j">J</option>
+                                        <select class="form-control" v-model="type">
+											<option selected="selected" value="j">J</option>
 											<option value="g" >G</option>
 											<option value="v" >V</option>
 											<option value="c" >Cedula</option>
-
                                         </select>
 
                                     </div>
@@ -134,19 +133,18 @@
                                     <label class="col-md-3 form-control-label" for="text-input">Razon Social</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="name" class="form-control" placeholder="Razon Social">
-
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="phone">Numero teléfonico</label>
+                                    <label class="col-md-3 form-control-label" for="phone">Número teléfonico</label>
                                     <div class="col-md-9">
-                                        <input type="number" v-model="phone" class="form-control" placeholder="">
+                                        <input type="number" v-model="phone" class="form-control" placeholder="Ingrese Número Teléfonico">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="stock">Correo electronico</label>
                                     <div class="col-md-9">
-                                        <input type="email" v-model="email" class="form-control" placeholder="">
+                                        <input type="email" v-model="email" class="form-control" placeholder="Ingrese Correo">
                                     </div>
                                 </div>
 
@@ -154,16 +152,6 @@
                                     <label class="col-md-3 form-control-label" for="description">Dirección</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="address" class="form-control" placeholder="Ingrese dirección">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="retention">Es Agente de Retención?</label>
-                                    <div class="col-md-5">
-                                        <select class="form-control" v-model="retention" required>
-											<option value="no" >No</option>
-											<option value="75" >75%</option>
-											<option value="100" >100%</option>
-                                        </select>
                                     </div>
                                 </div>
 
@@ -228,7 +216,7 @@
             return {
                 client_id : 0,
                 type: '',
-                rif : 0,
+                rif : '',
                 name : '',
                 phone : '',
                 email: '',
@@ -253,7 +241,8 @@
                 },
                 offset : 3,
                 criterion : 'name',
-                search : ''
+                search : '',
+                dim:0
             }
         },
         computed: {
@@ -314,8 +303,8 @@
                 if (this.validateClient()) {
                     return;
                 } else {
-                        let me=this;
-
+                    let me=this;
+                    me.dim=1;
                     axios.post('client/register', {
                         'type':this.type,
                         'rif':this.rif,
@@ -327,6 +316,7 @@
                     }).then(function(response) {
                         me.closeModal();
                         me.listClient(1,'','name');
+                        me.dim=0;
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -340,7 +330,7 @@
                 };
 
                 let me = this;
-
+                me.dim=1;
                 axios.put('client/update', {
                     'id' : this.client_id,
                     'type':this.type,
@@ -353,6 +343,7 @@
                 }).then(function (response){
                     me.closeModal();
                     me.listClient(1,'', 'name');
+                    me.dim=0;
                 }).catch(function (error){
                     console.log(error);
                 });
@@ -372,27 +363,28 @@
                 if (this.errorSmsList.length) this.errorSms = 1;
                     if (this.errorSmsList.length >= 1) {
                         Swal.fire({
-                    confirmButtonText: 'Aceptar!',
-                    confirmButtonClass: 'btn btn-danger',
-                    confirmButtonColor: '#3085d6',
-                    html: `${this.errorSmsList.map( er =>`<br><br>${er}`)}`,
-                    showCancelButton: false
-                    });
+                            type: error,
+                            confirmButtonText: 'Aceptar!',
+                            confirmButtonClass: 'btn btn-danger',
+                            confirmButtonColor: '#3085d6',
+                            html: `${this.errorSmsList.map( er =>`<br><br>${er}`)}`,
+                            showCancelButton: false
+                            });
                 };
                 return this.errorSms;
             },
             desactiveClient(){
-                        let me = this;
+                let me = this;
 
-                        axios.put('client/desactive', {
-                            'id': this.client_id,
-                        }).then(function (response) {
-                            me.closeModal();
-                            me.listClient(1,'', 'name');
-                        })
-                        .catch(function (error) {
-                           console.log(error);
-                        });
+                axios.put('client/desactive', {
+                    'id': this.client_id,
+                }).then(function (response) {
+                    me.closeModal();
+                    me.listClient(1,'', 'name');
+                })
+                .catch(function (error) {
+                   console.log(error);
+                });
             },
             activeClient(){
                 let me = this;
@@ -449,7 +441,7 @@
                                 this.client_id  = data['id'];
                                 this.name  		= data['name'];
                                 this.phone		=data['phone'];
-                                this.Type		=data['type'];
+                                this.type		=data['type'];
                                 this.rif         = data['rif'];
                                 this.email         = data['email'];
                                 this.address   = data['address'];

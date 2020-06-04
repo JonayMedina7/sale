@@ -1,21 +1,21 @@
  <template>
-        <main class="main">
+        <main class="main" :class="dim == 1 ? 'blur' : '' ">
            <ol class="breadcrumb">
-          <li class="breadcrumb-item">Inicio</li>
-          <li class="breadcrumb-item">
-            <a href="#">Dilia Software</a>
-          </li>
-          <li class="breadcrumb-item active"> Compras&nbsp;&nbsp;<i class="fa fa-cart-plus"></i></li>
-          <!-- Breadcrumb Menu-->
-          <li class="breadcrumb-menu d-md-down-none">
-            
-          </li>
-        </ol>
+              <li class="breadcrumb-item">Inicio</li>
+              <li class="breadcrumb-item">
+                <a href="#">Dilia Software</a>
+              </li>
+              <li class="breadcrumb-item active"> Compras&nbsp;&nbsp;<i class="fa fa-cart-plus"></i></li>
+              <!-- Breadcrumb Menu-->
+              <li class="breadcrumb-menu d-md-down-none">
+
+              </li>
+            </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        
+
                         <button type="button" class="btn btn-success" @click="showDetail()">
                             <i class="fa fa-cart-plus"></i>&nbsp;&nbsp;Ingresar Compra
                         </button>
@@ -27,18 +27,18 @@
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <select class="form-control col-md-3" v-model="criterion">
-                                          <option value="voucher">Tipo de Documento</option>
-                                          <option value="voucher_num">Numero de comprobante</option>
-                                          <option value="date">Fecha-hora</option>
+                                          <option value="voucher_num">Número </option>
+                                          <option value="date">Fecha</option>
                                         </select>
-                                        <input type="text" v-model="search" @keyup.enter="listPurchase(1,search,criterion)" class="form-control" placeholder="Texto a Buscar">
+                                        <input v-if="criterion == 'voucher_num'" type="text" v-model="search" @keyup.enter="listPurchase(1,search,criterion)" class="form-control" placeholder="Buscar">
+                                        <input v-if="criterion == 'date'" type="date" v-model="search" @keyup.enter="listPurchase(1,search,criterion)" class="form-control" placeholder="Buscar">
                                         <button type="submit" @click="listPurchase(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                     </div>
                                 </div>
                             </div>
                             <div class="box-header">
                                     <center><h3 class="box-title">Listado de Compras</h3></center>
-                                </div>  <br><hr>  
+                                </div>  <br><hr>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-sm">
                                     <thead>
@@ -46,8 +46,8 @@
                                             <th>Opciones</th>
                                             <th>Nombre Usuario</th>
                                             <th>Proveedor</th>
-                                            <th>Tipo de comprobante</th>
-                                            <th>Número comprobante</th>
+                                            <th>Tipo de Documento</th>
+                                            <th>Número</th>
                                             <th>Fecha Hora</th>
                                             <th>Total</th>
                                             <th>Estado</th>
@@ -65,14 +65,14 @@
 
                                             <td v-if="purchase.voucher=='bill'">Factura</td>
                                             <td v-else-if="purchase.voucher=='note'">Vale</td>
-                                            <td v-else-if="purchase.voucher=='credit'">Nota de Credito</td>
+                                            <td v-else-if="purchase.voucher=='credit'">Nota de crédito</td>
 
                                             <td v-text="purchase.voucher_num"></td>
                                             <td v-text="purchase.date"></td>
                                             <td v-text="purchase.total"></td>
-                                            <td v-text="purchase.status"></td>                                     
+                                            <td v-text="purchase.status"></td>
                                         </tr>
-                                        
+
                                     </tbody>
                                 </table>
                             </div>
@@ -85,7 +85,7 @@
                                     <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActive ? 'active' : '']">
                                         <a class="page-link" href="#" @click.prevent="changePage(page, search, criterion)" v-text="page"></a>
                                     </li>
-                                    
+
                                     <li class="page-item" v-if="pagination.current_page < pagination.last_page">
                                         <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page +1, search, criterion)">Sig</a>
                                     </li>
@@ -105,8 +105,8 @@
                                         <v-select  @search="providerSelect" label="name" :options="arrayProvider"
                                         placeholder="Buscar Proveedor"
                                         @input="getProviderInfo"
-                                        > 
-                                            
+                                        >
+
                                         </v-select>
                                     </div>
                                 </div>
@@ -121,9 +121,7 @@
                                         <label>Tipo comprobante(*)</label>
                                         <select class="form-control" v-model="voucher">
                                             <option value="0">Seleccione</option>
-                                            <option value="note">Boleta</option>
-                                            <option value="bill">Factura</option>
-                                            <option value="credit">Ticket</option>
+                                            <option value="bill" default>Factura</option>
                                         </select>
                                     </div>
                                 </div>
@@ -135,18 +133,18 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Numero Comprobante(*)</label>
+                                        <label>Número Comprobante(*)</label>
                                         <input type="text" class="form-control" v-model="voucher_num" placeholder="000x" name="">
                                     </div>
                                 </div>
-                                
+
                             </div>
                             <div class="form-group row border">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Articulo <span style="color:red;" v-show="product_id==0">(*Seleccione)</span></label>
                                         <div class="form-inline">
-                                            <input type="text" class="form-control" v-model="code" @keyup.enter="productSearch()" placeholder="Ingrese Producto" name="">
+                                            <input type="text" class="form-control" v-model="code" @keyup.enter="productSearch()" placeholder="Ingrese código Producto" name="">
                                             <button @click="openModal()" class="btn btn-primary">...</button>
                                             <input type="text" readonly class="form-control" v-model="product" name="">
                                         </div>
@@ -179,7 +177,7 @@
                                                 <th>Artículo</th>
                                                 <th>Precio</th>
                                                 <th>Cantidad</th>
-                                                <th>Sub-total</th> 
+                                                <th>Sub-total</th>
                                             </tr>
                                         </thead>
                                         <tbody v-if="arrayDetail.length">
@@ -255,7 +253,7 @@
                                         <label><h6>Tipo comprobante</h6></label>
                                        <h3> <p v-if="voucher=='bill'">Factura</p>
                                         <p v-else-if="voucher=='note'">Vale</p>
-                                        <p v-else-if="voucher=='credit'">Nota de credito</p></h3>
+                                        <p v-else-if="voucher=='credit'">Nota de crédito</p></h3>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -266,13 +264,13 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label><h6>Numero Comprobante</h6></label>
+                                        <label><h6>Número Comprobante</h6></label>
                                         <h3><p v-text="voucher_num"></p></h3>
                                     </div>
                                 </div>
-                                
+
                             </div>
-                            
+
                             <div class="form-group row border">
                                 <div class="table-responsive col-md-12">
                                     <table class="table table-bordered table-striped table-sm">
@@ -281,12 +279,12 @@
                                                 <th>Artículo</th>
                                                 <th>Precio</th>
                                                 <th>Cantidad</th>
-                                                <th>Sub-Total</th> 
+                                                <th>Sub-Total</th>
                                             </tr>
                                         </thead>
                                         <tbody v-if="arrayDetail.length">
                                             <tr v-for="detail in arrayDetail" :key="detail.id">
-                                                
+
                                                 <td v-text="detail.product" ></td>
                                                 <td v-text="detail.price" ></td>
                                                 <td v-text="detail.quantity" ></td>
@@ -393,7 +391,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        
+
                                     </tbody>
                                 </table>
                                 <nav>
@@ -404,7 +402,7 @@
                                         <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActive ? 'active' : '']">
                                             <a class="page-link" href="#" @click.prevent="changePageModal(page, search, criterion)" v-text="page"></a>
                                         </li>
-                                        
+
                                         <li class="page-item" v-if="pagination.current_page < pagination.last_page">
                                             <a class="page-link" href="#" @click.prevent="changePageModal(pagination.current_page +1, search, criterion)">Sig</a>
                                         </li>
@@ -423,7 +421,7 @@
                 <!-- /.modal-dialog -->
             </div>
             <!--Fin del modal-->
-            
+
         </main>
 </template>
 
@@ -445,7 +443,7 @@
                 voucher_serie : '',
                 date : '',
                 tax : 0.0,
-                taxp: '',
+                taxp: 0.0,
                 tax_mount:0.0,
                 arrayPurchase : [],
                 arrayDetail : [],
@@ -479,7 +477,8 @@
                 criterion : 'voucher_num',
                 search : '',
                 criteryP: 'name',
-                searchP: ''
+                searchP: '',
+                dim: 0
             }
         },
         components: {
@@ -528,8 +527,8 @@
                 for (var i = 0; i < this.arrayDetail.length; i++) {
                     if (this.arrayDetail[i].tax > 0) {
                         divisor = (this.arrayDetail[i].tax/100);
-                        
-                        result2 = result2 +((this.arrayDetail[i].price*this.arrayDetail[i].quantity)*divisor);
+
+                        result2 = result2 +((this.arrayDetailr[i].price*this.arrayDetail[i].quantity)*divisor);
                         this.taxp = this.arrayDetail[i].tax;
                     }
                 }
@@ -554,12 +553,12 @@
         },
         methods : {
             listPurchase (page,search,criterion){
-                
+
                 let me=this;
 
                 var url='purchase?page=' + page + '&search=' + search + '&criterion=' + criterion;
                 axios.get(url).then(function(response) {
-                    var response = response.data; 
+                    var response = response.data;
                      me.arrayPurchase = response.purchases.data;
                      me.pagination = response.pagination;
                 })
@@ -576,7 +575,7 @@
 
                 var url= 'purchase/getHeader?id='+id;
                 axios.get(url).then(function(response) {
-                    var response = response.data; 
+                    var response = response.data;
                     me.arrayPurchaseTemp = response.purchase;
                     me.purchase_id =id;
                     me.provider = me.arrayPurchaseTemp[0]['name'];
@@ -592,14 +591,14 @@
                 .catch(function (error) {
                     console.log(error);
                 });
-                
+
                 // obtener los datos de los detalles de la compra
 
                 var urld= 'purchase/getDetail?id='+id;
                 axios.get(urld).then(function(response) {
-                    var response = response.data; 
+                    var response = response.data;
                     me.arrayDetail = response.details;
-                    
+
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -646,14 +645,14 @@
 
             changePage(page, search, criterion){
                 let me = this;
-                // actualiza la pagina 
+                // actualiza la pagina
                 me.pagination.current_page = page;
                 // envia la peticion para visualizar la data de esa pagina
                 me.listPurchase(page, search, criterion);
             },
             changePageModal(page, search, criterion){
                 let me = this;
-                // actualiza la pagina 
+                // actualiza la pagina
                 me.pagination.current_page = page;
                 // envia la peticion para visualizar la data de esa pagina
                 me.listProduct(page, search, criterion);
@@ -695,7 +694,7 @@
                         me.product_id=0;
                         me.product="";
                         me.quantity=0;
-                        me.price=0; 
+                        me.price=0;
                         me.tax=0.0;
                     }
                 }
@@ -720,7 +719,7 @@
                         price: 1
                     });
                 }
-                
+
             },
             listProduct (page,searchP,criteryP){
                 let me=this;
@@ -740,10 +739,8 @@
                     return;
                 };
                 let me=this;
-                
+                me.dim=1;
                 axios.post('purchase/register', {
-
-                    
                     'provider_id':this.provider_id,
                     'user_id': this.user_id,
                     'product_id': this.product_id,
@@ -756,7 +753,7 @@
                     'exempt': this.exempt,
                     'total': this.total,
                     'data': this.arrayDetail
-                    
+
                 }).then(function(response) {
                     me.list=1;
                     me.listPurchase(1,'','voucher_num');
@@ -776,6 +773,7 @@
                     me.quantity=0;
                     me.price=0;
                     me.arrayDetail=[];
+                    me.dim=0;
 
                 })
                 .catch(function (error) {
@@ -786,17 +784,15 @@
                 this.errorSmsP=0;
                 this.errorSmsListP =[];
 
-                
-
                 if (!this.provider_id) this.errorSmsListP.push("Por favor Selecione un cliente");
 
-                if (this.voucher_num == 0) this.errorSmsListP.push("Ingrese un numero de Factura o nota de credito");
+                if (this.voucher_num == 0) this.errorSmsListP.push("Ingrese un Número de Factura o nota de crédito");
 
                 if (this.arrayDetail.length<=0) this.errorSmsListP.push("Por favor ingrese productos a la compra");
 
                 if (this.errorSmsListP.length) this.errorSmsP = 1;
                 /*console.log(this.errorSmsListP);*/
-                
+
                 if (this.errorSmsListP.length >= 1) {
                         Swal.fire({
                     confirmButtonText: 'Aceptar!',
@@ -809,7 +805,7 @@
                 return this.errorSmsP;
 
             },
-           
+
             showDetail(){
                 let me=this;
                 me.list=0;

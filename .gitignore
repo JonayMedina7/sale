@@ -4,6 +4,8 @@
 /storage/*.key
 /vendor
 .env
+saleadmin.zip
+salepb.zip
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml

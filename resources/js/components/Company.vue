@@ -1,178 +1,146 @@
-<template>
-	<main class="main">
-		            <!-- Breadcrumb -->
-		            <ol class="breadcrumb">
-		                <li class="breadcrumb-item"><a href="./dashboard">Escritorio</a></li>
-		            </ol>
-		            <div class="container-fluid">
-		                <!-- Ejemplo de tabla Listado -->
-		                <div class="card" v-for="det in arrayCompany" :key="det.id" v-if="arrayCompany.length">
-		                    <div class="card-header">
-		                        
-		                        <button type="button" class="btn btn-success" @click="openModal('company','update', det)">
-		                            <i class="icon-plus"></i>&nbsp;&nbsp;Editar Datos de la Empresa
-		                        </button>
-		                    </div>
-		                    <div class="card-body" >
-                                <div class="form-group row border">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="name">Nombre de La Empresa</label>
-                                            <h4 class="upper" v-text="det.name"></h4>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="rif">RIF.:</label>
-                                            <h4 class="upper" v-text="det.type + '-' + det.rif"></h4>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-10">
-                                        <div class="form-group">
-                                            <label for="address">Direcciòn</label>
-                                            <h4 class="upper" v-text="det.address"></h4>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="phone">Telefono:</label>
-                                            <h4 class="upper" v-text="det.phone"></h4>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="email">Correo Electronico.:</label>
-                                            <h4 class="upper" v-text="det.email"></h4>
-                                        </div>
-                                    </div>
-                                </div>
-		                    </div>
-		                </div>
-                        <div class="card " v-else>
-                            <div class="card-header">
-                                <button type="button" class="btn btn-success" @click="openModal('company','register')">
-                                    <i class="icon-plus"></i>&nbsp;&nbsp;Registrar la Empresa
-                                </button>
-                            </div>
-                            <div class="card-body">
-                                <h4>Por Favor Registre los Datos de la Empresa</h4>
+W<template>
+	<main class="main" :class="dim == 1 ? 'blur' : '' ">
+        <!-- Breadcrumb -->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">Inicio</li>
+            <li class="breadcrumb-item">
+                <a href="#">Dilia Software</a>
+            </li>
+            <li class="breadcrumb-item active"> Datos Empresa&nbsp;&nbsp;<i class="fa fa-file"></i></li>
+            <!-- Breadcrumb Menu-->
+            <li class="breadcrumb-menu d-md-down-none"></li>
+        </ol>
+        <div class="container-fluid">
+            <!-- Ejemplo de tabla Listado -->
+            <div class="card" v-for="det in arrayCompany" :key="det.id" v-if="arrayCompany.length">
+                <div class="card-header">
+
+                    <button type="button" class="btn btn-success" @click="openModal('company','update', det)">
+                        <i class="icon-plus"></i>&nbsp;&nbsp;Editar Datos de la Empresa
+                    </button>
+                </div>
+                <div class="card-body" >
+                    <div class="form-group row border">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="name">Nombre de La Empresa</label>
+                                <h4 class="upper" v-text="det.name"></h4>
                             </div>
                         </div>
-		                <!-- Fin ejemplo de tabla mostar -->
-		            </div>
-		            <!--Inicio del modal agregar/actualizar-->
-		            <div class="modal fade" tabindex="-1" :class="{'show' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
-		                <div class="modal-dialog modal-primary modal-lg" role="document">
-		                    <div class="modal-content">
-		                        <div class="modal-header">
-		                            <h4 class="modal-title" v-text="titleModal"></h4>
-		                            <button type="button" class="close" @click="closeModal()" aria-label="Close">
-		                              <span aria-hidden="true">×</span>
-		                            </button>
-		                        </div>
-		                        <div class="modal-body">
-		                            <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-                                        <div v-if="actionType==1">
-                                            <div class="col-6">
-                                                <label class=" form-control-label" for="name">Nombre de la Empresa</label>
-                                                <input type="text" v-model="name" class="form-control" placeholder="Nombre de la Empresa">
-                                            </div>
-                                            <div class=" col-12">
-                                                <label class=" form-control-label" for="rif">Rif.:</label>
-                                                <div class="form-group">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="rif">RIF.:</label>
+                                <h4 class="upper" v-text="det.type + '-' + det.rif"></h4>
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label for="address">Direcciòn</label>
+                                <h4 class="upper" v-text="det.address"></h4>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="phone">Telefono:</label>
+                                <h4 class="upper" v-text="det.phone"></h4>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email">Correo Electronico.:</label>
+                                <h4 class="upper" v-text="det.email"></h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card " v-else>
+                <div class="card-header">
+                    <button type="button" class="btn btn-success" @click="openModal('company','register')">
+                        <i class="icon-plus"></i>&nbsp;&nbsp;Registrar la Empresa
+                    </button>
+                </div>
+                <div class="card-body">
+                    <h4>Por Favor Registre los Datos de la Empresa</h4>
+                </div>
+            </div>
+            <!-- Fin ejemplo de tabla mostar -->
+        </div>
+        <!--Inicio del modal agregar/actualizar-->
+        <div class="modal fade" tabindex="-1" :class="{'show' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-primary modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" v-text="titleModal"></h4>
+                        <button type="button" class="close" @click="closeModal()" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                            <div v-if="actionType==1">
+                                <div class="col-6">
+                                    <label class=" form-control-label" for="name">Nombre de la Empresa</label>
+                                    <input type="text" v-model="name" class="form-control" placeholder="Nombre de la Empresa">
+                                </div>
+                                <div class=" col-12">
+                                    <label class=" form-control-label" for="rif">Rif.:</label>
+                                    <div class="form-group">
 
-                                                    <select name="type" v-model="type" class="form-group">
-                                                        <option value="j" selected>J</option>
-                                                        <option value="g">G</option>
-                                                        <option value="c">V</option>
-                                                        <option value="c">Cedula</option>
-                                                    </select>
-                                                    <input type="number" name="rif" class=" form-group" placeholder="Ingrese Rif." v-model="rif" maxlength="9" minlength="6">
-                                                </div>
-                                            </div>    
-                                        </div>
-		                                
-                                        <div  v-if="actionType==2">
-                                            <div class="col-6">
-                                                <label class=" form-control-label" for="name">Nombre de la Empresa</label>
-                                                <input type="text" readonly v-model="name" class="form-control" placeholder="Nombre de la Empresa">
-                                            </div>
-                                            <div class=" col-12">
-                                                <label class=" form-control-label" for="rif">Rif.:</label>
-                                                <div class="form-group">
+                                        <select name="type" v-model="type" class="form-group">
+                                            <option value="j" selected>J</option>
+                                            <option value="g">G</option>
+                                            <option value="c">V</option>
+                                            <option value="c">Cedula</option>
+                                        </select>
+                                        <input type="number" name="rif" class=" form-group" placeholder="Ingrese Rif." v-model="rif" maxlength="9" minlength="6">
+                                    </div>
+                                </div>
+                            </div>
 
-                                                    <span class="upper" v-text="type"></span>
-                                                    <input type="number" name="rif" class=" form-group" readonly v-model="rif">
-                                                </div>
-                                            </div>
-                                        </div>
-		                                <div class="col-md-12">
-		                                    <label class="form-control-label" for="address">Dirección</label>
-		                                    <input type="text" v-model="address" class="form-control" placeholder="Ingrese dirección de la empresa">
-		                                </div>
-                                        <div class="form-group col-md-6">
-                                            <label class=" form-control-label" for="email">Correo Electronico</label>
-                                            <input type="text" v-model="email" class="form-control" placeholder="Ingrese Email de la empresa">
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label class="form-control-label" for="phone">Telefono</label>
-                                            <input type="text" v-model="phone" class="form-control" placeholder="Ingrese Telefono de la empresa">
-                                        </div>
-		                            </form>
-		                        </div>
-		                        <div class="modal-footer">
-		                            <button type="button" class="btn btn-secondary" @click="closeModal()">Cerrar</button>
-		                            <button v-if="actionType==1" type="button" class="btn btn-primary" @click="registerCompany()">Guardar</button>
-		                            <button v-if="actionType==2" type="button" class="btn btn-primary" @click="updateCategory()">Actualizar</button>
-		                        </div>
-		                    </div>
-		                    <!-- /.modal-content -->
-		                </div>
-		                <!-- /.modal-dialog -->
-		            </div>
-		            <!--Fin del modal-->
-		            <!-- Inicio del modal Eliminar -->
-		            <div class="modal fade" tabindex="-1" :class="{'show' : modal1}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
-		                <div class="modal-dialog modal-danger" role="document">
-		                    <div v-if="condition" class="modal-content">
-		                        <div class="modal-header">
-		                            <h4 class="modal-title">Desactivar Categoria</h4>
-		                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		                              <span aria-hidden="true">×</span>
-		                            </button>
-		                        </div>
-		                        <div class="modal-body">
-		                            <p>Estas seguro de desactivar la Categoria?</p>
-		                        </div>
-		                        <div class="modal-footer">
-		                            <button type="button" class="btn btn-secondary" @click="closeModal()">Cancelar</button>
-		                            <button type="button" class="btn btn-danger" @click="desactiveCategory()">Desactivar</button>
-		                            
-		                        </div>
-		                    </div>
-		                    <div  class="modal-content">
-		                        <div class="modal-header">
-		                            <h4 class="modal-title">Activar</h4>
-		                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		                              <span aria-hidden="true">×</span>
-		                            </button>
-		                        </div>
-		                        <div class="modal-body">
-		                            <p>Pulse Activar para activar</p>
-		                        </div>
-		                        <div class="modal-footer">
-		                            <button type="button" class="btn btn-secondary" @click="closeModal()">Cancelar</button>
-		                            <button type="button" class="btn btn-success" @click="activeCategory()">Activar</button>
-		                        </div>
-		                    </div>
-		                    <!-- /.modal-content -->
-		                </div>
-		                <!-- /.modal-dialog -->
-		            </div>
-		            <!-- Fin del modal Eliminar -->
+                            <div  v-if="actionType==2">
+                                <div class="col-6">
+                                    <label class=" form-control-label" for="name">Nombre de la Empresa</label>
+                                    <input type="text" readonly v-model="name" class="form-control" placeholder="Nombre de la Empresa">
+                                </div>
+                                <div class=" col-12">
+                                    <label class=" form-control-label" for="rif">Rif.:</label>
+                                    <div class="form-group">
+
+                                        <span class="upper" v-text="type"></span>
+                                        <input type="number" name="rif" class=" form-group" readonly v-model="rif">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-control-label" for="address">Dirección</label>
+                                <input type="text" v-model="address" class="form-control" placeholder="Ingrese dirección de la empresa">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class=" form-control-label" for="email">Correo Electronico</label>
+                                <input type="text" v-model="email" class="form-control" placeholder="Ingrese Email de la empresa">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="form-control-label" for="phone">Telefono</label>
+                                <input type="text" v-model="phone" class="form-control" placeholder="Ingrese Telefono de la empresa">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @click="closeModal()">Cerrar</button>
+                        <button v-if="actionType==1" type="button" class="btn btn-primary" @click="registerCompany()">Guardar</button>
+                        <button v-if="actionType==2" type="button" class="btn btn-primary" @click="updateCategory()">Actualizar</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!--Fin del modal-->
+
 	</main>
 </template>
-	  		
+
 <script>
 	export default {
 		data (){
@@ -194,7 +162,8 @@
             errorCompanyList : [],
             offset : 3,
             criterion : 'name',
-            search : ''
+            search : '',
+            dim:0
 			}
 
 		},
@@ -210,7 +179,7 @@
 
 				var url='company';
                 axios.get(url).then(function(response) {
-                    var response = response.data; 
+                    var response = response.data;
 
                      me.arrayCompany = response.company;
                 })
@@ -223,7 +192,7 @@
             		return;
             	}
             	let me = this;
-
+                me.dim=1;
             	axios.post('company/register', {
             		'name': this.name,
                     'type': this.type,
@@ -235,6 +204,7 @@
             	}).then(function(response) {
                     me.closeModal();
                     me.listCompany();
+                    me.dim=0;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -245,7 +215,7 @@
             		return;
             	}
             	let me = this;
-
+                me.dim=1;
             	axios.put('company/update', {
             		'id':this.id,
             		'name': this.name,
@@ -258,6 +228,7 @@
             	}).then(function(response) {
                     me.closeModal();
                     me.listCompany();
+                    me.dim=0;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -283,31 +254,6 @@
                     });
                 };
                 return this.errorCompany;
-            },
-            desactiveCategory(){
-                let me = this;
-
-                axios.put('company/desactive', {
-                    'id': this.id,
-                }).then(function (response) {
-                    me.closeModal();
-                    me.listCompany();
-                })
-                .catch(function (error) {
-                   console.log(error); 
-                });
-            },
-            activeCategory(){
-                let me = this;
-
-                axios.put('company/active', {
-                    'id': this.id,
-                }).then(function (response) {
-                    me.closeModal();
-                    me.listCompany();
-                }).catch(function (error) {
-                    console.log(error); 
-                });
             },
             closeModal(){
             	this.modal=0;
@@ -373,7 +319,7 @@
                         }
                     }
                 }
-                
+
             }
 		},
 		mounted(){

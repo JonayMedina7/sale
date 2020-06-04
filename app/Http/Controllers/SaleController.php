@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Mike42\Escpos\Printer;
+use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use Mike42\Escpos\PrintConnectors\FilePrintConnector;
+use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 
 class SaleController extends Controller
 {
@@ -183,6 +187,23 @@ class SaleController extends Controller
         return $pdf;
     }
 
+    public function print(Request $request)
+    {
+        // $connector = new FilePrintConnector("php://stdout");
+        $connector = new FilePrintConnector("COM5");
+            $printer = new Printer($connector);
+            $printer->initialize();
+        try {
+
+            $printer->text("hello world!\n");
+            $printer->cut();
+            $printer->close();
+
+        } catch(Exception $e) {
+            echo "No se puede imprimir en la impresora: " . $e -> getMessage() . "\n";
+        }
+
+    }
 
     /**
      * Store a newly created resource in storage.

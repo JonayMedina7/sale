@@ -15,7 +15,7 @@ class CreateRetentionsTable extends Migration
     {
         Schema::create('retentions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('provider_id');
+            $table->unsignedBigInteger('provider_id')->nullable();
             $table->string('voucher_num', 20);
             $table->date('date');
             $table->string('year', 7);
@@ -23,6 +23,7 @@ class CreateRetentionsTable extends Migration
             $table->decimal('total', 15, 2);
             $table->string('status', 20);
             $table->timestamps();
+            $table->foreign('provider_id')->references('id')->on('providers')->onDelete('set null');
         });
     }
 

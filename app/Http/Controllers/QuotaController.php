@@ -12,7 +12,7 @@ class quotaController extends Controller
 {
      public function index(Request $request)
     {
-        /*if (!$request->ajax()) return redirect('/');*/
+        if (!$request->ajax()) return redirect('/');
         $search = $request->search;
         $criterion = $request->criterion;
 
@@ -24,7 +24,7 @@ class quotaController extends Controller
         } else {
             $quotas = Quota::join('clients', 'quotas.client_id', '=', 'clients.id')
             ->join('users', 'quotas.user_id', '=', 'users.id')
-            ->select('quotas.id', 'quotas.voucher_serial', 'quotas.voucher_num', 'quotas.date', 'quotas.tax', 'quotas.tax_mount', 'quotas.total', 'quotas.status', 'clients.name as client_name', 'clients.type', 'clients.rif', 'users.user')
+            ->select('quotas.id', 'quotas.voucher_num', 'quotas.date', 'quotas.tax', 'quotas.tax_mount', 'quotas.total', 'quotas.status', 'clients.name as client_name', 'clients.type', 'clients.rif', 'users.user')
             ->where('quotas.'.$criterion, 'like', '%'. $search . '%')->orderBy('quotas.id', 'desc')->paginate(10);
         }
 
@@ -54,7 +54,7 @@ class quotaController extends Controller
 
     public function quotaSearchRet(Request $request)
     {
-        // if (!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) return redirect('/');
 
         $filter = $request->filter;
         $id = $request->id;
@@ -72,7 +72,7 @@ class quotaController extends Controller
 
         $quota = Quota::join('clients', 'quotas.client_id', '=', 'clients.id')
         ->join('users', 'quotas.user_id', '=', 'users.id')
-        ->select('quotas.id', 'quotas.voucher_num', 'quotas.date', 'quotas.tax', 'quotas.tax_mount', 'quotas.exempt', 'quotas.total', 'quotas.status', 'quotas.client_id', 'clients.name as client_name', 'clients.type', 'clients.rif', 'users.user')
+        ->select('quotas.id', 'quotas.voucher_num', 'quotas.date', 'quotas.tax', 'quotas.tax_mount', 'quotas.exempt', 'quotas.total', 'quotas.status', 'quotas.client_id', 'clients.name as client_name', 'clients.type', 'clients.rif', 'clients.address', 'users.user')
         ->where('quotas.id','=',$id)
         ->orderBy('quotas.id', 'desc')->take(1)->get();
 
@@ -135,8 +135,6 @@ class quotaController extends Controller
 
         return view('welcome', compact('quota', 'details', 'numquota'));
     }
-
-
     /**
      * Store a newly created resource in storage.
      *
@@ -145,46 +143,43 @@ class quotaController extends Controller
      */
     public function store(Request $request)
     {
-
         if (!$request->ajax()) return redirect('/');
-
         try {
-
             $mytime = Carbon::now('America/Caracas');
 
-        DB::beginTransaction();
-        $quota = new Quota();
-        $quota->client_id = $request->client_id;
-        $quota->user_id = \Auth::user()->id;
-        $quota->voucher = $request->voucher;
-        $quota->voucher_num = $request->voucher_num;
-        $quota->date = $mytime->toDateString();
-        $quota->tax = $request->tax;
-        $quota->tax_mount = $request->tax_mount;
-        $quota->exempt = $request->exempt;
-        $quota->ret_num = 0;
-        $quota->total = $request->total;
-        $quota->status = 'Registrado';
-        $quota->save();
+            DB::beginTransaction();
+            $quota = new Quota();
+            $quota->client_id = $request->client_id;
+            $quota->user_id = \Auth::user()->id;
+            $quota->voucher = $request->voucher;
+            $quota->voucher_num = $request->voucher_num;
+            $quota->date = $mytime->toDateString();
+            $quota->tax = $request->tax;
+            $quota->tax_mount = $request->tax_mount;
+            $quota->exempt = $request->exempt;
+            $quota->ret_num = 0;
+            $quota->total = $request->total;
+            $quota->status = 'Registrado';
+            $quota->save();
 
-        $details = $request->data; // Array de detalles de venta
-        // recorrido del array
-        foreach ($details as $quotas => $det) {
-            $detailquota = new DetailQuota();
-            $detailquota->quota_id = $request->id;
-            $detailquota->product_id = $det['product_id'];
-            $detailquota->description = $det['description'];
-            $detailquota->quantity = $det['quantity'];
-            $detailquota->tax = $det['tax'];
-            $detailquota->price = $det['price'];
-            $detailquota->save();
-        }
+            $details = $request->data; // Array de detalles de venta
+            // recorrido del array
+            foreach ($details as $quotas => $det) {
+                $detailquota = new DetailQuota();
+                $detailquota->quota_id = $quota->id;
+                $detailquota->product_id = $det['product_id'];
+                $detailquota->description = $det['description'];
+                $detailquota->quantity = $det['quantity'];
+                $detailquota->tax = $det['tax'];
+                $detailquota->price = $det['price'];
+                $detailquota->save();
+            }
 
-        DB::commit();
-        return ['id'=>$quota->id];
-        } catch (Exception $e) {
-            DB::rollBack();
-        }
+            DB::commit();
+            return ['id'=>$quota->id];
+            } catch (Exception $e) {
+                DB::rollBack();
+            }
     }
 
      public function update(Request $request)
@@ -193,47 +188,43 @@ class quotaController extends Controller
         // dd($request);
         try {
              $mytime = Carbon::now('America/Caracas');
-        DB::beginTransaction();
-        $quota = Quota::findOrFail($request->id);
-        $quota->client_id = $request->client_id;
-        $quota->user_id = \Auth::user()->id;
-        $quota->voucher = $request->voucher;
-        $quota->voucher_num = $request->voucher_num;
-        $quota->date = $mytime->toDateString();
-        $quota->tax = $request->tax;
-        $quota->tax_mount = $request->tax_mount;
-        $quota->exempt = $request->exempt;
-        $quota->ret_num = 0;
-        $quota->total = $request->total;
-        $quota->status = 'Registrado';
-        $quota->save();
+            DB::beginTransaction();
+            $quota = Quota::findOrFail($request->id);
+            $quota->client_id = $request->client_id;
+            $quota->user_id = \Auth::user()->id;
+            $quota->voucher = $request->voucher;
+            $quota->voucher_num = $request->voucher_num;
+            $quota->date = $mytime->toDateString();
+            $quota->tax = $request->tax;
+            $quota->tax_mount = $request->tax_mount;
+            $quota->exempt = $request->exempt;
+            $quota->ret_num = 0;
+            $quota->total = $request->total;
+            $quota->status = 'Registrado';
+            $quota->save();
 
-        DB::table('detail_quotas')->where('quota_id', $request->id)->delete();
-        $details = $request->data; // Array de detalles de venta
-        // recorrido del array
-        foreach ($details as $quota => $det) {
-            $detailquota = new detailQuota();
-            $detailquota->quota_id = $request->id;
-            $detailquota->product_id = $det['product_id'];
-            $detailquota->description = $det['description'];
-            $detailquota->quantity = $det['quantity'];
-            $detailquota->tax = $det['tax'];
-            $detailquota->price = $det['price'];
-            $detailquota->save();
-        }
+            DB::table('detail_quotas')->where('quota_id', $request->id)->delete();
+            $details = $request->data; // Array de detalles de venta
+            // recorrido del array
+            foreach ($details as $quota => $det) {
+                $detailquota = new detailQuota();
+                $detailquota->quota_id = $request->id;
+                $detailquota->product_id = $det['product_id'];
+                $detailquota->description = $det['description'];
+                $detailquota->quantity = $det['quantity'];
+                $detailquota->tax = $det['tax'];
+                $detailquota->price = $det['price'];
+                $detailquota->save();
+            }
 
-        DB::commit();
-        return ['id'=>$request->id];
-        } catch (Exception $e) {
-            DB::rollBack();
-
-        }
-
+            DB::commit();
+            return ['id'=>$request->id];
+            } catch (Exception $e) {
+                DB::rollBack();
+            }
     }
-
     /**
      * Update the specified resource in storage.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\quota  $quota
      * @return \Illuminate\Http\Response

@@ -1,5 +1,5 @@
  <template>
-        <main class="main">
+        <main class="main" :class="dim == 1 ? 'blur' : '' ">
             <ol class="breadcrumb">
               <li class="breadcrumb-item">Inicio</li>
               <li class="breadcrumb-item">
@@ -27,7 +27,7 @@
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <select class="form-control col-md-3" v-model="criterion">
-                                          <option value="voucher_num">Numero de comprobante</option>
+                                          <option value="voucher_num">Número de comprobante</option>
                                         </select>
                                         <input type="text" v-model="search" @keyup.enter="listBuy(1,search,criterion)" class="form-control" placeholder="Factura a Buscar">
                                         <button type="submit" @click="listBuy(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
@@ -63,7 +63,7 @@
 
                                             <td v-if="buy.voucher=='bill'">Factura</td>
                                             <td v-else-if="buy.voucher=='note'">Vale</td>
-                                            <td v-else-if="buy.voucher=='credit'">Nota de Credito</td>
+                                            <td v-else-if="buy.voucher=='credit'">Nota de crédito</td>
 
                                             <td v-text="buy.voucher_num"></td>
                                             <td v-text="buy.date"></td>
@@ -133,7 +133,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Numero Comprobante(*)</label>
+                                        <label>Número Comprobante(*)</label>
                                         <input type="text" class="form-control" v-model="voucher_num" placeholder="000x" name="">
                                     </div>
                                 </div>
@@ -221,7 +221,7 @@
                                         <label><h6>Tipo comprobante</h6></label>
                                        <h3> <p v-if="voucher=='bill'">Factura</p>
                                         <p v-else-if="voucher=='note'">Vale</p>
-                                        <p v-else-if="voucher=='credit'">Nota de credito</p></h3>
+                                        <p v-else-if="voucher=='credit'">Nota de crédito</p></h3>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -232,7 +232,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label><h6>Numero Comprobante</h6></label>
+                                        <label><h6>Número Comprobante</h6></label>
                                         <h3><p v-text="voucher_num"></p></h3>
                                     </div>
                                 </div>
@@ -359,7 +359,8 @@
                 criterion : 'voucher_num',
                 search : '',
                 criteryP: 'name',
-                searchP: ''
+                searchP: '',
+                dim:0
             }
         },
         components: {
@@ -485,10 +486,8 @@
                     return;
                 };
                 let me=this;
-
+                me.dim=1;
                 axios.post('buy/register', {
-
-
                     'provider_id':this.provider_id,
                     'date': this.date,
                     'voucher': this.voucher,
@@ -514,7 +513,7 @@
                     me.total=0.0;
                     me.exempt = 0.0;
                     me.price=0;
-
+                    me.dim=0;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -526,7 +525,7 @@
 
                 if (!this.provider_id) this.errorSmsListP.push("Por favor Selecione un cliente");
 
-                if (this.voucher_num == 0) this.errorSmsListP.push("Ingrese un numero de Factura o nota de credito");
+                if (this.voucher_num == 0) this.errorSmsListP.push("Ingrese un Número de Factura o nota de crédito");
                 if (this.tax == 0 && this.exempt == 0) this.errorSmsListP.push("Por favor ingrese detalles para calcular factura");
                 if (this.total==0) this.errorSmsListP.push("Ingrese Montos de Factura");
 

@@ -5,9 +5,9 @@
                         <a class="nav-link " href="#"><i class="icon-home"></i> Inicio</a>
                     </li>
                     <li class="nav-title">
-                       
+
                     </li>
-                   
+
                     <li class="nav-item nav-dropdown">
                         <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-line-chart"></i> Ventas</a>
                         <ul class="nav-dropdown-items">
@@ -26,7 +26,7 @@
                         <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-cart-plus"></i> Compras</a>
                         <ul class="nav-dropdown-items">
                             <li @click="menu=3" class="nav-item">
-                                <a class="nav-link" href="i#"><i class="fa fa-folder-open"></i> Ingresos</a>
+                                <a class="nav-link" href="#"><i class="fa fa-folder-open"></i> Ingresos</a>
                             </li>
                             <li @click="menu=4" class="nav-item">
                                 <a class="nav-link" href="#"><i class="fa fa-address-book-o"></i> Proveedores</a>
@@ -47,7 +47,7 @@
                             </li>
                         </ul>
                     </li>
-                    
+
                      <li class="nav-item nav-dropdown">
                         <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-user-circle"></i> Acceso</a>
                         <ul class="nav-dropdown-items">
@@ -70,8 +70,8 @@
                             </li>
                         </ul>
                     </li>
-                        
-                  
+
+
                     <li @click="menu=12" class="nav-item">
                         <a class="nav-link" href="#"><i class="fa fa-support"></i> Ayuda <span class="badge badge-danger">PDF</span></a>
                     </li>
@@ -89,8 +89,8 @@
                         <a class="nav-link" href="#"><i class="icon-info"></i> Gastos</a>
                     </li>
 
-                    
-                   
+
+
                 </ul>
             </nav>
             <button class="sidebar-minimizer brand-minimizer" type="button"></button>

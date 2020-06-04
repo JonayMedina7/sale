@@ -8,14 +8,14 @@
           <li class="breadcrumb-item active"> Cuentas por Pagar&nbsp;&nbsp;<i class="icon-chart"></i></li>
           <!-- Breadcrumb Menu-->
           <li class="breadcrumb-menu d-md-down-none">
-            
+
           </li>
         </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        
+
                     </div>
                     <!-- litado registros -->
                     <template v-if="list==1">
@@ -24,11 +24,11 @@
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <select class="form-control col-md-3" v-model="criterion">
-                                          <option value="voucher">Tipo de Comprobante</option>
-                                          <option value="voucher_num">Numero de comprobante</option>
+                                          <option value="voucher_num">Número de comprobante</option>
                                           <option value="date">Fecha-hora</option>
                                         </select>
-                                        <input type="text" v-model="search" @keyup.enter="listPurchase(1,search,criterion)" class="form-control" placeholder="Texto a Buscar">
+                                        <input v-if="criterion == 'voucher_num'" type="text" v-model="search" @keyup.enter="listPurchase(1,search,criterion)" class="form-control" placeholder="Buscar">
+                                        <input v-if="criterion == 'date'" type="date" v-model="search" @keyup.enter="listPurchase(1,search,criterion)" class="form-control" placeholder="Buscar">
                                         <button type="submit" @click="listPurchase(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                     </div>
                                 </div>
@@ -54,7 +54,7 @@
                                                 <button type="button" class="btn btn-success btn-sm" @click="showPurchase(purchase.id)">
                                                   Detalles
                                                 </button>
-                                                
+
                                             </td>
                                             <td v-text="purchase.user"></td>
                                             <td v-text="purchase.name"></td>
@@ -63,9 +63,9 @@
                                             <td v-text="purchase.date"></td>
                                             <td v-text="purchase.total"></td>
                                             <td v-text="purchase.tax"></td>
-                                            <td v-text="purchase.status"></td>                                     
+                                            <td v-text="purchase.status"></td>
                                         </tr>
-                                        
+
                                     </tbody>
                                 </table>
                             </div>
@@ -78,7 +78,7 @@
                                     <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActive ? 'active' : '']">
                                         <a class="page-link" href="#" @click.prevent="changePage(page, search, criterion)" v-text="page"></a>
                                     </li>
-                                    
+
                                     <li class="page-item" v-if="pagination.current_page < pagination.last_page">
                                         <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page +1, search, criterion)">Sig</a>
                                     </li>
@@ -87,7 +87,6 @@
                         </div>
                     </template>
                     <!-- Fin Listado -->
-
 
                     <!-- Panel de vista de compras -->
                     <template v-else-if="list==2">
@@ -117,13 +116,13 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Numero Comprobante</label>
+                                        <label>Número Comprobante</label>
                                         <p v-text="voucher_num"></p>
                                     </div>
                                 </div>
-                                
+
                             </div>
-                            
+
                             <div class="form-group row border">
                                 <div class="table-responsive col-md-12">
                                     <table class="table table-bordered table-striped table-sm">
@@ -132,12 +131,12 @@
                                                 <th>Artículo</th>
                                                 <th>Precio</th>
                                                 <th>Cantidad</th>
-                                                <th>subTotal</th> 
+                                                <th>subTotal</th>
                                             </tr>
                                         </thead>
                                         <tbody v-if="arrayDetail.length">
                                             <tr v-for="detail in arrayDetail" :key="detail.id">
-                                                
+
                                                 <td v-text="detail.product" ></td>
                                                 <td v-text="detail.price" ></td>
                                                 <td v-text="detail.quantity" ></td>
@@ -180,7 +179,7 @@
                 </div>
                 <!-- Fin ejemplo de tabla Listado -->
             </div>
-            
+
         </main>
 </template>
 
@@ -215,8 +214,6 @@
                 total: 0.0,
                 totalTax: 0.0,
                 totalPartial: 0.0,
-
-
                 modal1 : 0,
                 modal : 0,
                 titleModal : '',
@@ -255,7 +252,6 @@
                     from = 1;
                 }
 
-
                 var to = from + (this.offset * 2);
                 if (to >= this.pagination.last_page){
                     to = this.pagination.last_page;
@@ -279,12 +275,12 @@
         },
         methods : {
             listPurchase (page,search,criterion){
-                
+
                 let me=this;
 
                 var url='purchase?page=' + page + '&search=' + search + '&criterion=' + criterion;
                 axios.get(url).then(function(response) {
-                    var response = response.data; 
+                    var response = response.data;
                      me.arrayPurchase = response.purchases.data;
                      me.pagination = response.pagination;
                 })
@@ -301,7 +297,7 @@
 
                 var url= 'purchase/getHeader?id='+id;
                 axios.get(url).then(function(response) {
-                    var response = response.data; 
+                    var response = response.data;
                     me.arrayPurchaseTemp = response.purchase;
                     console.log(me.arrayPurchaseTemp);
                     me.provider = me.arrayPurchaseTemp[0]['name'];
@@ -315,14 +311,14 @@
                 .catch(function (error) {
                     console.log(error);
                 });
-                
+
                 // obtener los datos de los detalles de la compra
 
                 var urld= 'purchase/getDetail?id='+id;
                 axios.get(urld).then(function(response) {
-                    var response = response.data; 
+                    var response = response.data;
                     me.arrayDetail = response.details;
-                    
+
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -330,7 +326,7 @@
             },
             changePage(page, search, criterion){
                 let me = this;
-                // actualiza la pagina 
+                // actualiza la pagina
                 me.pagination.current_page = page;
                 // envia la peticion para visualizar la data de esa pagina
                 me.listPurchase(page, search, criterion);

@@ -1,5 +1,5 @@
  <template>
-        <main class="main">
+        <main class="main" :class="dim == 1 ? 'blur' : '' ">
             <!-- Breadcrumb -->
             <ol class="breadcrumb">
           <li class="breadcrumb-item">Inicio</li>
@@ -9,14 +9,14 @@
           <li class="breadcrumb-item active"> Usuarios&nbsp;&nbsp;<i class="fa fa-users"></i></li>
           <!-- Breadcrumb Menu-->
           <li class="breadcrumb-menu d-md-down-none">
-            
+
           </li>
         </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        
+
                         <button type="button" class="btn btn-success" @click="openModal('client','register')">
                             <i class="fa fa-user"></i>&nbsp;Nuevo Usuario
                         </button>
@@ -38,11 +38,11 @@
                             <thead>
                                 <tr>
                                     <th>Opciones</th>
-                                    
+
                                     <th>Nombre y Apellido</th>
-                                    
+
                                     <th>Corre o Electrónico</th>
-                                   
+
                                     <th>Usuario</th>
                                     <th>Role</th>
                                     <th>Estado</th>
@@ -60,13 +60,13 @@
                                         <button v-else type="button" @click="openModal('client','active',client)" class="btn btn-success btn-sm" >
                                           <i class="icon-check"></i>
                                         </button>
-                                        
+
                                     </td>
-                                    
+
                                     <td v-text="client.name"></td>
-                                    
+
                                     <td v-text="client.email"></td>
-                                    
+
                                     <td v-text="client.user"></td>
                                     <td v-text="client.role_name"></td>
                                     <td>
@@ -78,9 +78,9 @@
                                             <span class="badge badge-secondary">Inactivo</span>
                                         </div>
                                     </td>
-                                    
+
                                 </tr>
-                                
+
                             </tbody>
                         </table>
                         <nav>
@@ -91,7 +91,7 @@
                                 <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActive ? 'active' : '']">
                                     <a class="page-link" href="#" @click.prevent="changePage(page, search, criterion)" v-text="page"></a>
                                 </li>
-                                
+
                                 <li class="page-item" v-if="pagination.current_page < pagination.last_page">
                                     <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page +1, search, criterion)">Sig</a>
                                 </li>
@@ -124,22 +124,22 @@
 											<option value="c" >Cedula</option>
 
                                         </select>
-								
+
                                     </div>
 									<div class="col-md-5">
                                         <input type="number" v-model="rif" class="form-control" >
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Nombre y apellido</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="name" class="form-control" placeholder="Razon Social">
-                                        
+
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="phone">Numero teléfonico</label>
+                                    <label class="col-md-3 form-control-label" for="phone">Número teléfonico</label>
                                     <div class="col-md-9">
                                         <input type="number" v-model="phone" class="form-control" placeholder="">
                                     </div>
@@ -150,7 +150,7 @@
                                         <input type="email" v-model="email" class="form-control" placeholder="">
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="description">Dirección</label>
                                     <div class="col-md-9">
@@ -158,7 +158,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="user">nombre de usuario</label>
+                                    <label class="col-md-3 form-control-label" for="user">Nombre de usuario</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="user" class="form-control" placeholder="Ingrese nombre de usuario">
                                     </div>
@@ -169,20 +169,20 @@
                                         <input type="text" v-model="password" class="form-control" placeholder="Ingrese password">
                                     </div>
                                 </div>
-		
+
 								<div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="role_id">Selectione el Role del usuario</label>
+                                    <label class="col-md-3 form-control-label" for="role_id">Selectione el Rol del usuario</label>
                                     <div class="col-md-2">
                                         <select class="form-control" v-model="role_id">
 
-											<option value="0" default>Seleccione un Role</option>
+											<option value="0" default>Seleccione un Rol</option>
 											<option v-for="role in arrayRole" :key="role.id" :value="role.id" v-text="role.name" ></option>
-											
+
                                         </select>
-								
+
                                     </div>
                                 </div>
-                                
+
                             </form>
                         </div>
                         <div class="modal-footer">
@@ -211,7 +211,7 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="closeModal()">Cancelar</button>
                             <button type="button" class="btn btn-danger" @click="desactiveClient()">Desactivar</button>
-                            
+
                         </div>
                     </div>
                     <div v-else class="modal-content">
@@ -222,7 +222,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p>Pulse Activar para activar al Cliente</p>
+                            <p>Pulse Activar para Habilitar al Cliente</p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="closeModal()">Cancelar</button>
@@ -234,7 +234,7 @@
                 <!-- /.modal-dialog -->
             </div>
             <!-- Fin del modal Eliminar -->
-            
+
         </main>
 </template>
 
@@ -274,7 +274,8 @@
                 },
                 offset : 3,
                 criterion : 'name',
-                search : ''
+                search : '',
+                dim:0
             }
         },
         computed: {
@@ -308,12 +309,12 @@
         },
         methods : {
             listClient (page,search,criterion){
-                 
+
                 let me=this;
 
                 var url='user?page=' + page + '&search=' + search + '&criterion=' + criterion;
                 axios.get(url).then(function(response) {
-                    var response = response.data; 
+                    var response = response.data;
                      me.arrayClient = response.clients.data;
                      me.pagination = response.pagination;
                 })
@@ -323,7 +324,7 @@
             },
             changePage(page, search, criterion){
                 let me = this;
-                // actualiza la pagina 
+                // actualiza la pagina
                 me.pagination.current_page = page;
                 // envia la peticion para visualizar la data de esa pagina
                 me.listClient(page, search, criterion);
@@ -334,21 +335,21 @@
 
                 var url='role/selectRole';
                 axios.get(url).then(function(response) {
-                    var response = response.data; 
+                    var response = response.data;
                      me.arrayRole = response.roles;
-                     
+
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
             },
             registerClient (){
-            	
+
                 if (this.validateClient()) {
                     return;
                 };
                 let me=this;
-                console.log(this.name);
+                me.dim = 1;
                 axios.post('user/register', {
                     'type':this.type,
                     'rif':this.rif,
@@ -360,10 +361,11 @@
                     'user': this.user,
                     'password': this.password,
                     'role_id': this.role_id
-                    
+
                 }).then(function(response) {
                     me.closeModal();
                     me.listClient(1,'','name');
+                    me.dim=0;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -373,9 +375,8 @@
                 if (this.validateClient()) {
                     return;
                 };
-
                 let me = this;
-
+                me.dim=1;
                 axios.put('user/update', {
                     'id' : this.client_id,
                     'type':this.type,
@@ -391,6 +392,7 @@
                 }).then(function (response){
                     me.closeModal();
                     me.listClient(1,'', 'name');
+                    me.dim=0;
                 }).catch(function (error){
                     console.log(error);
                 });
@@ -399,7 +401,7 @@
                 this.errorSms=0;
                 this.errorSmsListU =[];
 
-                
+
 
                 if (!this.name) this.errorSmsListU.push("Por favor insertar Nombre y Apellido");
 
@@ -435,7 +437,7 @@
                             me.listClient(1,'', 'name');
                         })
                         .catch(function (error) {
-                           console.log(error); 
+                           console.log(error);
                         });
             },
             activeClient(){
@@ -447,7 +449,7 @@
                     me.closeModal();
                     me.listClient(1,'', 'name');
                 }).catch(function (error) {
-                    console.log(error); 
+                    console.log(error);
                 });
             },
 
@@ -527,7 +529,7 @@
                         }
                     }
                 }
-                
+
             }
         },
         mounted() {

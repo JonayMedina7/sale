@@ -18,14 +18,14 @@ class CategoryController extends Controller
 
         $search = $request->search;
         $criterion = $request->criterion;
-        
+
         if ($search=='') {
-            $categories = Category::orderBy('id', 'desc')->paginate(4);
+            $categories = Category::orderBy('id', 'desc')->paginate(7);
         } else {
-            $categories = Category::where($criterion, 'like', '%'. $search . '%')->orderBy('id', 'desc')->paginate(4);
+            $categories = Category::where($criterion, 'like', '%'. $search . '%')->orderBy('id', 'desc')->paginate(7);
         }
 
-        
+
         return [
             'pagination' => [
                 'total'         => $categories->total(),
@@ -65,8 +65,8 @@ class CategoryController extends Controller
 
     }
 
-  
-    
+
+
     /**
      * Update the specified resource in storage.
      *
@@ -88,7 +88,7 @@ class CategoryController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $category = Category::findOrFail($request->id);
-        
+
         $category->condition = '0';
         $category->save();
     }
@@ -97,7 +97,7 @@ class CategoryController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $category = Category::findOrFail($request->id);
-        
+
         $category->condition = '1';
         $category->save();
     }

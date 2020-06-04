@@ -1,16 +1,14 @@
  <template>
         <main class="main" :class="dim == 1 ? 'blur' : '' ">
            <ol class="breadcrumb">
-          <li class="breadcrumb-item">Inicio</li>
-          <li class="breadcrumb-item">
-            <a href="#">Dilia Software</a>
-          </li>
-          <li class="breadcrumb-item active"> Ventas&nbsp;&nbsp;<i class="fa fa-file"></i></li>
-          <!-- Breadcrumb Menu-->
-          <li class="breadcrumb-menu d-md-down-none">
-
-          </li>
-        </ol>
+              <li class="breadcrumb-item">Inicio</li>
+              <li class="breadcrumb-item">
+                <a href="#">Dilia Software</a>
+              </li>
+              <li class="breadcrumb-item active"> Cotizaciones&nbsp;&nbsp;<i class="fa fa-file"></i></li>
+              <!-- Breadcrumb Menu-->
+              <li class="breadcrumb-menu d-md-down-none"></li>
+            </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
@@ -27,10 +25,11 @@
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <select class="form-control col-md-6" v-model="criterion">
-                                          <option value="voucher_num">Numero de Cotizacón</option>
+                                          <option value="voucher_num">Número de Cotizacón</option>
                                           <option value="date">Fecha</option>
                                         </select>
-                                        <input type="text" v-model="search" @keyup.enter="listQuota(1,search,criterion)" class="form-control" placeholder="Buscar">
+                                        <input v-if="criterion == 'voucher_num'" type="text" v-model="search" @keyup.enter="listQuota(1,search,criterion)" class="form-control" placeholder="Buscar">
+                                        <input v-if="criterion == 'date'" type="date" v-model="search" @keyup.enter="listQuota(1,search,criterion)" class="form-control" placeholder="Buscar">
                                         <button type="submit" @click="listQuota(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                     </div>
                                 </div>
@@ -88,22 +87,26 @@
                     <!-- Panel de creacion de cotizacion -->
                     <template v-else-if="list==0">
                         <div class="card-body">
+                            <div class="modal-header">
+                                <button type="button" class="close" @click="hideDetail()" aria-label="Close">
+                                  <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
                             <div class="form-group row border">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Cliente(*)</label>
-                                        <v-select  @search="clientSelect" label="client" :options="arrayClient"
-                                        placeholder="Buscar Cliente"
-                                        @input="getClientInfo"
-                                        ></v-select>
+                                        <v-select @search="clientSelect" label="name" :options="arrayClient"placeholder="Buscar Cliente" @input="getClientInfo">
+                                        <button slot="no-options" type="submit" @click="openModalClient()" class="btn btn-primary"><i class="fa fa-search"></i>Cliente no registrado. Crear??</button>
+                                        </v-select>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                    <label >Razon Social(*):</label>
-                                    <h4><span v-text="client" style="text-transform: uppercase;"> </span></h4>
+                                        <label >Razon Social(*):</label>
+                                        <h4><span v-text="name" style="text-transform: uppercase;"> </span></h4>
+                                    </div>
                                 </div>
-                            </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Rif o C.I(*)</label>
@@ -223,7 +226,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="client"><h6>Cliente</h6></label>
-                                        <h3><p v-text="client"></p></h3>
+                                        <h3><p v-text="name"></p></h3>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -322,7 +325,7 @@
                     <template v-else-if="list==3">
                         <div class="card-body">
                             <div class="modal-header">
-                                <h4 class="modal-title" >Actualizar Cotización</h4>
+                                <h4 class="modal-title">Actualizar Cotización</h4>
                                 <button type="button" class="close" @click="hideDetail()" aria-label="Close">
                                   <span aria-hidden="true">×</span>
                                 </button>
@@ -331,14 +334,15 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Cliente(*)</label>
-                                        <v-select  @search="clientSelect" label="client" :options="arrayClient" placeholder="Buscar Cliente" @input="getClientInfo">
+                                        <v-select  @search="clientSelect" label="name" :options="arrayClient" placeholder="Buscar Cliente" @input="getClientInfo">
+                                        <button slot="no-options" type="submit" @click="openModalClient()" class="btn btn-primary"><i class="fa fa-search"></i>Cliente no registrado. Crear??</button>
                                         </v-select>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label >Razon Social(*):</label>
-                                        <h4><span v-text="client" class="upper"> </span></h4>
+                                        <h4><span v-text="name" class="upper"> </span></h4>
                                     </div>
                                 </div>
                                 <div  class="col-md-3">
@@ -539,7 +543,75 @@
                 </div>
                 <!-- /.modal-dialog -->
             </div>
-            <!--Fin del modal-->
+            <!--Fin del modal agragar productos-->
+
+            <!--Inicio del modal agregar clientes-->
+            <div class="modal fade" tabindex="-1" :class="{'show' : modal1}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-primary modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Registrar Cliente</h4>
+                            <button type="button" class="close" @click="closeModal()" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="rif">Rif o C.I.</label>
+                                    <div class="col-md-2">
+
+                                        <select class="form-control" v-model="type">
+                                            <option selected="selected" value="j">J</option>
+                                            <option value="g" >G</option>
+                                            <option value="v" >V</option>
+                                            <option value="c" >Cedula</option>
+                                        </select>
+
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="number" v-model="rif" class="form-control" maxlength="9" minlength="6">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Razon Social</label>
+                                    <div class="col-md-9">
+                                        <input type="text" v-model="name" class="form-control" placeholder="Razon Social">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="phone">Número teléfonico</label>
+                                    <div class="col-md-9">
+                                        <input type="number" v-model="phone" class="form-control" placeholder="Ingrese Número Teléfonico">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="stock">Correo electronico</label>
+                                    <div class="col-md-9">
+                                        <input type="email" v-model="email" class="form-control" placeholder="Ingrese Correo">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="description">Dirección</label>
+                                    <div class="col-md-9">
+                                        <input type="text" v-model="address" class="form-control" placeholder="Ingrese dirección">
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @click="closeModal()">Cerrar</button>
+                            <button type="button" class="btn btn-primary" @click="registerClient()">Guardar</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!--Fin del modal agragar clientes-->            
 
         </main>
 </template>
@@ -551,14 +623,17 @@
     export default {
         data (){
             return {
+                appUrl: process.env.MIX_APP_URL,
                 quota_id : 0,
                 product_id : 0,
                 user_id : 0,
                 client_id : 0,
-                client: '',
                 type: '',
                 rif: '',
                 address: '',
+                name: '',
+                phone:'',
+                email:'',
                 user: '',
                 voucher: 'quota',
                 voucher_num : '',
@@ -580,7 +655,7 @@
                 price : 0,
                 quantity : 0,
                 dispo:'',
-                 total: 0.0,
+                total: 0.0,
                 totalTax: 0.0,
                 totalPartial: 0.0,
                 modal1 : 0,
@@ -604,7 +679,8 @@
                 criteryS: 'name',
                 searchS: '',
                 quotaid:0,
-                dim:0
+                dim:0,
+
             }
         },
         components: {
@@ -624,7 +700,6 @@
                     from = 1;
                 }
 
-
                 var to = from + (this.offset * 2);
                 if (to >= this.pagination.last_page){
                     to = this.pagination.last_page;
@@ -642,6 +717,7 @@
                 for (var i = 0; i <this.arrayDetail.length; i++) {
                     result = result +(this.arrayDetail[i].price*this.arrayDetail[i].quantity)
                 }
+                // result = (Intl.NumberFormat("es-VE").format(result));
                 // console.log(result);
                 return result;
             },
@@ -697,16 +773,16 @@
             showQuota(id){
                 let me=this;
                 me.list=2;
-                //obtener los detalles de la compra
                 var arrayQuotaTemp=[];
 
+                // obtener la cabecera de la cotización
                 var url= 'quota/getHeader?id='+id;
                 axios.get(url).then(function(response) {
                     var response = response.data;
                     me.arrayQuotaTemp = response.quota;
                     me.quota_id = id;
                     me.client_id = me.arrayQuotaTemp[0]['client_id'];
-                    me.client = me.arrayQuotaTemp[0]['client_name'];
+                    me.name = me.arrayQuotaTemp[0]['client_name'];
                     me.user = me.arrayQuotaTemp[0]['user'];
                     me.voucher_num = me.arrayQuotaTemp[0]['voucher_num'];
                     me.tax = me.arrayQuotaTemp[0]['tax'];
@@ -721,11 +797,11 @@
                     console.log(error);
                 });
 
+                // obtener los datos de los detalles de la cotización
                 var urld= 'quota/getDetail?id='+id;
                 axios.get(urld).then(function(response) {
                     var response = response.data;
                     me.arrayDetail = response.details;
-
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -753,7 +829,59 @@
                 me.type = val1.type;
                 me.rif = val1.rif;
                 me.address = val1.address;
-                me.client = val1.name;
+                me.name = val1.name;
+
+            },
+            validateClient(){
+                this.errorSms=0;
+                this.errorSmsList =[];
+
+                if (!this.name) this.errorSmsList.push("El Nombre del producto no puede estar vacio");
+
+                if (!this.email) this.errorSmsList.push("El Correo Eléctronico del Cliente no puede estar vacio");
+
+                if (!this.type) this.errorSmsList.push("Seleccione el tipo de Cliente: J, G, V, Cedula")
+
+                if (!this.rif) this.errorSmsList.push("El Rif del cliente debe ser nuemro y no puede estar vacio");
+
+                if (this.errorSmsList.length) this.errorSms = 1;
+                    if (this.errorSmsList.length >= 1) {
+                        Swal.fire({
+                            type: error,
+                            confirmButtonText: 'Aceptar!',
+                            confirmButtonClass: 'btn btn-danger',
+                            confirmButtonColor: '#3085d6',
+                            html: `${this.errorSmsList.map( er =>`<br><br>${er}`)}`,
+                            showCancelButton: false
+                            });
+                };
+                return this.errorSms;
+            },
+            registerClient (){
+
+                if (this.validateClient()) {
+                    return;
+                } else {
+                    let me=this;
+                    me.dim=1;
+                    axios.post('client/register', {
+                        'type':this.type,
+                        'rif':this.rif,
+                        'name': this.name,
+                        'phone': this.phone,
+                        'email': this.email,
+                        'retention': this.retention,
+                        'address': this.address
+                    }).then(function(response) {
+                        var response = response.data.id;
+                        me.client_id = response
+                        me.closeModal();
+                        me.dim=0;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                };
 
             },
             quotaId(){
@@ -788,8 +916,13 @@
                 });
             },
             pdfQuota(id){
-                window.open('https://bacoop.com/admin/public/quota/pdf/'+ id + ','+ '_blank');
-                // window.open('https://bacoop.com/jm/public/quota/pdf/'+ id + ','+ '_blank');
+                // ahora
+                window.open(this.appUrl + 'quota/pdf/'+ id);
+
+                // antes
+                // window.open('https://bacoop.com/admin/public/quota/pdf/'+ id + ','+ '_blank');
+
+                // window.open('https://bacoop.com/test/public/quota/pdf/'+ id + ','+ '_blank');
                 // window.open('http://localhost/sale/public/quota/pdf/'+ id + ','+ '_blank');
             },
             changePage(page, search, criterion){
@@ -912,7 +1045,7 @@
                     me.type='';
                     me.rif='';
                     me.address='';
-                    me.client='';
+                    me.name='';
                     me.user_id=0;
                     me.product_id=0;
                     me.voucher_num='';
@@ -930,9 +1063,9 @@
                     me.stock=0;
                     me.code='';
                     me.arrayDetail=[];
-
-                    window.open('https://bacoop.com/admin/public/quota/pdf/'+ id + ','+ '_blank');
-                    // window.open('https://bacoop.com/jm/public/quota/pdf/'+ id + ','+ '_blank');
+                    window.open(me.appUrl + 'quota/pdf/'+ response.data.id);
+                    // window.open('https://bacoop.com/admin/public/quota/pdf/'+ response.data.id + ','+ '_blank');
+                    // window.open('https://bacoop.com/test/public/quota/pdf/'+ response.data.id + ','+ '_blank');
                     // window.open('http://localhost/sale/public/quota/pdf/'+ response.data.id + ','+ '_blank');
                     me.dim=0;
                 })
@@ -945,62 +1078,39 @@
                 let me = this;
                 me.list = 3;
                 var arrayQuotaTemp=[];
+
+                // obtener la cabecera de la cotización
                 var url= 'quota/getHeader?id='+id;
                 axios.get(url).then(function(response) {
                     var response = response.data;
-                    me.arrayQuotaTemp = response.sale;
-                    // console.log(me.arrayQuotaTemp[0]);
+                    arrayQuotaTemp = response.quota;
                     me.quota_id = id;
-                    me.client_id = me.arrayQuotaTemp[0]['client_id'];
-                    me.client = me.arrayQuotaTemp[0]['client_name'];
-                    me.type = me.arrayQuotaTemp[0]['type'];
-                    me.rif = me.arrayQuotaTemp[0]['rif'];
-                    me.address = me.arrayQuotaTemp[0]['address'];
-                    me.user = me.arrayQuotaTemp[0]['user'];
-                    me.voucher_num = me.arrayQuotaTemp[0]['voucher_num'];
-                    me.voucher_num = me.arrayQuotaTemp[0]['voucher_num'];
-                    me.tax = me.arrayQuotaTemp[0]['tax'];
-                    me.tax_mount = me.arrayQuotaTemp[0]['tax_mount'];
-                    me.totalExempt = me.arrayQuotaTemp[0]['exempt'];
-                    me.total = me.arrayQuotaTemp[0]['total'];
-                    // me.returnClient(me.client, true);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-                var urlc = 'client/clientSearch?filter='+me.client_id;
-                axios.get(urlc).then(function(response){
-                    var response = response.data;
-                    me.arrayClient = response.clients[0];
-                    console.log(me.arrayclient);
-                    me.getClientInfo(me.arrayClient);
+                    me.client_id = arrayQuotaTemp[0]['client_id'];
+                    me.name = arrayQuotaTemp[0]['client_name'];
+                    me.type = arrayQuotaTemp[0]['type'];
+                    me.rif = arrayQuotaTemp[0]['rif'];
+                    me.address = arrayQuotaTemp[0]['address'];
+                    me.user = arrayQuotaTemp[0]['user'];
+                    me.voucher_num = arrayQuotaTemp[0]['voucher_num'];
+                    me.voucher_num = arrayQuotaTemp[0]['voucher_num'];
+                    me.tax = arrayQuotaTemp[0]['tax'];
+                    me.tax_mount = arrayQuotaTemp[0]['tax_mount'];
+                    me.totalExempt = arrayQuotaTemp[0]['exempt'];
+                    me.total = arrayQuotaTemp[0]['total'];
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
 
-
-                // obtener los datos de los detalles de la compra
-
+                // obtener los datos de los detalles de la cotización
                 var urld= 'quota/getDetail?id='+id;
                 axios.get(urld).then(function(response) {
                     var response = response.data;
                     me.arrayDetail = response.details;
-
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
-                // var url= 'client/clientSearch?filter='+me.client_id;
-                // axios.get(url).then(function(response) {
-                //     var response = response.data;
-                //     me.arrayClient = response.clients[0];
-                //     // loading(false);
-                //     me.getClientInfo(me.arrayClient);
-                // })
-                // .catch(function (error) {
-                //     console.log(error);
-                // });
             },
             updateQuota (){
                 if (this.validateQuota()) {
@@ -1030,7 +1140,7 @@
                     me.type='';
                     me.rif='';
                     me.address='';
-                    me.client='';
+                    me.name='';
                     me.vouche="bill";
                     me.user_id=0;
                     me.product_id=0;
@@ -1051,9 +1161,7 @@
                     me.code='';
                     me.arrayDetail=[];
                     me.showQuota(response.data.id);
-                    window.open('https://bacoop.com/admin/public/sale/pdf/'+ response.data.id + ','+ '_blank');
-                    // window.open('https://bacoop.com/jm/public/sale/pdf/'+ response.data.id + ','+ '_blank');
-                    // window.open('http://localhost/sale/public/quota/pdf/'+ response.data.id + ','+ '_blank');
+                    window.open(me.appUrl + 'quota/pdf/'+ response.data.id);
                     me.dim = 0;
                 })
                 .catch(function (error) {
@@ -1066,20 +1174,9 @@
                 me.errorSmsS=0;
                 me.errorSmsListS =[];
 
-                // var prod;
-
-                // me.arrayDetail.map(function(x){
-                //     if (x.quantity>x.stock) {
-                //         prod=x.product + " con Stock insuficiente";
-                //         me.errorSmsListS.push(prod);
-                //     }
-                // })
-
                 if (me.client_id==0) me.errorSmsListS.push("Por favor Selecione un cliente");
 
                 if (me.arrayDetail.length<=0) me.errorSmsListS.push("Por favor ingrese productos a la compra");
-
-                // if (!me.tax) me.errorSmsListS.push("Ingrese un impuesto valido");
 
                 if (me.errorSmsListS.length) me.errorSmsS = 1;
                     if (me.errorSmsListS.length >= 1) {
@@ -1102,13 +1199,15 @@
                 me.product_id=0;
                 me.voucher_num='';
                 me.voucher_serie='';
-                me.tax=0.16;
+                me.tax='';
                 me.tax_mount=0.0;
                 me.total=0.0;
                 me.product='';
                 me.quantity=0;
                 me.price=0;
+                me.description='';
                 me.arrayDetail=[];
+                me.arrayClient= [];
                 me.quotaId();
 
             },
@@ -1117,11 +1216,22 @@
             },
             closeModal(){
                 this.modal=0;
+                this.modal1=0;
             },
             openModal(){
                 this.arrayProduct=[];
                 this.titleModal    = 'Seleccione uno o mas Productos';
                 this.modal         = 1;
+            },
+            openModalClient(){
+                this.name='';
+                this.address='';
+                this.retention='no';
+                this.rif=0;
+                this.phone='';
+                this.email='';
+                this.type='';
+                this.modal1= 1;
             },
             desactiveQuota(quota_id){
                 Swal.fire({

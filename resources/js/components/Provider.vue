@@ -1,22 +1,22 @@
  <template>
-        <main class="main">
+        <main class="main" :class="dim == 1 ? 'blur' : '' ">
             <!-- Breadcrumb -->
             <ol class="breadcrumb">
-          <li class="breadcrumb-item">Inicio</li>
-          <li class="breadcrumb-item">
-            <a href="#">Dilia Software</a>
-          </li>
-          <li class="breadcrumb-item active"> Proveedores&nbsp;&nbsp;<i class="fa fa-address-book-o"></i></li>
-          <!-- Breadcrumb Menu-->
-          <li class="breadcrumb-menu d-md-down-none">
-            
-          </li>
-        </ol>
+              <li class="breadcrumb-item">Inicio</li>
+              <li class="breadcrumb-item">
+                <a href="#">Dilia Software</a>
+              </li>
+              <li class="breadcrumb-item active"> Proveedores&nbsp;&nbsp;<i class="fa fa-address-book-o"></i></li>
+              <!-- Breadcrumb Menu-->
+              <li class="breadcrumb-menu d-md-down-none">
+
+              </li>
+            </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        
+
                         <button type="button" class="btn btn-success" @click="openModal('client','register')">
                             <i class="fa fa-address-book-o"></i>&nbsp;&nbsp;Agregar Nuevo
                         </button>
@@ -36,7 +36,7 @@
                         </div>
                         <div class="box-header">
                                     <center><h3 class="box-title">Listado de Proveedores</h3></center>
-                                </div>  <br><hr>  
+                                </div>  <br><hr>
                         <table class="table table-bordered table-striped table-sm">
                             <thead>
                                 <tr>
@@ -57,16 +57,16 @@
                                         <button type="button" class="btn btn-warning btn-sm" @click="openModal('client','update', client)">
                                           <i class="icon-pencil"></i>&nbsp;&nbsp; Editar
                                         </button> &nbsp;
-                                        
+
                                     </td>
                                     <td v-text="client.type + '-' + client.rif"></td>
                                     <td v-text="client.name"></td>
                                     <td v-text="client.phone"></td>
                                     <td v-text="client.email"></td>
-                                    
+
                                     	<td v-if="client.retention>=75" v-text="client.retention + '%' "></td>
 										<td v-else>No Aplica</td>
-								
+
                                     <td v-text="client.address"></td>
                                     <td v-text="client.contact"></td>
                                     <td>
@@ -78,9 +78,9 @@
                                             <span class="badge badge-secondary">Inactivo</span>
                                         </div>
                                     </td>
-                                    
+
                                 </tr>
-                                
+
                             </tbody>
                         </table>
                         <nav>
@@ -91,7 +91,7 @@
                                 <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActive ? 'active' : '']">
                                     <a class="page-link" href="#" @click.prevent="changePage(page, search, criterion)" v-text="page"></a>
                                 </li>
-                                
+
                                 <li class="page-item" v-if="pagination.current_page < pagination.last_page">
                                     <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page +1, search, criterion)">Sig</a>
                                 </li>
@@ -124,22 +124,22 @@
 											<option value="c" >Cedula</option>
 
                                         </select>
-								
+
                                     </div>
 									<div class="col-md-5">
                                         <input type="number" v-model="rif" class="form-control" >
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Razon Social</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="name" class="form-control" placeholder="Razon Social">
-                                        
+
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="phone">Numero teléfonico</label>
+                                    <label class="col-md-3 form-control-label" for="phone">Número teléfonico</label>
                                     <div class="col-md-9">
                                         <input type="number" v-model="phone" class="form-control" placeholder="">
                                     </div>
@@ -150,7 +150,7 @@
                                         <input type="email" v-model="email" class="form-control" placeholder="">
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="description">Dirección</label>
                                     <div class="col-md-9">
@@ -173,13 +173,13 @@
                                     <label class="col-md-3 form-control-label" for="retention">Es Agente de Retención?</label>
                                     <div class="col-md-5">
                                         <select class="form-control" v-model="retention" required>
-											<option value="no" >No</option>
+											<option value="no" default>No</option>
 											<option value="75" >75%</option>
 											<option value="100" >100%</option>
                                         </select>
                                     </div>
                                 </div>
-                                
+
                             </form>
                         </div>
                         <div class="modal-footer">
@@ -208,7 +208,7 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="closeModal()">Cancelar</button>
                             <button type="button" class="btn btn-danger" @click="desactiveClient()">Desactivar</button>
-                            
+
                         </div>
                     </div>
                     <div v-else class="modal-content">
@@ -231,7 +231,7 @@
                 <!-- /.modal-dialog -->
             </div>
             <!-- Fin del modal Eliminar -->
-            
+
         </main>
 </template>
 
@@ -268,7 +268,8 @@
                 },
                 offset : 3,
                 criterion : 'name',
-                search : ''
+                search : '',
+                dim:0
             }
         },
         computed: {
@@ -302,12 +303,12 @@
         },
         methods : {
             listClient (page,search,criterion){
-                
+
                 let me=this;
 
                 var url='provider?page=' + page + '&search=' + search + '&criterion=' + criterion;
                 axios.get(url).then(function(response) {
-                    var response = response.data; 
+                    var response = response.data;
                      me.arrayClient = response.clients.data;
                      me.pagination = response.pagination;
                 })
@@ -317,18 +318,19 @@
             },
             changePage(page, search, criterion){
                 let me = this;
-                // actualiza la pagina 
+                // actualiza la pagina
                 me.pagination.current_page = page;
                 // envia la peticion para visualizar la data de esa pagina
                 me.listClient(page, search, criterion);
 
             },
             registerClient (){
-            	
+
                 if (this.validateClient()) {
                     return;
                 } else {
                     let me=this;
+                    me.dim=1;
                 console.log(this.name);
                 axios.post('provider/register', {
                     'type':this.type,
@@ -340,16 +342,17 @@
                     'address': this.address,
                     'contact': this.contact,
                     'contact_phone': this.contact_phone
-                    
+
                 }).then(function(response) {
                     me.closeModal();
                     me.listClient(1,'','name');
+                    me.dim=0;
                 })
                 .catch(function (error) {
                     console.log(error);
-                });    
+                });
                 };
-                
+
             },
             updateClient() {
                 if (this.validateClient()) {
@@ -357,7 +360,7 @@
                 };
 
                 let me = this;
-
+                me.dim=1;
                 axios.put('provider/update', {
                     'id' : this.client_id,
                     'type':this.type,
@@ -372,6 +375,7 @@
                 }).then(function (response){
                     me.closeModal();
                     me.listClient(1,'', 'name');
+                    me.dim=0;
                 }).catch(function (error){
                     console.log(error);
                 });
@@ -380,7 +384,7 @@
                 this.errorSms=0;
                 this.errorSmsList =[];
 
-                
+
 
                 if (!this.name) this.errorSmsList.push("El Nombre del proveedor no puede estar vacio");
 
@@ -402,15 +406,16 @@
             },
             desactiveClient(){
                         let me = this;
-
+                        me.dim=1;
                         axios.put('client/desactive', {
                             'id': this.client_id,
                         }).then(function (response) {
                             me.closeModal();
                             me.listClient(1,'', 'name');
+                            me.dim=0;
                         })
                         .catch(function (error) {
-                           console.log(error); 
+                           console.log(error);
                         });
             },
             activeClient(){
@@ -422,7 +427,7 @@
                     me.closeModal();
                     me.listClient(1,'', 'name');
                 }).catch(function (error) {
-                    console.log(error); 
+                    console.log(error);
                 });
             },
 
@@ -497,7 +502,7 @@
                         }
                     }
                 }
-                
+
             }
         },
         mounted() {

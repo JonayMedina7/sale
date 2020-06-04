@@ -24,14 +24,13 @@ class CreatePurchasesTable extends Migration
             $table->decimal('total', 20, 2);
             $table->decimal('tax_mount', 20,2);
             $table->integer('tax', 4);
-            
-            $table->integer('exempt', 20, 2)->nullable();
+            $table->decimal('exempt', 20, 2)->nullable();
             $table->bigInteger('ret_id')->unsigned();
             $table->foreing('ret_id')->references('id')->on('retentions');
-            $table->decimal('total_ret', 20,2);
+            $table->decimal('total_ret', 20,2)->nullable();
             $table->string('status', 20);
             $table->string('description');
-            $table->string('type', 10);
+            $table->enum('type', ['purchase','buy'])->nullable();
             $table->timestamps();
         });
     }

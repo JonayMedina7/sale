@@ -10,7 +10,12 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('/clear-cacheter', function() {
+    $exitCode = Artisan::call('config:clear');
+    $exitCode = Artisan::call('cache:clear');
+    $exitCode = Artisan::call('config:cache');
+    return 'DONE'; //Return anything
+});
 Route::group(['middleware' =>['guest']], function()
 {
 	Route::get('/', 'Auth\LoginController@showLoginForm')->name('main');
@@ -56,7 +61,6 @@ Route::group(['middleware' =>['auth']], function()
 		route::put('/provider/desactive', 'ProviderController@desactive');
 		route::put('/provider/active', 'ProviderController@active');
 		route::get('/provider/providerSelect', 'ProviderController@providerSelect');
-
 
 		route::get('/purchase', 'PurchaseController@index');
 		route::post('/purchase/register', 'PurchaseController@store');
@@ -164,6 +168,7 @@ Route::group(['middleware' =>['auth']], function()
 		route::get('/sale/pdf/{id}', 'SaleController@pdf')->name('venta_pdf');
 		route::get('/sale/pdfw/{id}', 'SaleController@pdfw')->name('venta');
 		route::get('sale/email', 'SaleController@email');
+		route::post('/sale/print', 'SaleController@print');
 
 		route::get('/quota', 'QuotaController@index');
 		route::post('/quota/register', 'QuotaController@store');
@@ -183,7 +188,7 @@ Route::group(['middleware' =>['auth']], function()
 		route::put('/retention/desactive', 'RetentionController@desactive');
 		route::get('/retention/getDownload', 'RetentionController@getDownload');
 		route::get('/retention/pdf/{id}', 'RetentionController@pdf')->name('retencion');
-		route::get('/retention/pdfw/{id}', 'RetentionController@pdfw')->name('retencion');
+		// route::get('/retention/pdfw/{id}', 'RetentionController@pdfw')->name('retencion');
 		route::get('retention/email', 'RetentionController@email');
 
 		route::get('/company', 'CompanyController@index');
@@ -203,6 +208,7 @@ Route::group(['middleware' =>['auth']], function()
 		route::get('/buy/getDetail', 'PurchaseController@getDetail');
 		route::get('/buy/purchaseRet', 'PurchaseController@purchaseRet');
 		route::get('/buy/listPurchaseRet', 'PurchaseController@listPurchaseRet');
+
 
 	});
 

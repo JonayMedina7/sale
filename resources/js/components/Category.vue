@@ -1,6 +1,5 @@
 <template>
-	<main class="main">
-		            <!-- Breadcrumb -->
+	<main class="main" :class="dim == 1 ? 'blur' : '' ">
     		<ol class="breadcrumb">
               <li class="breadcrumb-item">Inicio</li>
               <li class="breadcrumb-item">
@@ -12,153 +11,154 @@
 
               </li>
             </ol>
-		            <div class="container-fluid">
-		                <!-- Ejemplo de tabla Listado -->
-		                <div class="card">
-		                    <div class="card-header">
+            <div class="container-fluid">
+                <!-- Ejemplo de tabla Listado -->
+                <div class="card">
+                    <div class="card-header">
 
-		                        <button type="button" class="btn btn-success" @click="openModal('category','register')">
-		                            <i class="icon-plus"></i>&nbsp;&nbsp;Nueva Categoria
-		                        </button>
-		                    </div>
-		                    <div class="card-body">
-		                        <div class="form-group row">
-		                            <div class="col-md-6">
-		                                <div class="input-group">
-		                                    <select class="form-control col-md-3" v-model="criterion">
-		                                      <option value="name">Nombre Categoria</option>
-		                                      <option value="description">Descripción</option>
-		                                    </select>
-		                                    <input type="number" v-model="search" @keyup.enter="listCategory(1,search,criterion)" class="form-control" placeholder="Categoria">
-		                                    <button type="submit" @click="listCategory(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
-		                                </div>
-		                            </div>
-		                        </div>
-		                        <table class="table table-bordered table-striped table-sm">
-		                            <thead>
-		                                <tr>
-		                                    <th>Opciones</th>
-		                                    <th>Nombre Categoria</th>
-		                                    <th>Descripción</th>
-		                                    <th>Estado</th>
-		                                </tr>
-		                            </thead>
-		                            <tbody>
-		                                <tr v-for="category in arrayCategory" :key="category.id">
-		                                    <td>
-		                                        <button type="button" class="btn btn-warning btn-sm" @click="openModal('category','update', category)">
-		                                          Editar
-		                                        </button> &nbsp;
-		                                        <button v-if="category.condition" type="button" @click="openModal('category','desactive',category)" class="btn btn-danger btn-sm" >
-		                                           Desactivar
-		                                        </button>
-		                                        <button v-else type="button" @click="openModal('category','active',category)" class="btn btn-success btn-sm" >
-		                                           Activar
-		                                        </button>
-		                                    </td>
-		                                    <td v-text="category.name"></td>
-		                                    <td v-text="category.description"></td>
-		                                        <div v-if="category.condition">
-		                                            <span class="badge badge-success">Activo</span>
-		                                        </div>
+                        <button type="button" class="btn btn-success" @click="openModal('category','register')">
+                            <i class="icon-plus"></i>&nbsp;&nbsp;Nueva Categoria
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <select class="form-control col-md-3" v-model="criterion">
+                                      <option value="name">Nombre Categoria</option>
+                                      <option value="description">Descripción</option>
+                                    </select>
+                                    <input type="number" v-model="search" @keyup.enter="listCategory(1,search,criterion)" class="form-control" placeholder="Categoria">
+                                    <button type="submit" @click="listCategory(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table table-bordered table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Opciones</th>
+                                    <th>Nombre Categoria</th>
+                                    <th>Descripción</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="category in arrayCategory" :key="category.id">
+                                    <td>
+                                        <button type="button" class="btn btn-warning btn-sm" @click="openModal('category','update', category)">
+                                          Editar
+                                        </button> &nbsp;
+                                        <button v-if="category.condition" type="button" @click="openModal('category','desactive',category)" class="btn btn-danger btn-sm" >
+                                           Desactivar
+                                        </button>
+                                        <button v-else type="button" @click="openModal('category','active',category)" class="btn btn-success btn-sm" >
+                                           Activar
+                                        </button>
+                                    </td>
+                                    <td v-text="category.name"></td>
+                                    <td v-text="category.description"></td>
+                                    <td>
+                                        <div v-if="category.condition">
+                                            <span class="badge badge-success">Activo</span>
+                                        </div>
 
-		                                        <div v-else>
-		                                            <span class="badge badge-danger">Inactivo</span>
-		                                        </div>
-		                                    </td>
-		                                </tr>
-		                            </tbody>
-		                        </table>
-		                        <nav>
-		                            <ul class="pagination">
-		                                <li class="page-item" v-if="pagination.current_page > 1">
-		                                    <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page -1, search, criterion)">Ant</a>
-		                                </li>
-		                                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActive ? 'active' : '']">
-		                                    <a class="page-link" href="#" @click.prevent="changePage(page, search, criterion)" v-text="page"></a>
-		                                </li>
+                                        <div v-else>
+                                            <span class="badge badge-danger">Inactivo</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <nav>
+                            <ul class="pagination">
+                                <li class="page-item" v-if="pagination.current_page > 1">
+                                    <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page -1, search, criterion)">Ant</a>
+                                </li>
+                                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActive ? 'active' : '']">
+                                    <a class="page-link" href="#" @click.prevent="changePage(page, search, criterion)" v-text="page"></a>
+                                </li>
 
-		                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-		                                    <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page +1, search, criterion)">Sig</a>
-		                                </li>
-		                            </ul>
-		                        </nav>
-		                    </div>
-		                </div>
-		                <!-- Fin ejemplo de tabla Listado -->
-		            </div>
-		            <!--Inicio del modal agregar/actualizar-->
-		            <div class="modal fade" tabindex="-1" :class="{'show' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
-		                <div class="modal-dialog modal-primary modal-lg" role="document">
-		                    <div class="modal-content">
-		                        <div class="modal-header">
-		                            <h4 class="modal-title" v-text="titleModal"></h4>
-		                            <button type="button" class="close" @click="closeModal()" aria-label="Close">
-		                              <span aria-hidden="true">×</span>
-		                            </button>
-		                        </div>
-		                        <div class="modal-body">
-		                            <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-		                                <div class="form-group row">
-		                                    <label class="col-md-3 form-control-label" for="name">Nombre</label>
-		                                    <input type="text" v-model="name" class="form-control" placeholder="Nombre de Categoria">
-		                                </div>
-		                                <div class="form-group row">
-		                                    <label class="col-md-3 form-control-label" for="description">Descripción</label>
-		                                    <input type="text" v-model="description" class="form-control" placeholder="Descripción de la Categoria">
-		                                </div>
-		                            </form>
-		                        </div>
-		                        <div class="modal-footer">
-		                            <button type="button" class="btn btn-secondary" @click="closeModal()">Cerrar</button>
-		                            <button v-if="actionType==1" type="button" class="btn btn-primary" @click="registerCategory()">Guardar</button>
-		                            <button v-if="actionType==2" type="button" class="btn btn-primary" @click="updateCategory()">Actualizar</button>
-		                        </div>
-		                    </div>
-		                    <!-- /.modal-content -->
-		                </div>
-		                <!-- /.modal-dialog -->
-		            </div>
-		            <!--Fin del modal-->
-		            <!-- Inicio del modal Eliminar -->
-		            <div class="modal fade" tabindex="-1" :class="{'show' : modal1}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
-		                <div class="modal-dialog modal-danger" role="document">
-		                    <div v-if="condition" class="modal-content">
-		                        <div class="modal-header">
-		                            <h4 class="modal-title">Desactivar Categoria</h4>
-		                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		                              <span aria-hidden="true">×</span>
-		                            </button>
-		                        </div>
-		                        <div class="modal-body">
-		                            <p>Estas seguro de desactivar la Categoria?</p>
-		                        </div>
-		                        <div class="modal-footer">
-		                            <button type="button" class="btn btn-secondary" @click="closeModal()">Cancelar</button>
-		                            <button type="button" class="btn btn-danger" @click="desactiveCategory()">Desactivar</button>
+                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
+                                    <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page +1, search, criterion)">Sig</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <!-- Fin ejemplo de tabla Listado -->
+            </div>
+            <!--Inicio del modal agregar/actualizar-->
+            <div class="modal fade" tabindex="-1" :class="{'show' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-primary modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" v-text="titleModal"></h4>
+                            <button type="button" class="close" @click="closeModal()" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="name">Nombre</label>
+                                    <input type="text" v-model="name" class="form-control" placeholder="Nombre de Categoria">
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="description">Descripción</label>
+                                    <input type="text" v-model="description" class="form-control" placeholder="Descripción de la Categoria">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @click="closeModal()">Cerrar</button>
+                            <button v-if="actionType==1" type="button" class="btn btn-primary" @click="registerCategory()">Guardar</button>
+                            <button v-if="actionType==2" type="button" class="btn btn-primary" @click="updateCategory()">Actualizar</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!--Fin del modal-->
+            <!-- Inicio del modal Eliminar -->
+            <div class="modal fade" tabindex="-1" :class="{'show' : modal1}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-danger" role="document">
+                    <div v-if="condition" class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Desactivar Categoria</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Estas seguro de desactivar la Categoria?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @click="closeModal()">Cancelar</button>
+                            <button type="button" class="btn btn-danger" @click="desactiveCategory()">Desactivar</button>
 
-		                        </div>
-		                    </div>
-		                    <div v-else class="modal-content">
-		                        <div class="modal-header">
-		                            <h4 class="modal-title">Activar Category</h4>
-		                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		                              <span aria-hidden="true">×</span>
-		                            </button>
-		                        </div>
-		                        <div class="modal-body">
-		                            <p>Pulse Activar para activar al Category</p>
-		                        </div>
-		                        <div class="modal-footer">
-		                            <button type="button" class="btn btn-secondary" @click="closeModal()">Cancelar</button>
-		                            <button type="button" class="btn btn-success" @click="activeCategory()">Activar</button>
-		                        </div>
-		                    </div>
-		                    <!-- /.modal-content -->
-		                </div>
-		                <!-- /.modal-dialog -->
-		            </div>
-		            <!-- Fin del modal Eliminar -->
+                        </div>
+                    </div>
+                    <div v-else class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Activar Category</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Pulse Activar para activar al Category</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @click="closeModal()">Cancelar</button>
+                            <button type="button" class="btn btn-success" @click="activeCategory()">Activar</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- Fin del modal Eliminar -->
 	</main>
 </template>
 
@@ -187,7 +187,8 @@
             },
             offset : 3,
             criterion : 'name',
-            search : ''
+            search : '',
+            dim:0
 			}
 
 		},
@@ -239,7 +240,7 @@
                 // actualiza la pagina
                 me.pagination.current_page = page;
                 // envia la peticion para visualizar la data de esa pagina
-                me.listClient(page, search, criterion);
+                me.listCategory(page, search, criterion);
 
             },
             registerCategory(){
@@ -247,7 +248,7 @@
             		return;
             	}
             	let me = this;
-
+                me.dim =1;
             	axios.post('category/register', {
             		'name': this.name,
             		'description': this.description
@@ -255,6 +256,7 @@
             	}).then(function(response) {
                     me.closeModal();
                     me.listCategory(1,'','name');
+                    me.dim=0;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -265,7 +267,7 @@
             		return;
             	}
             	let me = this;
-
+                me.dim = 1;
             	axios.put('category/update', {
             		'id':this.id,
             		'name': this.name,
@@ -274,6 +276,7 @@
             	}).then(function(response) {
                     me.closeModal();
                     me.listCategory(1,'','name');
+                    me.dim=0;
                 })
                 .catch(function (error) {
                     console.log(error);

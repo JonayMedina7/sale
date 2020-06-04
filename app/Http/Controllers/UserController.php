@@ -20,7 +20,7 @@ class UserController extends Controller
         /*if (!$request->ajax()) return redirect('/');*/
         $search = $request->search;
         $criterion = $request->criterion;
-        
+
         if ($search=='') {
             $clients = User::join('clients', 'users.id', '=', 'clients.id')
             ->join('roles', 'users.role_id','=','roles.id')
@@ -31,7 +31,7 @@ class UserController extends Controller
             ->select('clients.id', 'clients.name', 'clients.phone', 'clients.email', 'clients.type', 'clients.rif', 'clients.retention', 'clients.address', 'users.user', 'users.password', 'users.condition', 'users.role_id', 'roles.name as role_name'  )->where($criterion, 'like', '%'. $search . '%')->orderBy('id', 'desc')->paginate(7);
         }
 
-        
+
         return [
             'pagination' => [
                 'total'         => $clients->total(),
@@ -45,7 +45,7 @@ class UserController extends Controller
         ];
     }
 
-  
+
 
     /**
      * Store a newly created resource in storage.
@@ -60,18 +60,18 @@ class UserController extends Controller
         try {
         DB::beginTransaction();
         $client = new Client();
-        $client->name = $request->name;
+        $client->name = ucwords(strtolower($request->name));
         $client->phone = $request->phone;
-        $client->email = $request->email;
+        $client->email = strtolower($request->email);
         $client->type = $request->type;
         $client->rif = $request->rif;
         $client->retention = $request->retention;
         $client->condition = '1';
-        $client->address = $request->address;
-        $client->save();    
+        $client->address = ucwords(strtolower($request->address));
+        $client->save();
 
         $user = new User();
-        $user->user = $request->user;
+        $user->user = strtolower($request->user);
         $user->password = bcrypt($request->password);
         $user->condition = '1';
         $user->role_id = $request->role_id;
@@ -82,7 +82,7 @@ class UserController extends Controller
             DB::rollBack();
 
         }
-        
+
     }
 
     /**
@@ -92,7 +92,7 @@ class UserController extends Controller
      * @param  \App\client  $client
      * @return \Illuminate\Http\Response
      */
-    
+
     public function update(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
@@ -104,19 +104,18 @@ class UserController extends Controller
         $user = User::findOrFail($request->id);
 
         $client = Client::findOrFail($user->id);
-
-        
-        $client->name = $request->name;
+        $client->name = ucwords(strtolower($request->name));
         $client->phone = $request->phone;
-        $client->email = $request->email;
+        $client->email = strtolower($request->email);
         $client->type = $request->type;
         $client->rif = $request->rif;
         $client->retention = $request->retention;
-        $client->address = $request->address;
+        $client->condition = '1';
+        $client->address = ucwords(strtolower($request->address));
         $client->condition = '1';
         $client->save();
 
-        $user->user = $request->user;
+        $user->user = strtolower($request->user);
         $user->password = bcrypt($request->password);
         $user->condition = '1';
         $user->role_id = $request->role_id;
@@ -127,7 +126,7 @@ class UserController extends Controller
             DB::rollBack();
 
         }
-        
+
     }
 
      public function desactive(Request $request)

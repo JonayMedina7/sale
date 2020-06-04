@@ -1,15 +1,19 @@
  <template>
-        <main class="main">
+        <main class="main" :class="dim == 1 ? 'blur' : '' ">
             <!-- Breadcrumb -->
             <ol class="breadcrumb">
-                
-                <li class="breadcrumb-item"><a href="/">Escritorio</a></li>
-                
+                <li class="breadcrumb-item">Inicio</li>
+                <li class="breadcrumb-item">
+                    <a href="#">Dilia Software</a>
+                </li>
+                <li class="breadcrumb-item active"> Cotizaciones&nbsp;&nbsp;<i class="fa fa-file"></i></li>
+                <!-- Breadcrumb Menu-->
+                <li class="breadcrumb-menu d-md-down-none"></li>
             </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
-                    
+
                     <div class="card-body">
                         <div class="form-group row">
                             <div class="col-md-6">
@@ -22,7 +26,7 @@
                         <table class="table table-bordered table-striped table-sm">
                             <thead>
                                 <tr>
-                                    
+
                                     <th>Nombre Role</th>
                                     <th>Descripción</th>
                                     <th>Estado</th>
@@ -30,10 +34,10 @@
                             </thead>
                             <tbody>
                                 <tr v-for="role in arrayRole" :key="role.id">
-                                    
+
                                     <td v-text="role.name"></td>
                                     <td v-text="role.description"></td>
-                                    
+
                                     <td>
                                         <div v-if="role.condition">
                                             <span class="badge badge-success">Activo</span>
@@ -43,9 +47,9 @@
                                             <span class="badge badge-secondary">Inactivo</span>
                                         </div>
                                     </td>
-                                    
+
                                 </tr>
-                                
+
                             </tbody>
                         </table>
                         <nav>
@@ -56,7 +60,7 @@
                                 <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActive ? 'active' : '']">
                                     <a class="page-link" href="#" @click.prevent="changePage(page, search, criterion)" v-text="page"></a>
                                 </li>
-                                
+
                                 <li class="page-item" v-if="pagination.current_page < pagination.last_page">
                                     <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page +1, search, criterion)">Sig</a>
                                 </li>
@@ -67,9 +71,9 @@
                 <!-- Fin ejemplo de tabla Listado -->
             </div>
             <!--Inicio del modal agregar/actualizar-->
-            
+
             <!-- Fin del modal Eliminar -->
-            
+
         </main>
 </template>
 
@@ -126,12 +130,12 @@
         },
         methods : {
             listRole (page,search,criterion){
-                
+
                 let me=this;
 
                 var url='role?page=' + page + '&search=' + search + '&criterion=' + criterion;
                 axios.get(url).then(function(response) {
-                    var response = response.data; 
+                    var response = response.data;
                      me.arrayRole = response.roles.data;
                      me.pagination = response.pagination;
                 })
@@ -141,15 +145,15 @@
             },
             changePage(page, search, criterion){
                 let me = this;
-                // actualiza la pagina 
+                // actualiza la pagina
                 me.pagination.current_page = page;
                 // envia la peticion para visualizar la data de esa pagina
                 me.listRole(page, search, criterion);
 
             },
-            
-                
-            
+
+
+
         },
         mounted() {
             this.listRole(1,this.search,this.name);

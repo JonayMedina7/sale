@@ -1,16 +1,16 @@
  <template>
-        <main class="main">
+        <main class="main" :class="dim == 1 ? 'blur' : '' ">
             <ol class="breadcrumb">
-          <li class="breadcrumb-item">Inicio</li>
-          <li class="breadcrumb-item">
-            <a href="#">Dilia Software</a>
-          </li>
-          <li class="breadcrumb-item active"> Retenciones&nbsp;&nbsp;<i class="fa fa-file"></i></li>
-          <!-- Breadcrumb Menu-->
-          <li class="breadcrumb-menu d-md-down-none">
+              <li class="breadcrumb-item">Inicio</li>
+              <li class="breadcrumb-item">
+                <a href="#">Dilia Software</a>
+              </li>
+              <li class="breadcrumb-item active"> Retenciones&nbsp;&nbsp;<i class="fa fa-file"></i></li>
+              <!-- Breadcrumb Menu-->
+              <li class="breadcrumb-menu d-md-down-none">
 
-          </li>
-        </ol>
+              </li>
+            </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
@@ -30,11 +30,11 @@
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <select class="form-control col-md-3" v-model="criterion">
-                                          <option value="voucher">Tipo de Comprobante</option>
-                                          <option value="voucher_num">Numero de comprobante</option>
+                                          <option value="voucher_num">Número</option>
                                           <option value="date">Fecha-hora</option>
                                         </select>
-                                        <input type="text" v-model="search" @keyup.enter="listRetention(1,search,criterion)" class="form-control" placeholder="Texto a Buscar">
+                                        <input v-if="criterion == 'voucher_num'" type="text" v-model="search" @keyup.enter="listRetention(1,search,criterion)" class="form-control" placeholder="Buscar">
+                                        <input v-if="criterion == 'date'" type="date" v-model="search" @keyup.enter="listRetention(1,search,criterion)" class="form-control" placeholder="Buscar">
                                         <button type="submit" @click="listRetention(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                     </div>
                                 </div>
@@ -47,7 +47,7 @@
                                     <thead>
                                         <tr>
                                             <th>Opciones</th>
-                                            <th>Numero retención</th>
+                                            <th>Número retención</th>
                                             <th>Cliente</th>
                                             <th>Fecha Hora</th>
                                             <th>Total Retención</th>
@@ -98,11 +98,6 @@
                             <div class="form-group row">
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                       <!--  <select class="form-control col-md-3" v-model="criterion">
-                                          <option value="voucher">Tipo de Comprobante</option>
-                                          <option value="voucher_num">Numero de comprobante</option>
-                                          <option value="date">Fecha-hora</option>
-                                        </select> -->
                                         <input type="date" v-model="fecha1" class="form-control" required>
                                         <input type="date" v-model="fecha2" class="form-control" required>
 
@@ -148,8 +143,6 @@
                                         <label for="">Rif o C.I(*)</label>
 
                                           <h4><span v-text="type + '-' + rif" class="upper"></span> </h4>
-
-
                                     </div>
                                 </div>
                                 <div class="col-md-9">
@@ -174,7 +167,7 @@
                                     <div class="form-group">
                                         <label>Facturas <span style="color:red;" v-show="purchase_id==0">(*Seleccione)</span></label>
                                         <div class="form-inline">
-                                            <input type="text" class="form-control" v-model="purchase_num" @keyup.enter="purchaseRet()" placeholder="Ingrese numero de Venta" name="">
+                                            <input type="text" class="form-control" v-model="purchase_num" @keyup.enter="purchaseRet()" placeholder="Ingrese Número de Venta" name="">
                                             <button @click="openModalr()" class="btn btn-primary">...</button>
                                             <input type="text" readonly class="form-control" v-model="purchase_num" name="" placeholder="ENTER para buscar">
                                         </div>
@@ -213,7 +206,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Opciones</th>
-                                                <th>Numero de documento</th>
+                                                <th>Número de documento</th>
                                                 <th>Documento</th>
                                                 <th>Monto </th>
                                                 <th>Total I.V.A</th>
@@ -310,7 +303,7 @@
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Numero de Retención</label>
+                                        <label>Número de Retención</label>
                                         <strong><h5 v-text="voucher_num"></h5></strong>
                                         <span v-text="status"></span>
                                     </div>
@@ -409,7 +402,7 @@
                                             <th>Agregar</th>
                                             <th>Nro.</th>
                                             <th>Tipo de Documento</th>
-                                            <th>Fecha Documento</th>
+                                            <th>Fecha </th>
                                             <th>Monto</th>
                                             <th>Total I.v.a</th>
                                         </tr>
@@ -424,7 +417,7 @@
                                             <td v-text="purchase.purchase_num"></td>
                                             <td v-if="purchase.voucher=='bill'">Factura</td>
                                             <td v-else-if="purchase.voucher=='note'">Vale</td>
-                                            <td v-else-if="purchase.voucher=='credit'">Nota de Credito</td>
+                                            <td v-else-if="purchase.voucher=='credit'">Nota de crédito</td>
                                             <td v-text="purchase.datep"></td>
                                             <td v-text="purchase.totalp"></td>
                                             <td v-text="purchase.tax_mount"></td>
@@ -456,6 +449,7 @@
     export default {
         data (){
             return {
+                appUrl: process.env.MIX_APP_URL,
                 user_id : 0,
                 provider_id : 0,
                 purchase_id: 0,
@@ -510,7 +504,8 @@
                 fecha1 : '',
                 fecha2: '',
                 criteryR: 'name',
-                searchR: ''
+                searchR: '',
+                dim:0
             }
         },
         components: {
@@ -575,6 +570,7 @@
                 if (this.validateTxt()){
                     return;
                 }
+                this.dim=1
               var element = document.createElement('a');
               element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
               element.setAttribute('download', filename);
@@ -617,6 +613,7 @@
                         });
                     });
                    me.download("retentions.txt", texto);
+                   me.dim=0;
                 })
                 .catch(function(error) {
                     console.log(error);
@@ -747,6 +744,7 @@
                     return;
                 }
                 let me=this;
+                me.dim=1;
                 var url='purchase/purchaseRet?filter='+me.purchase_num + '&id='+me.provider_id;
                 axios.get(url).then(function(response){
                     var response = response.data;
@@ -765,6 +763,7 @@
                         me.purchase_num = '';
                         me.purchase_id = 0;
                     }
+                    me.dim=0;
                 })
                 .catch(function (error) {
                         console.log(error);
@@ -793,7 +792,7 @@
                     Swal.fire({
                     type: 'error',
                     title: 'Error...',
-                    text: 'La factura ya se encuentra agregada!',
+                    text: 'La Compra ya se encuentra agregada!',
                     });
                 }else {
                     me.arrayDetailr.push({
@@ -888,8 +887,10 @@
                     });
             },
             pdfRet(id){
-                window.open('https://bacoop.com/admin/public/sale/pdf/'+ id + ','+ '_blank');
-                // window.open('https://bacoop.com/jm/public/sale/pdf/'+ id + ','+ '_blank');
+                window.open(this.appUrl + 'retention/pdf/'+ id);
+
+                // window.open('https://bacoop.com/admin/public/retention/pdf/'+ id + ','+ '_blank');
+                // window.open('https://bacoop.com/test/public/retention/pdf/'+ id + ','+ '_blank');
                 // window.open('http://localhost/sale/public/retention/pdf/'+ id + ','+ '_blank');
             },
             changePage(page, search, criterion){
@@ -903,8 +904,9 @@
                 if (this.validateRet()){
                     return;
                 }
-                // console.log(this.arrayDetailr);
+                
                 let me = this;
+                me.dim=1;
                 axios.post('retention/register', {
                     'provider_id': this.provider_id,
                     'voucher_num':this.voucher_num,
@@ -931,8 +933,11 @@
                     me.voucher_num = '';
                     me.purchase_num='';
                     me.arrayDetailr=[];
-
+                    console.log(me.appUrl);
+                    window.open(me.appUrl + 'retention/pdf/'+ response.data.id);
+                         
                     me.showRet(response.data.id);
+                    me.dim=0;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -949,13 +954,13 @@
                 if (me.errorSmsListR.length) me.errorSmsR = 1;
                 if (this.errorSmsListR.length >= 1) {
                         Swal.fire({
-                    type: 'error',
-                    confirmButtonText: 'Aceptar!',
-                    confirmButtonClass: 'btn btn-danger',
-                    confirmButtonColor: '#3085d6',
-                    html: `${this.errorSmsListR.map( er =>`<br><br>${er}`)}`,
-                    showCancelButton: false
-                    });
+                            type: 'error',
+                            confirmButtonText: 'Aceptar!',
+                            confirmButtonClass: 'btn btn-danger',
+                            confirmButtonColor: '#3085d6',
+                            html: `${this.errorSmsListR.map( er =>`<br><br>${er}`)}`,
+                            showCancelButton: false
+                            });
                 };
 
                 return this.errorSmsR;
@@ -976,19 +981,19 @@
 
                 if (me.provider_id==0) me.errorSmsListR.push("Por favor Seleccione un cliente");
 
-                // if (me.voucher_num == 0) me.errorSmsListR.push("Ingrese un numero de Factura o nota de crédito");
+                // if (me.voucher_num == 0) me.errorSmsListR.push("Ingrese un Número de Factura o nota de crédito");
                 // if (me.date=='') me.errorSmsListR.push("Por favor Selecione una Fecha para la retención");
                 if (me.arrayDetailr.length<=0) me.errorSmsListR.push("Por favor ingrese Facturas a retener");
 
                 if (me.errorSmsListR.length) me.errorSmsR = 1;
                 if (this.errorSmsListR.length >= 1) {
-                        Swal.fire({
-                    type: 'error',
-                    confirmButtonText: 'Aceptar!',
-                    confirmButtonClass: 'btn btn-danger',
-                    confirmButtonColor: '#3085d6',
-                    html: `${this.errorSmsListR.map( er =>`<br><br>${er}`)}`,
-                    showCancelButton: false
+                    Swal.fire({
+                        type: 'error',
+                        confirmButtonText: 'Aceptar!',
+                        confirmButtonClass: 'btn btn-danger',
+                        confirmButtonColor: '#3085d6',
+                        html: `${this.errorSmsListR.map( er =>`<br><br>${er}`)}`,
+                        showCancelButton: false
                     });
                 };
                 return this.errorSmsR;
@@ -1024,7 +1029,7 @@
             },
             desactiveRet(id){
                 Swal.fire({
-                    title: 'Esta seguro de anular esta venta?',
+                    title: 'Esta seguro de anular esta Retencion?',
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',

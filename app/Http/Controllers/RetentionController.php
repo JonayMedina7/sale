@@ -52,11 +52,10 @@ class RetentionController extends Controller
     {
         $mytime = Carbon::now('America/Caracas');
         $mytime = $mytime->format('Ym');
-        $retid = Retention::select('retentions.id')->orderBy('retentions.id','desc')->take(1)->get();
-        $num = 1;
-        $retid = $retid[0]->id + $num;
+        $retid = Retention::select('retentions.id')->orderBy('id','desc')->first();        
+        $retid = $retid->id + 1;
         $retid = $mytime.(str_pad($retid,8,"0",STR_PAD_LEFT ));
-        
+        // dd($retid);
         return ['retid' => $retid];
         
     }

@@ -16,16 +16,13 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         // if (!$request->ajax()) return redirect('/');
-
         $search = $request->search;
         $critery = $request->critery;
-
 
         if ($search=='') {
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
             ->join('taxes', 'products.tax_id', '=', 'taxes.id')
             ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.stock_min', 'products.description', 'products.condition', 'taxes.tax')
-            ->whereColumn('products.stock', '>=', 'products.stock_min')
             ->orderBy('products.id', 'desc')->paginate(7);
         } else {
             $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
@@ -38,8 +35,6 @@ class ProductController extends Controller
         // $products = DB::table('products')
         //     ->whereColumn('stock', '<=','stock_min')
         //     ->orderBy('products.id', 'desc')->get();
-
-
 
         return [
             'pagination' => [
@@ -72,9 +67,7 @@ class ProductController extends Controller
             ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition', 'taxes.tax')
             ->where('products.'.$critery, 'like', '%'. $search . '%')
             ->orderBy('products.id', 'desc')->paginate(10);
-
         }
-
 
         return [
             'pagination' => [
@@ -97,10 +90,10 @@ class ProductController extends Controller
             ->select('products.id','products.category_id','products.code', 'products.name', 'categories.name as category_name', 'products.price_buy', 'products.stock', 'products.description', 'products.condition', 'taxes.tax')
             ->orderBy('products.name', 'desc')->get();
 
-            $cont = Product::count();
+            $cont = count($products);
 
             $pdf = \PDF::loadView('pdf.productspdf',['products'=>$products,'cont'=>$cont]);
-            return $pdf->download('productos.pdf');
+            return $pdf->stream('productos.pdf');
     }
 
     public function listProductSale(Request $request)
@@ -128,7 +121,6 @@ class ProductController extends Controller
 
         }
 
-
         return [
             'pagination' => [
                 'total'         => $products->total(),
@@ -152,7 +144,6 @@ class ProductController extends Controller
         ->select('id','name')->orderBy('name','asc')->take(1)->get();
 
         return ['products' => $products];
-
     }
 
     public function productSearchSale(Request $request)
@@ -167,7 +158,6 @@ class ProductController extends Controller
         ->orderBy('name','asc')->take(1)->get();
 
         return ['products' => $products];
-
     }
 
 

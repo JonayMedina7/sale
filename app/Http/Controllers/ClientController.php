@@ -75,16 +75,17 @@ class ClientController extends Controller
         if (!$request->ajax()) return redirect('/');
         $client = new Client();
 
-
-        $client->name = $request->name;
+        $client->name = ucwords(strtolower($request->name));
         $client->phone = $request->phone;
-        $client->email = $request->email;
+        $client->email = strtolower($request->email);
         $client->type = $request->type;
         $client->rif = $request->rif;
         $client->retention = $request->retention;
-        $client->address = $request->address;
+        $client->address = ucwords(strtolower($request->address));
         $client->condition = '1';
         $client->save();
+
+         return ['id'=>$client->id];
 
     }
 
@@ -100,13 +101,13 @@ class ClientController extends Controller
         if (!$request->ajax()) return redirect('/');
         $client = client::findOrFail($request->id);
 
-        $client->name = $request->name;
+        $client->name = ucwords(strtolower($request->name));
         $client->phone = $request->phone;
-        $client->email = $request->email;
+        $client->email = strtolower($request->email);
         $client->type = $request->type;
         $client->rif = $request->rif;
         $client->retention = $request->retention;
-        $client->address = $request->address;
+        $client->address = ucwords(strtolower($request->address));
         $client->condition = '1';
         $client->save();
 

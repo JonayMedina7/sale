@@ -1,17 +1,17 @@
  <template>
-        <main class="main">
+        <main class="main" :class="dim == 1 ? 'blur' : '' ">
             <!-- Breadcrumb -->
             <ol class="breadcrumb">
-          <li class="breadcrumb-item">Inicio</li>
-          <li class="breadcrumb-item">
-            <a href="#">Dilia Software</a>
-          </li>
-          <li class="breadcrumb-item active"> Productos&nbsp;&nbsp;<i class="fa fa-archive"></i></li>
-          <!-- Breadcrumb Menu-->
-          <li class="breadcrumb-menu d-md-down-none">
+              <li class="breadcrumb-item">Inicio</li>
+              <li class="breadcrumb-item">
+                <a href="#">Dilia Software</a>
+              </li>
+              <li class="breadcrumb-item active"> Productos&nbsp;&nbsp;<i class="fa fa-archive"></i></li>
+              <!-- Breadcrumb Menu-->
+              <li class="breadcrumb-menu d-md-down-none">
 
-          </li>
-        </ol>
+              </li>
+            </ol>
             <!-- div tabla de productos -->
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
@@ -209,7 +209,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p>Pulse Aceptar para activar el Producto</p>
+                            <p>Pulse Aceptar para Habilitar el Producto</p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="closeModal()">Cancelar</button>
@@ -229,6 +229,7 @@
     export default {
         data (){
             return {
+                appUrl: process.env.MIX_APP_URL,
                 product_id : 0,
                 category_id : 0,
                 code : '',
@@ -259,7 +260,8 @@
                 critery : 'name',
                 search : '',
                 arrayCategory : [],
-                category_name: ''
+                category_name: '',
+                dim:0
             }
         },
         computed: {
@@ -293,9 +295,7 @@
         },
         methods : {
             listProduct (page,search,critery){
-
                 let me=this;
-
                 var url='product?page=' + page + '&search=' + search + '&critery=' + critery;
                 axios.get(url).then(function(response) {
                     var response = response.data;
@@ -307,8 +307,9 @@
                 });
             },
             loadPdf(){
-                window.open('https://bacoop.com/admin/public/product/listPdf', '_blank');
-                // window.open('https://bacoop.com/jm/public/product/listPdf', '_blank');
+                window.open(this.appUrl + 'product/listPdf');
+                // window.open('https://bacoop.com/admin/public/product/listPdf', '_blank');
+                // window.open('https://bacoop.com/test/public/product/listPdf', '_blank');
                 // window.open('http://localhost/sale/public/product/listPdf', '_blank');
             },
             categorySelect(){
@@ -351,11 +352,11 @@
 
             },
             registerProduct (){
-
                 if (this.validateProduct()) {
                     return;
                 };
                 let me=this;
+                me.dim=1;
                 axios.post('product/register', {
                     'category_id': this.category_id,
                     'code':this.code,
@@ -369,6 +370,7 @@
                 }).then(function(response) {
                     me.closeModal();
                     me.listProduct(1,'','name');
+                    me.dim=0;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -378,9 +380,8 @@
                 if (this.validateProduct()) {
                     return;
                 };
-
                 let me = this;
-
+                me.dim=1;
                 axios.put('product/update', {
                     'id' : this.product_id,
                     'category_id': this.category_id,
@@ -393,6 +394,7 @@
                 }).then(function (response){
                     me.closeModal();
                     me.listProduct(1,'', 'name');
+                    me.dim=0;
                 }).catch(function (error){
                     console.log(error);
                 });
@@ -405,9 +407,9 @@
 
                 if (!this.name) this.errorSmsProduct.push("El Nombre del producto no puede estar vacio");
 
-                // if (!this.stock) this.errorSmsProduct.push(" Stock del producto debe ser un Numero y no puede estar vacio");
+                // if (!this.stock) this.errorSmsProduct.push(" Stock del producto debe ser un Número y no puede estar vacio");
 
-                // if (!this.price_buy) this.errorSmsProduct.push("Precio de Compra del producto debe ser un Numero y no puede estar vacio");
+                // if (!this.price_buy) this.errorSmsProduct.push("Precio de Compra del producto debe ser un Número y no puede estar vacio");
 
                 if (this.tax_id == 0) this.errorSmsProduct.push("Seleccione tipo de impuesto para el producto");
 
