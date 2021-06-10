@@ -111,7 +111,7 @@
             	}
             	let me = this;
 
-            	axios.put('tax/update', {
+            	axios.post('tax/update', {
             		'id': data['id'],
             		'tax': data['tax']
 

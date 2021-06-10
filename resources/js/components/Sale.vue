@@ -15,8 +15,8 @@
             <div class="card">
                 <div class="card-header">
 
-                    <button type="button" class="btn btn-success" @click="showDetail()">
-                        <i class="fa fa-file"></i>&nbsp;&nbsp;Crear Factura
+                    <button type="button" class="float-xl-right btn btn-outline-success" @click="showDetail()">
+                        <span class="h5"><i class="fa fa-file fa-fw"></i>&nbsp;&nbsp;Crear Factura</span>
                     </button>
                 </div>
                 <!-- litado registros -->
@@ -57,7 +57,7 @@
                                     <tr v-for="sale in arraySale" :key="sale.id">
                                         <td>
                                             <button type="button" class="btn btn-success btn-sm" @click="showSale(sale.id)">
-                                            Detalles</i>
+                                            Detalles
                                             </button> &nbsp;
                                         </td>
                                         <td v-text="sale.name"></td>
@@ -377,8 +377,15 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="">Cliente(*)</label>
-                                    <v-select  @search="clientSelect" label="name" :options="arrayClient"placeholder="Buscar Cliente"@input="getClientInfo">
-                                        <button slot="no-options" type="submit" @click="openModalClient()" class="btn btn-primary"><i class="fa fa-search"></i>Cliente no registrado. Crear??</button>
+                                    <v-select  @search="clientSelect"
+                                    label="name" :options="arrayClient"
+                                    placeholder="Buscar Cliente"
+                                    @input="getClientInfo">
+                                        <button slot="no-options"
+                                        type="submit" @click="openModalClient()"
+                                        class="btn btn-primary">
+                                            <i class="fa fa-search"></i>
+                                            Cliente no registrado. Crear??</button>
                                     </v-select>
                                 </div>
                             </div>
@@ -511,10 +518,11 @@
                     </div>
                 </template>
                 <!-- Fin panel -->
+
             </div>
             <!-- Fin de tabla Listado -->
         </div>
-            
+
         <!--Inicio del modal agregar Productos-->
         <div class="modal fade" tabindex="-1" :class="{'show' : modal }" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-primary modal-lg" role="document">
@@ -617,14 +625,12 @@
                             <div class="form-group row">
                                 <label class="col-md-3 form-control-label" for="rif">Rif o C.I.</label>
                                 <div class="col-md-2">
-
                                     <select class="form-control" v-model="type">
                                         <option selected="selected" value="j">J</option>
-                                        <option value="g" >G</option>
-                                        <option value="v" >V</option>
-                                        <option value="c" >Cedula</option>
+                                        <option value="g">G</option>
+                                        <option value="v">V</option>
+                                        <option value="c">Cedula</option>
                                     </select>
-
                                 </div>
                                 <div class="col-md-5">
                                     <input type="number" v-model="rif" class="form-control" maxlength="9" minlength="6">
@@ -640,7 +646,7 @@
                             <div class="form-group row">
                                 <label class="col-md-3 form-control-label" for="phone">Número teléfonico</label>
                                 <div class="col-md-9">
-                                    <input type="number" v-model="phone" class="form-control" placeholder="Ingrese Número Teléfonico">
+                                    <input type="text" v-model="phone" class="form-control" placeholder="Ingrese Número Teléfonico" @input="acceptNumber">
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -668,7 +674,7 @@
             </div>
             <!-- /.modal-dialog -->
         </div>
-        <!--Fin del modal agragar clientes-->  
+        <!--Fin del modal agragar clientes-->
     </main>
 </template>
 
@@ -940,7 +946,8 @@
                 if (this.errorSmsList.length) this.errorSms = 1;
                     if (this.errorSmsList.length >= 1) {
                         Swal.fire({
-                            type: error,
+                            type: 'error',
+                            title:'Hey!! Nos falta(n) Datos',
                             confirmButtonText: 'Aceptar!',
                             confirmButtonClass: 'btn btn-danger',
                             confirmButtonColor: '#3085d6',
@@ -1175,7 +1182,7 @@
                     .catch(function (error) {
                         console.log(error);
                     });
-                    
+
                 };
             },
             editSale(id){
@@ -1224,7 +1231,7 @@
                     }else {
                         let me=this;
                         me.dim=1;
-                        axios.put('sale/update', {
+                        axios.post('sale/update', {
 
                             'id': this.sale_id,
                             'client_id':this.client_id,
@@ -1303,10 +1310,12 @@
                 if (me.errorSmsListS.length) me.errorSmsS = 1;
                 if (me.errorSmsListS.length >= 1) {
                     Swal.fire({
+                        title:'Hey!! Nos falta(n) Datos',
+                        type: 'info',
                         confirmButtonText: 'Aceptar!',
                         confirmButtonClass: 'btn btn-danger',
                         confirmButtonColor: '#3085d6',
-                        html: `${me.errorSmsListS.map( er =>`<br><br>${er}`)}`,
+                        html: `${me.errorSmsListS.map( er =>`<br><span style="color:red;" class="mb-3">${er}</span>`)}`,
                         showCancelButton: false
                     });
                 };
@@ -1376,7 +1385,7 @@
                     if (result.value) {
                         let me=this;
 
-                        axios.put('sale/desactive', {
+                        axios.post('sale/desactive', {
                             'id': sale_id
                         }).then(function (response){
                             me.list=1;
@@ -1395,6 +1404,10 @@
 
                     }
                 })
+            },
+            acceptNumber() {
+                var x = this.phone.replace(/\D/g, '').match(/(\d{0,4})(\d{0,3})(\d{0,4})/);
+                this.phone = !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
             }
         },
         mounted() {

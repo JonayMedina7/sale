@@ -1,213 +1,216 @@
-W <template>
-        <main class="main" :class="dim == 1 ? 'blur' : '' ">
-            <!-- Breadcrumb -->
-             <ol class="breadcrumb">
-              <li class="breadcrumb-item">Inicio</li>
-              <li class="breadcrumb-item">
-                <a href="#">Dilia Software</a>
-              </li>
-              <li class="breadcrumb-item active"> Clientes&nbsp;&nbsp;<i class="fa fa-address-book-o"></i></li>
-              <!-- Breadcrumb Menu-->
-              <li class="breadcrumb-menu d-md-down-none">
+<template>
+    <main class="main" :class="dim == 1 ? 'blur' : '' ">
+        <!-- Breadcrumb -->
+         <ol class="breadcrumb">
+          <li class="breadcrumb-item">Inicio</li>
+          <li class="breadcrumb-item">
+            <a href="#">Dilia Software</a>
+          </li>
+          <li class="breadcrumb-item active"> Clientes&nbsp;&nbsp;<i class="fa fa-address-book-o"></i></li>
+          <!-- Breadcrumb Menu-->
+          <li class="breadcrumb-menu d-md-down-none">
 
-              </li>
-            </ol>
-            <div class="container-fluid">
-                <!-- Ejemplo de tabla Listado -->
-                <div class="card">
-                    <div class="card-header">
+          </li>
+        </ol>
+        <div class="container-fluid">
+            <!-- Ejemplo de tabla Listado -->
+            <div class="card">
+                <div class="card-header">
 
-                        <button type="button" class="btn btn-success" @click="openModal('client','register')">
-                            <i class="fa fa-address-book-o"></i>&nbsp;&nbsp; Agregar Nuevo
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group row">
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <select class="form-control col-md-3" v-model="criterion">
-                                      <option value="name">Nombre</option>
-                                      <option value="rif">Rif</option>
-                                    </select>
-                                    <input type="text" v-model="search" @keyup.enter="listClient(1,search,criterion)" class="form-control" placeholder="Texto a Buscar">
-                                    <button type="submit" @click="listClient(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
-                                </div>
+                    <button type="button" class="float-xl-left btn btn-outline-success" @click="openModal('client','register')">
+                        <span class="h5"><i class="fa fa-address-book-o fa-fw"></i>&nbsp;&nbsp; Agregar Nuevo</span>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <select class="form-control col-md-3" v-model="criterion">
+                                  <option value="name">Nombre</option>
+                                  <option value="rif">Rif</option>
+                                </select>
+                                <input type="text" v-model="search" @keyup.enter="listClient(1,search,criterion)" class="form-control" placeholder="Texto a Buscar">
+                                <button type="submit" @click="listClient(1,search,criterion)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                             </div>
                         </div>
-                        <table class="table table-bordered table-striped table-sm">
-                            <thead>
-                                <tr>
-                                    <th>Opciones</th>
-                                    <th>Rif</th>
-                                    <th>Razón Social</th>
-                                    <th>Teléfono</th>
-                                    <th>Correo Electrónico</th>
-                                    <th>Agente de retención</th>
-                                    <th>Dirección</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="client in arrayClient" :key="client.id">
-                                    <td>
-                                        <button type="button" class="btn btn-warning btn-sm" @click="openModal('client','update', client)">
-                                          &nbsp;&nbsp;Editar
-                                        </button> &nbsp;
-                                        <button v-if="client.condition" type="button" @click="openModal('client','desactive',client)" class="btn btn-danger btn-sm" >
-                                          &nbsp;&nbsp;Suspender
-                                        </button>
-                                        <button v-else type="button" @click="openModal('client','active',client)" class="btn btn-success btn-sm" >
-                                          <i class="icon-check"></i>
-                                        </button>
-                                    </td>
-                                    <td v-text="client.type + '-' + client.rif"></td>
-                                    <td v-text="client.name"></td>
-                                    <td v-text="client.phone"></td>
-                                    <td v-text="client.email"></td>
+                    </div>
+                    <table class="table table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>Opciones</th>
+                                <th>Rif</th>
+                                <th>Razón Social</th>
+                                <th>Teléfono</th>
+                                <th>Correo Electrónico</th>
+                                <th>Agente de retención</th>
+                                <th>Dirección</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="client in arrayClient" :key="client.id">
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-sm" @click="openModal('client','update', client)">
+                                      &nbsp;&nbsp;Editar
+                                    </button> &nbsp;
+                                    <button v-if="client.condition" type="button" @click="openModal('client','desactive',client)" class="btn btn-danger btn-sm" >
+                                      &nbsp;&nbsp;Suspender
+                                    </button>
+                                    <button v-else type="button" @click="openModal('client','active',client)" class="btn btn-success btn-sm" >
+                                      <i class="icon-check"></i>
+                                    </button>
+                                </td>
+                                <td v-text="client.type + '-' + client.rif"></td>
+                                <td v-text="client.name"></td>
+                                <td v-text="client.phone"></td>
+                                <td v-text="client.email"></td>
 
-                                    	<td v-if="client.retention>=75" v-text="client.retention + '%' "></td>
-										<td v-else>No aplica</td>
+                                	<td v-if="client.retention>=75" v-text="client.retention + '%' "></td>
+									<td v-else>No aplica</td>
 
-                                    <td v-text="client.address"></td>
-                                    <td>
-                                        <div v-if="client.condition">
-                                            <span class="badge badge-success">Activo</span>
-                                        </div>
+                                <td v-text="client.address"></td>
+                                <td>
+                                    <div v-if="client.condition">
+                                        <span class="badge badge-success">Activo</span>
+                                    </div>
 
-                                        <div v-else>
-                                            <span class="badge badge-secondary">Inactivo</span>
-                                        </div>
-                                    </td>
-                                </tr>
+                                    <div v-else>
+                                        <span class="badge badge-secondary">Inactivo</span>
+                                    </div>
+                                </td>
+                            </tr>
 
-                            </tbody>
-                        </table>
-                        <nav>
-                            <ul class="pagination">
-                                <li class="page-item" v-if="pagination.current_page > 1">
-                                    <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page -1, search, criterion)">Ant</a>
-                                </li>
-                                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActive ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="changePage(page, search, criterion)" v-text="page"></a>
-                                </li>
+                        </tbody>
+                    </table>
+                    <nav>
+                        <ul class="pagination">
+                            <li class="page-item" v-if="pagination.current_page > 1">
+                                <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page -1, search, criterion)">Ant</a>
+                            </li>
+                            <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActive ? 'active' : '']">
+                                <a class="page-link" href="#" @click.prevent="changePage(page, search, criterion)" v-text="page"></a>
+                            </li>
 
-                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                    <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page +1, search, criterion)">Sig</a>
-                                </li>
-                            </ul>
-                        </nav>
+                            <li class="page-item" v-if="pagination.current_page < pagination.last_page">
+                                <a class="page-link" href="#" @click.prevent="changePage(pagination.current_page +1, search, criterion)">Sig</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <!-- Fin ejemplo de tabla Listado -->
+        </div>
+        <!--Inicio del modal agregar/actualizar-->
+        <div class="modal fade" tabindex="-1" :class="{'show' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-primary modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" v-text="titleModal"></h4>
+                        <button type="button" class="close" @click="closeModal()" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label" for="rif">Rif o C.I.</label>
+                                <div class="col-md-2">
+
+                                    <select class="form-control" v-model="type">
+										<option selected="selected" value="j">J</option>
+										<option value="g" >G</option>
+										<option value="v" >V</option>
+										<option value="c" >Cedula</option>
+                                    </select>
+
+                                </div>
+								<div class="col-md-5">
+                                    <input type="number" v-model="rif" class="form-control" maxlength="9" minlength="6">
+                                    <span style="color:red;" v-if="msg.rif">{{msg.rif}}</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label" for="text-input">Razon Social</label>
+                                <div class="col-md-9">
+                                    <input type="text" v-model="name" class="form-control" placeholder="Razon Social">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label" for="phone">Número teléfonico</label>
+                                <div class="col-md-9">
+                                    <input type="text" v-model="phone" class="form-control" placeholder="Ingrese Número Teléfonico" @input="acceptNumber">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label" for="stock">Correo electronico</label>
+                                <div class="col-md-9">
+                                    <input type="email" v-model="email" class="form-control" placeholder="Ingrese Correo"
+                                    v-bind:class="{'form-control':true, 'is-invalid' : !validEmail(email) && emailBlured}" v-on:blur="emailBlured = true">
+                                    <div class="invalid-feedback">Un Correo Electronico valido es necesario</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label" for="description">Dirección</label>
+                                <div class="col-md-9">
+                                    <input type="text" v-model="address" class="form-control" placeholder="Ingrese dirección">
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @click="closeModal()">Cerrar</button>
+                        <button v-if="actionType==1" type="button" class="btn btn-primary" @click="registerClient()">Guardar</button>
+                        <button v-if="actionType==2" type="button" class="btn btn-primary" @click="updateClient()">Actualizar</button>
                     </div>
                 </div>
-                <!-- Fin ejemplo de tabla Listado -->
+                <!-- /.modal-content -->
             </div>
-            <!--Inicio del modal agregar/actualizar-->
-            <div class="modal fade" tabindex="-1" :class="{'show' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
-                <div class="modal-dialog modal-primary modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title" v-text="titleModal"></h4>
-                            <button type="button" class="close" @click="closeModal()" aria-label="Close">
-                              <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="rif">Rif o C.I.</label>
-                                    <div class="col-md-2">
-
-                                        <select class="form-control" v-model="type">
-											<option selected="selected" value="j">J</option>
-											<option value="g" >G</option>
-											<option value="v" >V</option>
-											<option value="c" >Cedula</option>
-                                        </select>
-
-                                    </div>
-									<div class="col-md-5">
-                                        <input type="number" v-model="rif" class="form-control" maxlength="9" minlength="6">
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="text-input">Razon Social</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="name" class="form-control" placeholder="Razon Social">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="phone">Número teléfonico</label>
-                                    <div class="col-md-9">
-                                        <input type="number" v-model="phone" class="form-control" placeholder="Ingrese Número Teléfonico">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="stock">Correo electronico</label>
-                                    <div class="col-md-9">
-                                        <input type="email" v-model="email" class="form-control" placeholder="Ingrese Correo">
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="description">Dirección</label>
-                                    <div class="col-md-9">
-                                        <input type="text" v-model="address" class="form-control" placeholder="Ingrese dirección">
-                                    </div>
-                                </div>
-
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" @click="closeModal()">Cerrar</button>
-                            <button v-if="actionType==1" type="button" class="btn btn-primary" @click="registerClient()">Guardar</button>
-                            <button v-if="actionType==2" type="button" class="btn btn-primary" @click="updateClient()">Actualizar</button>
-                        </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!--Fin del modal-->
+         <div class="modal fade" tabindex="-1" :class="{'show' : modal1}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-danger" role="document">
+                <div v-if="condition" class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Desactivar Cliente</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
                     </div>
-                    <!-- /.modal-content -->
+                    <div class="modal-body">
+                        <p>Estas seguro de desactivar al Cliente?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @click="closeModal()">Cancelar</button>
+                        <button type="button" class="btn btn-danger" @click="desactiveClient()">Desactivar</button>
+
+                    </div>
                 </div>
-                <!-- /.modal-dialog -->
-            </div>
-            <!--Fin del modal-->
-             <div class="modal fade" tabindex="-1" :class="{'show' : modal1}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
-                <div class="modal-dialog modal-danger" role="document">
-                    <div v-if="condition" class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Desactivar Cliente</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Estas seguro de desactivar al Cliente?</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" @click="closeModal()">Cancelar</button>
-                            <button type="button" class="btn btn-danger" @click="desactiveClient()">Desactivar</button>
-
-                        </div>
+                <div v-else class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Activar Cliente</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
                     </div>
-                    <div v-else class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Activar Cliente</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Pulse Activar para activar al Cliente</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" @click="closeModal()">Cancelar</button>
-                            <button type="button" class="btn btn-success" @click="activeClient()">Activar</button>
-                        </div>
+                    <div class="modal-body">
+                        <p>Pulse Activar para activar al Cliente</p>
                     </div>
-                    <!-- /.modal-content -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @click="closeModal()">Cancelar</button>
+                        <button type="button" class="btn btn-success" @click="activeClient()">Activar</button>
+                    </div>
                 </div>
-                <!-- /.modal-dialog -->
+                <!-- /.modal-content -->
             </div>
-            <!-- Fin del modal Eliminar -->
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- Fin del modal Eliminar -->
 
-        </main>
+    </main>
 </template>
 
 <script>
@@ -215,15 +218,16 @@ W <template>
         data (){
             return {
                 client_id : 0,
-                type: '',
+                type: 'j',
                 rif : '',
                 name : '',
                 phone : '',
                 email: '',
+                emailBlured : false,
+                valid : false, 
                 retention : 'no',
                 address : '',
                 condition : '',
-                type: '',
                 arrayClient : [],
                 modal1 : 0,
                 modal : 0,
@@ -231,6 +235,7 @@ W <template>
                 actionType : 0,
                 errorSms : 0,
                 errorSmsList : [],
+                msg: [],
                 pagination : {
                     'total' : 0,
                     'current_page' : 0,
@@ -243,6 +248,12 @@ W <template>
                 criterion : 'name',
                 search : '',
                 dim:0
+            }
+        },
+        watch: {
+            rif(value){
+              this.rif = value;
+              this.validRif(value);
             }
         },
         computed: {
@@ -331,7 +342,7 @@ W <template>
 
                 let me = this;
                 me.dim=1;
-                axios.put('client/update', {
+                axios.post('client/update', {
                     'id' : this.client_id,
                     'type':this.type,
                     'rif':this.rif,
@@ -352,6 +363,8 @@ W <template>
                 this.errorSms=0;
                 this.errorSmsList =[];
 
+
+                if( this.validEmail(this.email)){this.valid = true;};
                 if (!this.name) this.errorSmsList.push("El Nombre del producto no puede estar vacio");
 
                 if (!this.email) this.errorSmsList.push("El Correo Eléctronico del Cliente no puede estar vacio");
@@ -363,11 +376,12 @@ W <template>
                 if (this.errorSmsList.length) this.errorSms = 1;
                     if (this.errorSmsList.length >= 1) {
                         Swal.fire({
-                            type: error,
+                            type: 'info',
+                            title:'Hey!! Nos falta(n) Datos ',
                             confirmButtonText: 'Aceptar!',
                             confirmButtonClass: 'btn btn-danger',
                             confirmButtonColor: '#3085d6',
-                            html: `${this.errorSmsList.map( er =>`<br><br>${er}`)}`,
+                            html: `${this.errorSmsList.map( er =>`<br><span style="color:red;" class="mb-3">${er}</span>`)}`,
                             showCancelButton: false
                             });
                 };
@@ -376,7 +390,7 @@ W <template>
             desactiveClient(){
                 let me = this;
 
-                axios.put('client/desactive', {
+                axios.post('client/desactive', {
                     'id': this.client_id,
                 }).then(function (response) {
                     me.closeModal();
@@ -389,7 +403,7 @@ W <template>
             activeClient(){
                 let me = this;
 
-                axios.put('client/active', {
+                axios.post('client/active', {
                     'id': this.client_id,
                 }).then(function (response) {
                     me.closeModal();
@@ -412,7 +426,7 @@ W <template>
                 this.rif=0;
                 this.phone='';
                 this.email='';
-                this.type = '';
+                this.type = 'j';
             },
             openModal(modelo, accion, data = []){
                 switch(modelo) {
@@ -431,7 +445,7 @@ W <template>
 				                this.rif=0;
 				                this.phone='';
 				                this.email='';
-				                this.type='';
+				                this.type='j';
                                 break;
                             }
                             case 'update':
@@ -466,6 +480,41 @@ W <template>
                     }
                 }
 
+            },
+            acceptNumber() {
+                var x = this.phone.replace(/\D/g, '').match(/(\d{0,4})(\d{0,3})(\d{0,4})/);
+                this.phone = !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
+            },
+            validEmail : function(email) {
+                var re = /(.+)@(.+){2,}\.(.+){2,}/;
+                return re.test(email.toLowerCase());
+            },
+            validRif(value){
+                if (this.type != 'c') {
+                    let difference = 9;
+                    if (value.length<9) {
+                        difference = difference - value.length;
+                        this.msg['rif'] = 'Deben ser 9 Caracteres! Faltan  '+ difference + ' caracteres! Para completar use ceros delante' ;
+                    } else if(value.length>9) {
+                        difference = value.length - difference;
+                        this.msg['rif'] = 'Deben ser 9 Caracteres! sobran  '+ difference + ' caracteres! Para completar use ceros delante' ;
+                        
+                    }else {
+                        this.msg['rif'] = '';
+                    }
+                } else {
+                    let difference =  8;
+                    if (value.length<8) {
+                        difference = difference - value.length;
+                        this.msg['rif'] = 'Deben ser 8 Caracteres! Faltan  '+ difference + ' caracteres! Para completar use ceros delante' ;
+                    } else if(value.length>8) {
+                        difference = value.length - difference;
+                        this.msg['rif'] = 'Deben ser 8 Caracteres! sobran  '+ difference + ' caracteres! Para completar use ceros delante' ;
+                        
+                    }else {
+                        this.msg['rif'] = '';
+                    }
+                }
             }
         },
         mounted() {

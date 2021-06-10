@@ -61,33 +61,66 @@ class ProviderController extends Controller
     public function store(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
+        $client = Client::where('rif', $request->rif)->where('email', $request->email)->first();
+        
+        if ($client != '') {
+            try {
+                DB::beginTransaction();
+                $client = Client::findOrFail($client->id);
+                $client->phone = $request->phone;
+                $client->email = strtolower($request->email);
+                $client->retention = $request->retention;
+                $client->address = ucwords(mb_strtolower($request->address));
+                $client->condition = '1';
+                $client->save();
 
-        try {
-        DB::beginTransaction();
-        $client = new Client();
-        $client->name = ucwords(strtolower($request->name));
-        $client->phone = $request->phone;
-        $client->email = strtolower($request->email);
-        $client->type = $request->type;
-        $client->rif = $request->rif;
-        $client->retention = $request->retention;
-        $client->address = ucwords(strtolower($request->address));
-        $client->condition = '1';
-        $client->save();
-
-        $provider = new Provider();
-        $provider->contact = ucwords(strtolower($request->contact));
-        $provider->contact_phone = $request->contact_phone;
-        $provider->id = $client->id;
-
-        $provider->save();
-
-        DB::commit();
-        } catch (Exception $e) {
-        	DB::rollBack();
-
+                $provider = Provider::updateOrCreate([
+                    'id' => $client->id
+                ],[
+                    'contact' => ucwords(mb_strtolower($request->contact)),
+                    'contact_phone' => $request->contact_phone
+                ]);
+                
+                $provider->save();
+                DB::commit();
+                return response()->json(['info'=> 'Actualizado proveedor, rif registrado con el Proveedor '. $client->name], 200);
+            } catch (Exception $e) {
+                DB::rollBack();
+                    return response()->json(['error'=>$e]);;
+            }
+            
         }
+        $client = Client::where('email', $request->email)->first();
+        if ($client != '' && $client->rif <> $request->rif ) {
+            return response()->json(['error' => 'Email Registrado, por favor verifique los Clientes'],400);
+        } else{
+            try {
+                DB::beginTransaction();
+                $client = new Client();
+                $client->name = ucwords(mb_strtolower($request->name));
+                $client->phone = $request->phone;
+                $client->email = strtolower($request->email);
+                $client->type = $request->type;
+                $client->rif = $request->rif;
+                $client->retention = $request->retention;
+                $client->address = ucwords(mb_strtolower($request->address));
+                $client->condition = '1';
+                $client->save();
 
+                $provider = new Provider();
+                $provider->contact = ucwords(mb_strtolower($request->contact));
+                $provider->contact_phone = $request->contact_phone;
+                $provider->id = $client->id;
+
+                $provider->save();
+
+                DB::commit();
+                return response()->json(['message'=> 'Proveedor Registrado '. $client->name], 200);
+                } catch (Exception $e) {
+                    DB::rollBack();
+                    return response()->json(['error'=>$e], 400);;
+                }
+        }
 
     }
 
@@ -110,23 +143,24 @@ class ProviderController extends Controller
 
         $client = Client::findOrFail($provider->id);
 
-        $client->name = ucwords(strtolower($request->name));
+        $client->name = ucwords(mb_strtolower($request->name));
         $client->phone = $request->phone;
         $client->email = strtolower($request->email);
         $client->type = $request->type;
         $client->rif = $request->rif;
         $client->retention = $request->retention;
-        $client->address = ucwords(strtolower($request->address));
+        $client->address = ucwords(mb_strtolower($request->address));
         $client->condition = '1';
         $client->save();
 
-        $provider->contact = ucwords(strtolower($request->contact));
+        $provider->contact = ucwords(mb_strtolower($request->contact));
         $provider->contact_phone = $request->contact_phone;
         $provider->save();
         DB::commit();
+        return 'pass';
         } catch (Exception $e) {
         	DB::rollBack();
-
+            return $e;
         }
 
     }

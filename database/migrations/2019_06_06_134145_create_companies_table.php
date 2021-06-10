@@ -20,6 +20,7 @@ class CreateCompaniesTable extends Migration
             $table->string('phone', 13)->nullable();
             $table->string('email')->unique();
             $table->enum('type',['j', 'g', 'v', 'c'])->default('j');
+            $table->string('stamp_url')->nullable();
             $table->integer('rif')->unique();
             $table->timestamps();
         });

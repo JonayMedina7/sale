@@ -19,7 +19,7 @@ class SaleController extends Controller
 {
      public function index(Request $request)
     {
-        /*if (!$request->ajax()) return redirect('/');*/
+        if (!$request->ajax()) return redirect('/');
         $search = $request->search;
         $criterion = $request->criterion;
 
@@ -321,6 +321,7 @@ class SaleController extends Controller
         $sale = Sale::findOrFail($request->id);
         $sale->status = 'Anulado';
         $sale->save();
+        return response()->json(200);
     }
 
 }

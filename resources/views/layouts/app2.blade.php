@@ -12,8 +12,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Sistema Ventas - Dilia Soluciones</title>
     <!-- Icons -->
-    
-    
+
+
     <link href="{{ asset('./css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('./css/template.css') }}" rel="stylesheet">
 </head>
@@ -28,9 +28,9 @@
             <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button">
               <span class="navbar-toggler-icon"></span>
             </button>
-            
+
             <ul class="nav navbar-nav ml-auto">
-                <li class="nav-item d-md-down-none">
+                {{-- <li class="nav-item d-md-down-none">
                     <a class="nav-link" href="#" data-toggle="dropdown">
                         <i class="icon-bell"></i>
                         <span class="badge badge-pill badge-danger">5</span>
@@ -48,7 +48,7 @@
                             <span class="badge badge-danger">2</span>
                         </a>
                     </div>
-                </li>
+                </li> --}}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                         <img src="img/avatars/6.png" class="img-avatar" alt="">
@@ -58,11 +58,11 @@
                         <div class="dropdown-header text-center">
                             <strong>Cuenta</strong>
                         </div>
-                        
+
                         <a class="dropdown-item" href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit(); "><i class="fa fa-lock"></i> Cerrar sesión</a>
                         <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
                             @csrf
-                            
+
                         </form>
                     </div>
                 </li>
@@ -79,14 +79,14 @@
                     @include('layouts.storersidebar')
                 @endif
             @endif
-            
+
             <!-- Contenido Principal -->
            @yield('content')
             <!-- /Fin del contenido principal -->
         </div>
 
-    </div> <!-- /div id="app--> 
-    
+    </div> <!-- /div id="app-->
+
 
     <footer class="app-footer">
 
@@ -96,9 +96,9 @@
     </footer>
 
     <!-- Bootstrap and necessary plugins -->
-    
-    
-    
+
+
+
     <script src="{{ asset('./js/app.js') }}" defer></script>
     <script src="{{ asset('./js/template.js') }}" defer></script>
     <script src="{{ asset('./js/Chart.min.js') }}" defer></script>

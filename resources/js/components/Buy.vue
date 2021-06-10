@@ -16,8 +16,8 @@
                 <div class="card">
                     <div class="card-header">
 
-                        <button type="button" class="btn btn-success" @click="showDetail()">
-                            <i class="fa fa-cart-plus"></i>&nbsp;&nbsp;Ingresar Gastos
+                        <button type="button" class="float-xl-left btn btn-outline-success" @click="showDetail()">
+                            <span class="h5"><i class="ffa fa-cart-plus fa-fw"></i>&nbsp;&nbsp;Ingresar Gastos</span>
                         </button>
                     </div>
                     <!-- litado registros -->
@@ -592,7 +592,7 @@
                     if (result.value) {
                         let me=this;
 
-                        axios.put('buy/desactive', {
+                        axios.post('buy/desactive', {
                             'id': purshase_id
                         }).then(function (response){
                            me.listBuy(1,'','voucher_num');

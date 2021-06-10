@@ -216,7 +216,7 @@ W<template>
             	}
             	let me = this;
                 me.dim=1;
-            	axios.put('company/update', {
+            	axios.post('company/update', {
             		'id':this.id,
             		'name': this.name,
             		'type': this.type,

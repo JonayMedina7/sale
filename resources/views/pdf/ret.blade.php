@@ -8,7 +8,6 @@
     <script src="{{ asset('js/jquery.min.js') }}" defer></script>
     <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet"> --}}
     <style>
-
         *, *::before, *::after {
             box-sizing: border-box;
         }
@@ -40,9 +39,6 @@
         text-align: left;
         margin: 1;
         padding: 1;
-        
-
-        /*font-family: SourceSansPro;*/
         }
         article, aside, figcaption, figure, header, hgroup, main, nav, section, footer{
                 display: block !important;
@@ -74,7 +70,6 @@
             padding:  0px;
             top: 7px;
             bottom: 0px;
-            
             
         }
         table.art thead, table.art tbody{
@@ -110,12 +105,11 @@
             margin-left: auto;
         }
         .row{
-                
-                display: flex;
-                -ms-flex-wrap: wrap;
-                flex-wrap: wrap;
-                margin-right: -15px;
-                margin-left: -15px;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
         }
         .border {
             border: 1px solid #dee2e6 !important;
@@ -128,12 +122,12 @@
         }
 
         .col-md-5 {
-                flex: 0 0 41.666667%;
-                 max-width: 41.666667%;
+            flex: 0 0 41.666667%;
+             max-width: 41.666667%;
         }
         .col-md-6 {
-                flex: 0 0 50%;
-                 width: 50%;
+            flex: 0 0 50%;
+             width: 50%;
         }
         .col-md-7 {
             flex: 0 0 58.333333%;
@@ -229,8 +223,8 @@
         }
         .stamp {
             top: 100%;
-            width: 40%;
-            height: 900%;
+            width: 35%;
+            height: 700%;
             padding: 0;
             margin: 0;
         }
@@ -305,42 +299,74 @@
                         </tr>
                     </thead>
                     <tbody align="center">
-                        @foreach ($detailret as $d)
-
-                        <tr>
-                            <td scope="row">{{ $d->id }}</td>
-                            <td>{{ date('d/m/Y', strtotime($d->datep) ) }}</td>
-                            <td>{{ $d->purchase_num }}</td>
-                            <td>{{ $d->voucher_serie }}</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>01</td>
-                            <td>0</td>
-                            <td>{{ number_format($d->totalp, 2, ',', '.') }}</td>
-                            <td>{{ number_format($d->exempt, 2, ',', '.') }}</td>
-                            <td>{{ number_format(($d->totalp - $d->tax_mount)-$d->exempt, 2, ',', '.') }}</td>
-                            <td>{{ $d->tax.'%' }}</td>
-                            <td>{{ number_format($d->tax_mount, 2, ',', '.') }}</td>
-                            <td>{{ number_format($d->total_ret, 2, ',', '.') }}</td>
-                            @for ($i = 0; $i <count($detailret) ; $i++)
-                                @php
-                                    $total_exempt = 0.00;
-                                    $total_base = 0.00;
-                                    $total_taxes = 0.00;
-                                    $tot_p = 0.00;
-                                @endphp
-                                    @php ($total_exempt = $total_exempt + $d->exempt)
-                                    @php ($total_base = $total_base + (($d->totalp - $d->tax_mount)-$d->exempt))
-                                    @php ($total_taxes = $total_taxes + $d->tax_mount)
-                                    @php ($tot_p = $tot_p + $d->totalp)
-                            @endfor
-                            
-                            
-                        </tr>
-                        @endforeach
+                        @php
+                            $total_exempt = 0.00;
+                            $total_base = 0.00;
+                            $total_taxes = 0.00;
+                            $tot_p = 0.00;
+                            $total_tax_note = 0.00;
+                            $total_exempt_note = 0.00;
+                            $total_base_note = 0.00;
+                            $total_note = 0.00;
+                        @endphp
+                        @for ($i = 0; $i <count($detailret) ; $i++)
+    
+                            <tr>
+                                <td scope="row">{{ $i+1 }}</td>
+                                <td>{{ date('d/m/Y', strtotime($detailret[$i]->datep) ) }}</td>
+                                @if($detailret[$i]->voucher == 'bill')
+                                    <td>{{ $detailret[$i]->purchase_num }}</td>
+                                @else
+                                    <td>0</td>
+                                @endif
+                                <td>{{ $detailret[$i]->voucher_serie }}</td>
+                                @if($detailret[$i]->voucher == 'debit')
+                                    <td>{{ $detailret[$i]->purchase_num }}</td>
+                                @else
+                                    <td>0</td>
+                                @endif
+                                @if($detailret[$i]->voucher == 'credit')
+                                    <td>{{ $detailret[$i]->purchase_num }}</td>
+                                    <td>03</td>
+                                    <td>{{ $detailret[$i]->note_num }}</td>
+                                    <td>-{{ number_format($detailret[$i]->totalp, 2, ',', '.') }}</td>
+                                    <td>-{{ number_format($detailret[$i]->exempt, 2, ',', '.') }}</td>
+                                    <td>-{{ number_format(($detailret[$i]->totalp - $detailret[$i]->tax_mount)-$detailret[$i]->exempt, 2, ',', '.') }}</td>
+                                    <td>{{ $detailret[$i]->tax.'%' }}</td>
+                                    <td>-{{ number_format($detailret[$i]->tax_mount, 2, ',', '.') }}</td>
+                                    <td>-{{ number_format($detailret[$i]->total_ret, 2, ',', '.') }}</td>
+                                    @php($total_note = $total_note + $detailret[$i]->totalp)
+                                    @php($total_tax_note = $total_tax_note + $detailret[$i]->tax_mount)
+                                    @php($total_exempt_note = $total_exempt_note + $detailret[$i]->exempt)
+                                    @php($total_base_note = $total_base_note + (($detailret[$i]->totalp - $detailret[$i]->tax_mount) - $detailret[$i]->exempt))
+                                @elseif($detailret[$i]->voucher == 'bill' || $detailret[$i]->voucher == 'debit')
+                                    <td>0</td>
+                                    <td>{{ $detailret[$i]->doc_type }}</td>
+                                    @if($detailret[$i]->voucher == 'debit')
+                                        <td>{{ $detailret[$i]->note_num }}</td>
+                                    @else
+                                        <td>0</td>
+                                    @endif
+                                    <td>{{ number_format($detailret[$i]->totalp, 2, ',', '.') }}</td>
+                                    <td>{{ number_format($detailret[$i]->exempt, 2, ',', '.') }}</td>
+                                    <td>{{ number_format(($detailret[$i]->totalp - $detailret[$i]->tax_mount)-$detailret[$i]->exempt, 2, ',', '.') }}</td>
+                                    <td>{{ $detailret[$i]->tax.'%' }}</td>
+                                    <td>{{ number_format($detailret[$i]->tax_mount, 2, ',', '.') }}</td>
+                                    <td>{{ number_format($detailret[$i]->total_ret, 2, ',', '.') }}</td>
+                                    @php($tot_p = $tot_p + $detailret[$i]->totalp)
+                                    @php($total_taxes = $total_taxes + $detailret[$i]->tax_mount)
+                                    @php($total_exempt = $total_exempt + $detailret[$i]->exempt)
+                                    @php($total_base = $total_base + (($detailret[$i]->totalp - $detailret[$i]->tax_mount)-$detailret[$i]->exempt))
+                                @endif
+                            </tr>
+                         @endfor
                         <tr>
                             <td colspan="8"></td>
                             {{-- <td>{{  }}</td> --}}
+                            @php ($tot_p = $tot_p-$total_note)
+                            @php ($total_taxes = $total_taxes-$total_tax_note)
+                            @php ($total_exempt = $total_exempt-$total_exempt_note)
+                            @php ($total_base = $total_base-$total_base_note)
                             <td>{{ number_format($tot_p, 2, ',', '.') }}</td>
                             <td>{{ number_format($total_exempt, 2, ',', '.') }}</td>
                             <td>{{ number_format($total_base, 2, ',', '.') }}</td>
@@ -351,24 +377,18 @@
                             @endforeach
                         </tr>
                         
-                    </tbody>
-                    
+                    </tbody>                    
                 </table>
-               
-                
             </main>
-        
         
             <footer class="container-fluid">
                 <div class="row clearfix">
-                    
                     @if ($image)
                     <div class="signat1">
                             <img class="stamp" src="{{ public_path($image) }}" >
                     @else 
                     <div class="signat1 signpad">
                     @endif
-                        
                         <hr noshade="noshade" size="3" width="60%" />
                         <p>Agente de Retención (Fecha de Entrega)</p>
                     </div>

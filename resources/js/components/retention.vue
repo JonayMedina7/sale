@@ -5,7 +5,7 @@
               <li class="breadcrumb-item">
                 <a href="#">Dilia Software</a>
               </li>
-              <li class="breadcrumb-item active"> Retenciones&nbsp;&nbsp;<i class="fa fa-file"></i></li>
+              <li class="breadcrumb-item active"> Retenciones&nbsp;&nbsp;<i class="fa fa-file fa-fw"></i></li>
               <!-- Breadcrumb Menu-->
               <li class="breadcrumb-menu d-md-down-none">
 
@@ -16,11 +16,11 @@
                 <div class="card">
                     <div class="card-header">
 
-                        <button type="button" class="btn btn-success" @click="showInsert()">
-                            <i class="fa fa-file"></i>&nbsp;&nbsp;Crear Retencion
+                        <button type="button" class="float-xl-left btn btn-outline-success" @click="showInsert()">
+                            <span class="h5"><i class="fa fa-file fa-fw"></i>&nbsp;&nbsp;Crear Retencion</span>
                         </button>
-                        <button type="button" class="btn btn-success" @click="showTxt()">
-                            <i class="fa fa-file"></i>&nbsp;&nbsp;Generar TXT
+                        <button type="button"class="float-xl-left btn btn-outline-light" @click="showTxt()">
+                            <span class="h5"><i class="fa fa-file fa-fw"></i>&nbsp;&nbsp;Generar TXT</span>
                         </button>
                     </div>
                     <!-- litado retenciones registradas -->
@@ -93,6 +93,7 @@
                         </div>
                     </template>
 
+                    <!-- panel busqueda para txt retenciones -->
                     <template v-if="list==6">
                         <div class="card-body">
                             <div class="form-group row">
@@ -107,7 +108,7 @@
 
 
                            <button type="button" class="btn btn-secondary" @click="hideRet()">Cerrar</button>
-                           <button type="button" class="btn btn-primary" @click="txt(fecha1,fecha2)">Registrar Retención</button>
+                           <button type="button" class="btn btn-primary" @click="txt(fecha1,fecha2)">Generar Archivo</button>
                         </div>
                     </template>
                     <!-- Fin Listado -->
@@ -223,7 +224,7 @@
                                                 <td class="form-control" v-text="detail.purchase_num"></td>
                                                 <td>
                                                     <span class="form-control" v-if="detail.voucher=='bill'">Factura</span>
-                                                    <span class="form-control" v-else-if="detail.voucher=='note'">Vale</span>
+                                                    <span class="form-control" v-else-if="detail.voucher=='debit'">Nota de Debito</span>
                                                     <span class="form-control" v-else-if="detail.voucher=='credit'">Nota de Crédito</span>
                                                 </td>
 
@@ -238,14 +239,13 @@
                                                     <input v-model="detail.exempt" disabled type="number"  class="form-control" name="">
                                                 </td>
 
-                                                <td>Bs.:
-                                                    {{ detail.ret_amount = (detail.tax_mount*ret_val) }}
-
+                                                <td>
+                                                    {{ moneyFormat(detail.ret_amount = (detail.tax_mount*ret_val)) }}
                                                 </td>
                                             </tr>
                                             <tr style="background-color: #CEECFS;">
                                                 <td colspan="6" align="right"><strong>Total Retenido: </strong></td>
-                                                <td>Bs.: {{ totalPartial=(calculateTotalPartial).toFixed(2) }}</td>
+                                                <td>{{ moneyFormat(totalPartial=(calculateTotalPartial)) }}</td>
 
                                             </tr>
                                         </tbody>
@@ -269,7 +269,7 @@
                     </template>
                     <!-- Fin panel -->
 
-                    <!-- Panel de vista de ventas -->
+                    <!-- Panel de vista de retencion -->
                     <template v-else-if="list==2">
                         <div class="card-body">
                             <div class="form-group row border">
@@ -333,11 +333,18 @@
                                         <tbody v-if="arrayDetailr.length">
                                             <tr v-for="detail in arrayDetailr" :key="detail.id">
 
-                                                <td v-text="detail.voucher" ></td>
+                                                <td v-if="detail.voucher=='bill'">Factura</td>
+                                                <td v-else-if="detail.voucher=='debit'">Nota de Debito</td>
+                                                <td v-else-if="detail.voucher=='credit'">Nota de Crédito</td>
                                                 <td v-text="detail.purchase_num" ></td>
                                                 <td v-text="detail.datep" ></td>
-                                                <td v-text="detail.totalp"></td>
-                                                <td v-text="detail.total_ret"></td>
+                                                <td>{{moneyFormat(detail.totalp)}}</td>
+                                                <td>{{moneyFormat(detail.total_ret)}}</td>
+
+                                            </tr>
+                                            <tr style="background-color: #CEECFS;">
+                                                <td colspan="4" align="right"><strong>Total Retenido: </strong></td>
+                                                <td>{{moneyFormat(total)}}</td>
                                             </tr>
                                         </tbody>
                                         <tbody v-else>
@@ -358,11 +365,11 @@
                                           Anular
                                         </button>
                                     </template>
-                                    <!-- <template>
+                                    <template>
                                         <button type="button" @click="emailRet(id)" class="btn btn-warning btn-sm">
                                             <i class="icon-envelope">&nbsp; </i>Enviar por Email
                                         </button>
-                                    </template> -->
+                                    </template>
                                 </div>
                                 <div class="col-md-6 float-right">
                                     <button type="button" class="btn btn-secondary float-right" @click="hideRet()">
@@ -402,6 +409,7 @@
                                             <th>Agregar</th>
                                             <th>Nro.</th>
                                             <th>Tipo de Documento</th>
+                                            <th>Vinculada con</th>
                                             <th>Fecha </th>
                                             <th>Monto</th>
                                             <th>Total I.v.a</th>
@@ -416,8 +424,14 @@
                                             </td>
                                             <td v-text="purchase.purchase_num"></td>
                                             <td v-if="purchase.voucher=='bill'">Factura</td>
-                                            <td v-else-if="purchase.voucher=='note'">Vale</td>
-                                            <td v-else-if="purchase.voucher=='credit'">Nota de crédito</td>
+                                            <td v-else-if="purchase.voucher=='debit'">Nota de Debito</td>
+                                            <td v-else-if="purchase.voucher=='credit'">Nota de Crédito</td>
+                                            <td v-if="purchase.note_num">
+                                                <span v-if="purchase.voucher=='bill'" v-text="'Nota N° '+purchase.note_num"></span>
+                                                <span v-else-if="purchase.voucher=='debit'" v-text="'Factura N° '+purchase.note_num"></span>
+                                                <span v-else-if="purchase.voucher=='credit'" v-text="'Factura N° '+purchase.note_num"></span>
+                                            </td>
+                                            <td v-else>No hay documento relacionado</td>
                                             <td v-text="purchase.datep"></td>
                                             <td v-text="purchase.totalp"></td>
                                             <td v-text="purchase.tax_mount"></td>
@@ -540,15 +554,19 @@
             },
             calculateTotalPartial: function(){
                 var result=0.0;
+                var result2=0.0;
+                var result3=0.0;
                 for (var i = 0; i <this.arrayDetailr.length; i++) {
-                    result = result +(this.arrayDetailr[i].tax_mount*this.ret_val)
+                    if (this.arrayDetailr[i].voucher == 'bill' || this.arrayDetailr[i].voucher == 'debit') {
+                        result = result +(this.arrayDetailr[i].tax_mount*this.ret_val)
+                    }else if (this.arrayDetailr[i].voucher == 'credit') {
+                        result2 = result2 +(this.arrayDetailr[i].tax_mount*this.ret_val)
+                    }
                 }
-                return result;
-            },
-            calculateTotal: function(){
-                return parseFloat(this.totalTax) + parseFloat(this.totalPartial);
-            }
 
+                result3 = (result-result2);
+                return result3;
+            },
         },
         methods : {
             listRetention (page,search,criterion){
@@ -571,20 +589,20 @@
                     return;
                 }
                 this.dim=1
-              var element = document.createElement('a');
-              element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-              element.setAttribute('download', filename);
+                var element = document.createElement('a');
+                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+                element.setAttribute('download', filename);
 
-              element.style.display = 'none';
-              document.body.appendChild(element);
+                element.style.display = 'none';
+                document.body.appendChild(element);
 
-              element.click();
+                element.click();
 
-              document.body.removeChild(element);
+                document.body.removeChild(element);
 
-              this.listRetention(1,'','voucher_num');
-              this.fecha1='';
-              this.fecha2='';
+                this.listRetention(1,'','voucher_num');
+                this.fecha1='';
+                this.fecha2='';
             },
             txt (fecha1,fecha2){
 
@@ -601,14 +619,12 @@
                     var response = response.data;
                     me.arrayTxt = response.txt;
 
-
-
                     me.company = response.company;
                     me.company.forEach(function(elemento){
                          comp = elemento['type']+elemento['rif'];
                         me.arrayTxt.forEach(function(element){
                         tot = ((element['totalp']-element['tax_mount'])-element['exempt']);
-                        texto += comp + '\t'  +element['year']+element['month']+ '\t'  +element['datep']+ '\t'  +'C'+ '\t'  +'01'+ '\t'  +element['prov_type']+element['prov_rif'] + '\t'  +element['purchase_num']+ '\t'  +element['voucher_serie']+ '\t'  +element['totalp']+ '\t'  + tot + '\t'  +element['total']+ '\t'  +'0'+ '\t'  +element['voucher_num']+ '\t'  +element['exempt']+ '\t'  +element['tax']+ '\t'  +'0' + '\n';
+                        texto += comp + '\t'  +element['year']+element['month']+ '\t'  +element['datep']+ '\t'  +'C'+ '\t'  +element['doc_type']+ '\t'  +element['prov_type']+element['prov_rif'] + '\t'  +element['purchase_num']+ '\t'  +element['voucher_serie']+ '\t'  +element['totalp']+ '\t'  + tot + '\t'  +element['total']+ '\t'  +element['note_num']+ '\t'  +element['voucher_num']+ '\t'  +element['exempt']+ '\t'  +element['tax']+ '\t'  +'0' + '\n';
 
                         });
                     });
@@ -749,7 +765,6 @@
                 axios.get(url).then(function(response){
                     var response = response.data;
                     me.arrayPurchase = response.purchases;
-                    console.log(me.arrayPurchase);
 
                     if (me.arrayPurchase.length>0) {
                         me.purchase_id = me.arrayPurchase[0]['id'];
@@ -868,8 +883,7 @@
                     }).then((result) => {
                         if (result.value) {
                             let me=this;
-
-                            axios.get('retention/email?id='+id).then(function (response){
+                            axios.get('retention/email/'+id).then(function (response){
                                me.listRetention(1,'','voucher_num');
                                 Swal.fire(
                                     'Enviado!',
@@ -887,7 +901,7 @@
                     });
             },
             pdfRet(id){
-                window.open(this.appUrl + 'retention/pdf/'+ id);
+                window.open('retention/pdf/'+ id);
 
                 // window.open('https://bacoop.com/admin/public/retention/pdf/'+ id + ','+ '_blank');
                 // window.open('https://bacoop.com/test/public/retention/pdf/'+ id + ','+ '_blank');
@@ -898,13 +912,12 @@
                 // actualiza la pagina
                 me.pagination.current_page = page;
                 // envia la peticion para visualizar la data de esa pagina
-                me.listSale(page, search, criterion);
+                me.listRetention(page, search, criterion);
             },
             registerRet(){
                 if (this.validateRet()){
                     return;
                 }
-                
                 let me = this;
                 me.dim=1;
                 axios.post('retention/register', {
@@ -928,14 +941,11 @@
                     me.type='';
                     me.rif='';
                     me.address='';
-
                     me.voucher='bill';
                     me.voucher_num = '';
                     me.purchase_num='';
                     me.arrayDetailr=[];
-                    console.log(me.appUrl);
                     window.open(me.appUrl + 'retention/pdf/'+ response.data.id);
-                         
                     me.showRet(response.data.id);
                     me.dim=0;
                 })
@@ -953,14 +963,14 @@
                 if (!me.arrayTxt.length)me.errorSmsListR.push("Periodo Introducido no posee retenciones realizadas");
                 if (me.errorSmsListR.length) me.errorSmsR = 1;
                 if (this.errorSmsListR.length >= 1) {
-                        Swal.fire({
-                            type: 'error',
-                            confirmButtonText: 'Aceptar!',
-                            confirmButtonClass: 'btn btn-danger',
-                            confirmButtonColor: '#3085d6',
-                            html: `${this.errorSmsListR.map( er =>`<br><br>${er}`)}`,
-                            showCancelButton: false
-                            });
+                    Swal.fire({
+                        type: 'error',
+                        confirmButtonText: 'Aceptar!',
+                        confirmButtonClass: 'btn btn-danger',
+                        confirmButtonColor: '#3085d6',
+                        html: `${this.errorSmsListR.map( er =>`<br><br>${er}`)}`,
+                        showCancelButton: false
+                    });
                 };
 
                 return this.errorSmsR;
@@ -980,19 +990,17 @@
                 })
 
                 if (me.provider_id==0) me.errorSmsListR.push("Por favor Seleccione un cliente");
-
-                // if (me.voucher_num == 0) me.errorSmsListR.push("Ingrese un Número de Factura o nota de crédito");
-                // if (me.date=='') me.errorSmsListR.push("Por favor Selecione una Fecha para la retención");
                 if (me.arrayDetailr.length<=0) me.errorSmsListR.push("Por favor ingrese Facturas a retener");
 
                 if (me.errorSmsListR.length) me.errorSmsR = 1;
                 if (this.errorSmsListR.length >= 1) {
                     Swal.fire({
                         type: 'error',
+                        title:'Hey!! Nos falta(n) Datos',
                         confirmButtonText: 'Aceptar!',
                         confirmButtonClass: 'btn btn-danger',
                         confirmButtonColor: '#3085d6',
-                        html: `${this.errorSmsListR.map( er =>`<br><br>${er}`)}`,
+                        html: `${this.errorSmsListR.map( er =>`<br><span style="color:red;" class="mb-3">${er}</span>`)}`,
                         showCancelButton: false
                     });
                 };
@@ -1044,7 +1052,7 @@
                     if (result.value) {
                         let me=this;
 
-                        axios.put('retention/desactive', {
+                        axios.post('retention/desactive', {
                             'id': id
                         }).then(function (response){
                            me.listRetention(1,'','voucher_num');
@@ -1062,7 +1070,12 @@
 
                     }
                 })
-            }
+            },
+            moneyFormat(price){
+                const format = {style: 'currency', currency: 'VES'};
+                const formatter = new Intl.NumberFormat('es-Ve', format);
+                return formatter.format(price);
+            },
         },
         mounted() {
             this.listRetention(1,this.search,this.criterion);

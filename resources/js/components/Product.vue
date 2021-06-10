@@ -382,7 +382,7 @@
                 };
                 let me = this;
                 me.dim=1;
-                axios.put('product/update', {
+                axios.post('product/update', {
                     'id' : this.product_id,
                     'category_id': this.category_id,
                     'code':this.code,
@@ -428,7 +428,7 @@
             desactiveProduct(){
                         let me = this;
 
-                        axios.put('product/desactive', {
+                        axios.post('product/desactive', {
                             'id': this.product_id,
                         }).then(function (response) {
                             me.closeModal();
@@ -441,7 +441,7 @@
             activeProduct(){
                 let me = this;
 
-                axios.put('product/active', {
+                axios.post('product/active', {
                     'id': this.product_id,
                 }).then(function (response) {
                     me.closeModal();

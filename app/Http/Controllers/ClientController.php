@@ -75,13 +75,13 @@ class ClientController extends Controller
         if (!$request->ajax()) return redirect('/');
         $client = new Client();
 
-        $client->name = ucwords(strtolower($request->name));
+        $client->name = ucwords(mb_strtolower($request->name));
         $client->phone = $request->phone;
         $client->email = strtolower($request->email);
         $client->type = $request->type;
         $client->rif = $request->rif;
         $client->retention = $request->retention;
-        $client->address = ucwords(strtolower($request->address));
+        $client->address = ucwords(mb_strtolower($request->address));
         $client->condition = '1';
         $client->save();
 
@@ -101,13 +101,13 @@ class ClientController extends Controller
         if (!$request->ajax()) return redirect('/');
         $client = client::findOrFail($request->id);
 
-        $client->name = ucwords(strtolower($request->name));
+        $client->name = ucwords(mb_strtolower($request->name));
         $client->phone = $request->phone;
         $client->email = strtolower($request->email);
         $client->type = $request->type;
         $client->rif = $request->rif;
         $client->retention = $request->retention;
-        $client->address = ucwords(strtolower($request->address));
+        $client->address = ucwords(mb_strtolower($request->address));
         $client->condition = '1';
         $client->save();
 
@@ -117,9 +117,9 @@ class ClientController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $client = client::findOrFail($request->id);
-
         $client->condition = '0';
         $client->save();
+        return response()->json(200);
     }
 
     public function active(Request $request)
@@ -129,5 +129,6 @@ class ClientController extends Controller
 
         $client->condition = '1';
         $client->save();
+        return response()->json(200);
     }
 }

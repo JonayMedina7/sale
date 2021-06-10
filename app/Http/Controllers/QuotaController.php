@@ -170,7 +170,6 @@ class quotaController extends Controller
                 $detailquota->product_id = $det['product_id'];
                 $detailquota->description = $det['description'];
                 $detailquota->quantity = $det['quantity'];
-                $detailquota->tax = $det['tax'];
                 $detailquota->price = $det['price'];
                 $detailquota->save();
             }

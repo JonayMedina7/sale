@@ -1840,7 +1840,7 @@ fieldset[disabled] a.btn {
   background-image: none;
   border-color: #f0f3f5; }
   .btn-outline-light:hover {
-    color: #fff;
+    color: #272638;
     background-color: #f0f3f5;
     border-color: #f0f3f5; }
   .btn-outline-light:focus, .btn-outline-light.focus {
@@ -2770,9 +2770,9 @@ tbody.collapse.show {
   margin-left: 1.25rem; }
 
 .card-header {
-  padding: 0.75rem 1.25rem;
+  padding: 1.25rem 1.25rem;
   margin-bottom: 0;
-  background-color: #f0f3f5;
+  background-color: #272638;
   border-bottom: 1px solid #c2cfd6; }
 
 .card-footer {
@@ -9153,6 +9153,14 @@ hr.transparent {
 .navbar .dropdown-toggle .img-avatar {
   height: 35px;
   margin: 0 10px; }
+
+.btn-outline-success{
+  border-color:transparent;
+}
+
+.btn-outline-light{
+  border-color:transparent;
+}
 
 *[dir="rtl"] {
   direction: rtl;

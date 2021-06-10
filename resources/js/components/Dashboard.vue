@@ -21,7 +21,7 @@
                         <div class="col-md-6">
                             <div class="card card-chart">
                                 <div class="card-header">
-                                    <h4>Ingresos</h4>
+                                    <h4 class="btn-outline-light">Ingresos</h4>
                                 </div>
                                 <div class="card-content">
                                     <div class="ct.chart">
@@ -39,7 +39,7 @@
                         <div class="col-md-6">
                             <div class="card card-chart">
                                 <div class="card-header">
-                                    <h4>Ventas</h4>
+                                    <h4 class="btn-outline-light">Ventas</h4>
                                 </div>
                                 <div class="card-content">
                                     <div class="ct.chart">

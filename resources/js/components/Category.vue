@@ -16,8 +16,8 @@
                 <div class="card">
                     <div class="card-header">
 
-                        <button type="button" class="btn btn-success" @click="openModal('category','register')">
-                            <i class="icon-plus"></i>&nbsp;&nbsp;Nueva Categoria
+                        <button type="button" class="float-xl-left btn btn-outline-success" @click="openModal('category','register')">
+                            <p class="h5"> <i class="fa fa-plus fa-fw"></i>&nbsp;&nbsp;Nueva Categoria</p>
                         </button>
                     </div>
                     <div class="card-body">
@@ -268,7 +268,7 @@
             	}
             	let me = this;
                 me.dim = 1;
-            	axios.put('category/update', {
+            	axios.post('category/update', {
             		'id':this.id,
             		'name': this.name,
             		'description': this.description
@@ -303,7 +303,7 @@
             desactiveCategory(){
                 let me = this;
 
-                axios.put('category/desactive', {
+                axios.post('category/desactive', {
                     'id': this.id,
                 }).then(function (response) {
                     me.closeModal();
@@ -316,7 +316,7 @@
             activeCategory(){
                 let me = this;
 
-                axios.put('category/active', {
+                axios.post('category/active', {
                     'id': this.id,
                 }).then(function (response) {
                     me.closeModal();

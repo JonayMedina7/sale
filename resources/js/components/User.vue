@@ -141,7 +141,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="phone">Número teléfonico</label>
                                     <div class="col-md-9">
-                                        <input type="number" v-model="phone" class="form-control" placeholder="">
+                                        <input type="text" v-model="phone" class="form-control" placeholder="" @input="acceptNumber">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -377,7 +377,7 @@
                 };
                 let me = this;
                 me.dim=1;
-                axios.put('user/update', {
+                axios.post('user/update', {
                     'id' : this.client_id,
                     'type':this.type,
                     'rif':this.rif,
@@ -400,9 +400,6 @@
             validateClient(){
                 this.errorSms=0;
                 this.errorSmsListU =[];
-
-
-
                 if (!this.name) this.errorSmsListU.push("Por favor insertar Nombre y Apellido");
 
                 if (!this.user) this.errorSmsListU.push("Por favor insertar Nombre de usuario valido");
@@ -430,7 +427,7 @@
             desactiveClient(){
                         let me = this;
 
-                        axios.put('user/desactive', {
+                        axios.post('user/desactive', {
                             'id': this.client_id,
                         }).then(function (response) {
                             me.closeModal();
@@ -443,7 +440,7 @@
             activeClient(){
                 let me = this;
 
-                axios.put('user/active', {
+                axios.post('user/active', {
                     'id': this.client_id,
                 }).then(function (response) {
                     me.closeModal();
@@ -530,6 +527,10 @@
                     }
                 }
 
+            },
+            acceptNumber() {
+                var x = this.phone.replace(/\D/g, '').match(/(\d{0,4})(\d{0,3})(\d{0,4})/);
+                this.phone = !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
             }
         },
         mounted() {

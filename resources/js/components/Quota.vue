@@ -1118,7 +1118,7 @@
                 }else {
                 let me=this;
                 me.dim = 1;
-                axios.put('quota/update', {
+                axios.post('quota/update', {
 
                     'id': this.quota_id,
                     'client_id':this.client_id,
@@ -1250,7 +1250,7 @@
                     if (result.value) {
                         let me=this;
 
-                        axios.put('quota/desactive', {
+                        axios.post('quota/desactive', {
                             'id': quota_id
                         }).then(function (response){
                             me.list=1;
